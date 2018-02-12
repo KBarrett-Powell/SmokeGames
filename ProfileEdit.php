@@ -37,6 +37,47 @@ session_start();
     if (!$gamesdb) {
        die("Failed to connect: " . mysqli_connect_error());
     } 
-    // CODE - need to implement updating tables with info
+
+    $user = mysqli_real_escape_string($gamesdb, $_POST['user']);
+    $fname = mysqli_real_escape_string($gamesdb, $_POST['fname']);
+    $lname = mysqli_real_escape_string($gamesdb, $_POST['lname']);
+    $propic = mysqli_real_escape_string($gamesdb, $_POST['propic']);
+    $desc = mysqli_real_escape_string($gamesdb, $_POST['desc']);
+
+    $curentid = $_SESSION['id'];
+
+    if ($user != null) {
+        $retrieve = "SELECT Uname FROM Users WHERE Uname = '$user'";
+        $result = mysqli_query($gamesdb, $retrieve);
+
+        if (mysqli_num_rows($result) == 1) {
+            echo "Username Taken";
+        } else {
+            $update = "UPDATE Users SET Uname = '$user' WHERE UserID = '$currentid'";
+            $upres = mysqli_query($gamesdb, $update);
+        }
+    }
+
+    if ($fname != null) {
+        $update = "UPDATE Users SET Fname = '$fname' WHERE UserID = '$currentid'";
+        $result = mysqli_query($gamesdb, $update);
+    }
+
+    if ($lname != null) {
+        $update = "UPDATE Users SET Lname = '$lname' WHERE UserID = '$currentid'";
+        $result = mysqli_query($gamesdb, $update);
+    }
+
+    if ($propic != null) {
+        $update = "UPDATE Users SET ProPic = '$propic' WHERE UserID = '$currentid'";
+        $result = mysqli_query($gamesdb, $update);
+    }
+
+    if ($desc != null) {
+        $update = "UPDATE Users SET PDesc = '$desc' WHERE UserID = '$currentid'";
+        $result = mysqli_query($gamesdb, $update);
+    }
+
+    #Delete would be DELETE FROM Users WHERE UserID = current
 ?>
 </body></html>
