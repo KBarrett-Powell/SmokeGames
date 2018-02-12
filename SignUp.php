@@ -77,11 +77,6 @@ this first form is to sign up -->
     <input class="button" type="submit" value="Login" name="submit_login"></form></div></td></tr></table>
 
 <?php 
-    function valOrNull( $value ) { 
-        if (is_null($value)) {return NULL;}
-        else {return $value;}
-    }
-
     $gamesdb = mysqli_connect("csmysql.cs.cf.ac.uk", "group4.2017", "WKPrte4YHjB34F", "group4_2017");
     if (!$gamesdb) {
        die("Failed to connect: " . mysqli_connect_error());
