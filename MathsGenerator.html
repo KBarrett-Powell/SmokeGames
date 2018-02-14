@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<title>Maths Game</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<body onload="test()">
+	<div id="mainDiv" width="960" height="540">
+		<div id="mathsProblem">
+			<p id="firstNumber" style="display:inline"> </p>
+			<p id="operation" style="display:inline"> </p>
+			<p id="secondNumber" style="display:inline"> </p>
+			<p style="display:inline"> =</p>
+			<form style="display:inline" onsubmit="checkAnswer()"> <!-- action = /action.php -->
+				<input type="text" size="1" id="answer">
+				<input type="submit" value="GO">
+			</form>
+		</div>
+	</div>
+
+	<script>
+		var firstNumber = 0;
+		var operation = "";
+		var secondNumber = 0;
+
+		function test() {
+			var waitTime = 10;
+			generateMathsProblem();
+			updateMathsProblemDiv();
+			setInterval(function() {
+				generateMathsProblem();
+				updateMathsProblemDiv();
+			}, waitTime*1000);
+		}
+
+		function checkAnswer() { // for multiplayer, send the player's input to the server
+			var userAnswerString = document.getElementById("answer").value;
+			var userAnswer = 0;
+			try { userAnswer = parseInt(userAnswerString); } catch (e) { alert("Enter an integer!"); }
+			var actualAnswer = 0;
+			if (operation === "+") actualAnswer = firstNumber + secondNumber;
+			else if (operation === "-") actualAnswer = firstNumber - secondNumber;
+			else if (operation === "*") actualAnswer = firstNumber * secondNumber;
+			else if (operation === "/") actualAnswer = firstNumber / secondNumber;
+			if (userAnswer == actualAnswer) alert("That's correct!");
+			else alert("Wrong answer. Better luck next time!");
+		}
+
+		function updateMathsProblemDiv() {
+			document.getElementById("firstNumber").innerHTML = firstNumber;
+			document.getElementById("operation").innerHTML = operation;
+			document.getElementById("secondNumber").innerHTML = secondNumber;
+		}
+
+		function generateMathsProblem() {
+			var operationInteger = Math.floor(Math.random() * 4);
+			firstNumber = Math.floor(Math.random() * 100);
+			secondNumber = Math.floor(Math.random() * 100);
+			if (operationInteger == 0) operation = "+";
+			else if (operationInteger == 1) operation = "-";
+			else if (operationInteger == 2) operation = "x";
+			else if (operationInteger == 3) {
+				operation = "/";
+				if (firstNumber < secondNumber) {
+					var temp = firstNumber;
+					firstNumber = secondNumber;
+					secondNumber = temp;
+				}
+				firstNumber = firstNumber - (firstNumber % secondNumber);
+			} else alert("Problem in the generateMathsProblem function");
+		}
+	</script>
+	<noscript>JavaScript is not supported. Unfortunately, you cannot play this game!</noscript>
+</body>
+</html>

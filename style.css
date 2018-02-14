@@ -1,0 +1,15 @@
+* {
+	background-color: #383456;
+	width: 960px;
+	height: 540px;
+	font-family: 'Montserrat', sans-serif;
+}
+
+#mathsProblem {
+	color: white;
+	font-size: 50pt;
+}
+
+input[text] {
+	width: 100px;
+}
