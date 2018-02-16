@@ -31,8 +31,8 @@ session_start();
 <!-- Creating space for display of images -->
 <div class=imgDisplay>
   <img class=imgs src="images/game1.jpg" style="width:100%">
+  <img class=imgs src="images/BannerImages/Bounce.jpg" style="width:100%">
   <img class=imgs src="images/game2.jpg" style="width:100%">
-  <img class=imgs src="images/game3.jpg" style="width:100%">
   <div class=imgNav>
     <!-- Defining left and right nav arrows -->
     <div class=leftNav onclick="plusDivs(-1)">&#10094;</div>
