@@ -28,9 +28,16 @@ session_start();
     echo"Hello ".$_SESSION['username']."!<br><br>";
 }?>
 
+<!--Filter Code. (Added by Kailesh)-->
+<?php
+    $gameFilterType = $_POST['filterby'];
+    $retrive = "SELECT * FROM Games WHERE Category LIKE '%{$gameFilterType}%' ORDER BY Gname ASC ";
+    //echo $gameFilterType;
+?>
+
 <!-- Creating space for display of images -->
 <div class=imgDisplay>
-  <img class=imgs src="images/game1.jpg" style="width:100%">
+  <img class=imgs src="images/BannerImages/Ghost.jpg" style="width:100%">
   <img class=imgs src="images/BannerImages/Bounce.jpg" style="width:100%">
   <img class=imgs src="images/game2.jpg" style="width:100%">
   <div class=imgNav>
@@ -80,17 +87,22 @@ session_start();
 <br><br>
 
 <!-- Title bar for 'Games', includes filter and sort -->
-<table class=games-sort><tr><td><h2>Games</h2></td></tr>
-<tr><td class=filterOpt><form id="filterForm" method="GET" action="<?php $_SERVER['PHP_SELF']?>">
-
+<table class=games-sort><tr><td><h2>Games</h2></td></tr>    
+<tr><td class=filterOpt>
+    
 <!-- filter by type of game - NOT IMPLEMENTED YET-->
-<select name-'filterby'>
-        <option value='all'>All</option>
-        <option value='action'>Action</option>
-        <option value='arcade'>Arcade</option>
-        <option value='multi'>Multi-Player</option>
-        <option value='puzzle'>Puzzle</option></select>
-<input type="submit" value="Filter"></form></td>
+<form action="index.php" method="post">
+    <select name="filterby">
+            <option value='all'>All</option>
+            <option value='action'>Action</option>
+            <option value='arcade'>Arcade</option>
+            <option value='multi'>Multi-Player</option>
+            <option value='puzzle'>Puzzle</option></select>
+    <input type="submit" value="Filter">
+</form></td>
+
+    
+<form id="filterForm" method="GET" action="<?php $_SERVER['PHP_SELF']?>">
 
 <!-- sort by several different options - NOT FULLY INTEGRATED as we havent started storing other options in database-->
 <td class=sortOpt> <form id="sortForm" method="GET" action="<?php $_SERVER['PHP_SELF']?>">
@@ -110,7 +122,7 @@ session_start();
        die("Failed to connect: " . mysqli_connect_error());
     } 
 
-    // Add filter functionality here, use WHERE 
+    // Add filter functionality here, use WHERE
     // This SQL query defines how the items are sorted
     if (isset($_GET['sortwhat'])) {
         $retrieve = "SELECT * FROM Games ORDER BY ". $_GET['sortwhat'] . " " . $_GET['sorthow'] . ";";
