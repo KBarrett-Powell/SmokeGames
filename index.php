@@ -41,6 +41,7 @@ session_start();
     <!-- Generator: Jssor Slider Maker -->
     <!-- Source: https://www.jssor.com -->
     <script src="js/jssor.slider-27.0.4.min.js" type="text/javascript"></script>
+    <!-- I want to move the java script for this into another file. - Kailesh-->
     <script type="text/javascript">
         jssor_1_slider_init = function() {
 
@@ -108,26 +109,12 @@ session_start();
         <div data-u="slides" style="cursor:default;position:relative;top:0px;left:0px;width:1300px;height:500px;overflow:hidden;">
             <div data-p="225.00">
                 <img data-u="image" src="images/BannerImages/Ghost.jpg" />
-                <div data-u="caption" data-t="0" style="position:absolute;top:120px;left:75px;width:470px;height:220px;">
-                    <img style="position:absolute;top:0px;left:0px;width:470px;height:220px;" src="img/c-phone-horizontal.png" />
-                    <div style="position:absolute;top:4px;left:45px;width:379px;height:213px;overflow:hidden;">
-                        <img data-u="caption" data-t="1" style="position:absolute;top:0px;left:0px;width:379px;height:213px;" src="img/c-slide-1.jpg" />
-                        <img data-u="caption" data-t="2" style="position:absolute;top:0px;left:379px;width:379px;height:213px;" src="img/c-slide-3.jpg" />
-                    </div>
-                    <img style="position:absolute;top:4px;left:45px;width:379px;height:213px;" src="img/c-navigator-horizontal.png" />
-                    <img data-u="caption" data-t="3" style="position:absolute;top:476px;left:454px;width:63px;height:77px;" src="img/hand.png" />
-                </div>
             </div>
             <div data-p="225.00">
                 <img data-u="image" src="images/BannerImages/Bounce.jpg" />
             </div>
             <div data-p="225.00">
                 <img data-u="image" src="images/BannerImages/DragRacer.jpg" />
-                <div style="position:absolute;top:30px;left:30px;width:480px;height:130px;background-color:rgba(255,188,5,0.8);font-family:'Roboto Condensed',sans-serif;font-size:40px;color:#000000;line-height:1.5;padding:5px 5px 5px 5px;box-sizing:border-box;">TOUCH SWIPE
-<br />
-                    RESPONSIVE SLIDER
-                </div>
-                <div style="position:absolute;top:300px;left:30px;width:480px;height:130px;background-color:rgba(255,188,5,0.8);font-family:'Roboto Condensed',sans-serif;font-size:30px;color:#000000;line-height:1.27;padding:5px 5px 5px 5px;box-sizing:border-box;">Build your slider with anything, includes image, svg, text, html, photo, picture content</div>
             </div>
         </div>
         <!-- Bullet Navigator -->
