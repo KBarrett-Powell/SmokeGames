@@ -39,7 +39,7 @@ session_start();
 <div class=imgDisplay>
   <img class=imgs src="images/BannerImages/Ghost.jpg" style="width:100%">
   <img class=imgs src="images/BannerImages/Bounce.jpg" style="width:100%">
-  <img class=imgs src="images/game2.jpg" style="width:100%">
+  <img class=imgs src="images/BannerImages/DragRacer.jpg" style="width:100%">
   <div class=imgNav>
     <!-- Defining left and right nav arrows -->
     <div class=leftNav onclick="plusDivs(-1)">&#10094;</div>
