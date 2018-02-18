@@ -104,7 +104,7 @@
                 if (mysqli_num_rows($result) == 1) { $_SESSION['admin'] = true; }
 
                 // return user to main page
-                header("Location: MainPage.php");
+                header("Location: index.php");
                 exit;
             } else {echo "Username Or Password Incorrect. Please Try Again.";}
             
@@ -133,6 +133,13 @@
                     echo "Couldn't enter data: ".mysqli_error($gamesdb);
                 } else {
                     echo "User Added Successfully";
+                    // sort session variables of information about user
+                    $_SESSION['loggedin'] = true;
+                    $_SESSION['username'] = $user;
+                    $_SESSION['id'] = $id;
+                    
+                    header("Location: index.php");
+                    exit;
                 }
             }
         }

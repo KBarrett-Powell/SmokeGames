@@ -8,7 +8,7 @@ session_start();
 </head><body>
 
 <table class=heading><tr><td><img src='images/logo.png' width=100></td>
-<h1><td class=title><a href="MainPage.php">Smoke Games</td></h1></a>
+<h1><td class=title><a href="index.php">Smoke Games</td></h1></a>
 <td class=links><form id="searchForm" method="POST" action="SearchItems.php">
 <span><input type="text" name="searchvalue" class="mainsearch" placeholder="Search..."></span></form></td>
 <td><?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
