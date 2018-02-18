@@ -21,6 +21,7 @@ session_start();
 <?php 
     // Title at top of page with log out button implemented to the right of it
     echo "<div class='proTitle'><a href='ProfileEdit.php'><p>Edit Profile</p></a><h3>".$_SESSION['username']."</h3>";
+    // ADD message saying successfully logged out
     echo "<a href='Sessions.php'><button>Log Out</button></a></div><br>";
 
     $gamesdb = mysqli_connect("csmysql.cs.cf.ac.uk", "group4.2017", "WKPrte4YHjB34F", "group4_2017");

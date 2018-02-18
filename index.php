@@ -174,8 +174,8 @@ session_start();
 <tr><td class=filterOpt><form id="filterForm" method="GET" action="<?php $_SERVER['PHP_SELF']?>">
 
 <!-- filter by type of game - NOT IMPLEMENTED YET-->
-<select name-'filterby'>
-        <option value='all'>All</option>
+<select name='filterby'>
+        <option value=''>All</option>
         <option value='action'>Action</option>
         <option value='arcade'>Arcade</option>
         <option value='multi'>Multi-Player</option>
@@ -187,8 +187,8 @@ session_start();
 
 <select name='sortwhat'>
         <option value='Gname'>Name</option>
-        <option value='Gname'>Popularity</option>
-        <option value='Gname'>Recommended</option></select>
+        <option value='Popularity'>Popularity</option>
+        <option value='Recommended'>Recommended</option></select>
 <select name='sorthow'>
         <option value='ASC'>Ascending</option>
         <option value='DESC'>Descending</option></select>
@@ -201,12 +201,14 @@ session_start();
     } 
 
     // This SQL query defines how the items are sorted and what they are filtered by
-    if (isset($_GET['sortwhat'])) {
+    if (isset($_GET['sortwhat']) && isset($_GET['filterby'])) {
+        $retrieve = "SELECT * FROM Games WHERE Category LIKE '%".$_GET['filterby']."%' ORDER BY ". $_GET['sortwhat'] . " " . $_GET['sorthow'] . ";";
+    } else if (isset($_GET['sortwhat'])) {
         $retrieve = "SELECT * FROM Games ORDER BY ". $_GET['sortwhat'] . " " . $_GET['sorthow'] . ";";
     } else if (isset($_GET['filterby'])) {
-        $retrieve = "SELECT * FROM Games WHERE Category LIKE '$". $_GET['filterby'] ."%' ORDER BY Gname ASC;";
+        $retrieve = "SELECT * FROM Games WHERE Category LIKE '%".$_GET['filterby']."%' ORDER BY Gname ASC;";
     } else {    
-        $retrieve = "SELECT * FROM Games ORDER BY Gname ASC";
+        $retrieve = "SELECT * FROM Games ORDER BY Gname ASC;";
     }
 
     $result = mysqli_query($gamesdb, $retrieve);
