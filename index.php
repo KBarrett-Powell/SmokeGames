@@ -9,7 +9,7 @@ session_start();
 
 <!-- Creating Main Naviagtion Bar -->
 <table class=heading><tr><td><img src='images/logo.png' width=100></td>
-<h1><td class=title><a href="MainPage.php">Smoke Games</td></h1></a>
+<h1><td class=title><a href="index.php">Smoke Games</td></h1></a>
 <td class=links><form id="searchForm" method="POST" action="SearchItems.php">
 <span><input type="text" name="searchvalue" class="mainsearch" placeholder="Search..."></span></form></td>
 <td><?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
@@ -27,13 +27,6 @@ session_start();
 <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     echo"Hello ".$_SESSION['username']."!<br><br>";
 }?>
-
-<!--Filter Code. (Added by Kailesh)-->
-<?php
-    $gameFilterType = $_POST['filterby'];
-    $retrive = "SELECT * FROM Games WHERE Category LIKE '%{$gameFilterType}%' ORDER BY Gname ASC ";
-    //echo $gameFilterType;
-?>
 
 <!-- Creating space for display of images -->
 <div class=imgDisplay>
@@ -178,21 +171,16 @@ session_start();
 
 <!-- Title bar for 'Games', includes filter and sort -->
 <table class=games-sort><tr><td><h2>Games</h2></td></tr>    
-<tr><td class=filterOpt>
-    
-<!-- filter by type of game - NOT IMPLEMENTED YET-->
-<form action="index.php" method="post">
-    <select name="filterby">
-            <option value='all'>All</option>
-            <option value='action'>Action</option>
-            <option value='arcade'>Arcade</option>
-            <option value='multi'>Multi-Player</option>
-            <option value='puzzle'>Puzzle</option></select>
-    <input type="submit" value="Filter">
-</form></td>
+<tr><td class=filterOpt><form id="filterForm" method="GET" action="<?php $_SERVER['PHP_SELF']?>">
 
-    
-<form id="filterForm" method="GET" action="<?php $_SERVER['PHP_SELF']?>">
+<!-- filter by type of game - NOT IMPLEMENTED YET-->
+<select name-'filterby'>
+        <option value='all'>All</option>
+        <option value='action'>Action</option>
+        <option value='arcade'>Arcade</option>
+        <option value='multi'>Multi-Player</option>
+        <option value='puzzle'>Puzzle</option></select>
+<input type="submit" value="Filter"></form></td>
 
 <!-- sort by several different options - NOT FULLY INTEGRATED as we havent started storing other options in database-->
 <td class=sortOpt> <form id="sortForm" method="GET" action="<?php $_SERVER['PHP_SELF']?>">
@@ -212,11 +200,12 @@ session_start();
        die("Failed to connect: " . mysqli_connect_error());
     } 
 
-    // Add filter functionality here, use WHERE
-    // This SQL query defines how the items are sorted
+    // This SQL query defines how the items are sorted and what they are filtered by
     if (isset($_GET['sortwhat'])) {
         $retrieve = "SELECT * FROM Games ORDER BY ". $_GET['sortwhat'] . " " . $_GET['sorthow'] . ";";
-    } else {
+    } else if (isset($_GET['filterby'])) {
+        $retrieve = "SELECT * FROM Games WHERE Category LIKE '$". $_GET['filterby'] ."%' ORDER BY Gname ASC;";
+    } else {    
         $retrieve = "SELECT * FROM Games ORDER BY Gname ASC";
     }
 

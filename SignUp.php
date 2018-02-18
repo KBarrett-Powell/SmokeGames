@@ -61,18 +61,18 @@ this first form is to sign up -->
     <input type="text" id="fname" name="fname" placeholder="First Name">
     <input type="text" id="lname" name="lname" placeholder="Last Name">
     <input type="text" id="user" name="user" placeholder="Username">
-    <input type="text" id="age" name="age" placeholder="Age">
-    <input type="text" id="email" name="email" placeholder="Email">
-    <input type="text" id="phoneno" name="phoneno" placeholder="Phone Number">
-    <input type="text" id="pass1" name="pass1" placeholder="Password">
-    <input type="text" id="pass2" name="pass2" placeholder="Re-enter Password">
+    <input type="number" id="age" name="age" min="6" max="100" value="NULL" style="margin-left:15%; margin-right:15%" placeholder="Age">
+    <input type="email" id="email" name="email" placeholder="Email">
+    <input type="number" id="phoneno" name="phoneno" maxlength="15" value="NULL" placeholder="Phone Number">
+    <input type="password" id="pass1" name="pass1" placeholder="Password">
+    <input type="password" id="pass2" name="pass2" placeholder="Re-enter Password">
 
     <input class="button" type="submit" value="Sign Up" name="submit_create"></form></td>
 
     <td><form class=signinform action="" name="login" method="post">
     <h2>Login</h2>
     <input type="text" id="user" name="user" placeholder="Username">
-    <input type="text" id="pass" name="pass" placeholder="Password">
+    <input type="password" id="pass" name="pass" placeholder="Password">
 
     <input class="button" type="submit" value="Login" name="submit_login"></form></div></td></tr></table>
 
@@ -125,16 +125,11 @@ this first form is to sign up -->
                 $id = $row['max(UserID)'] + 1;
 
                 //This code works to update the database but doesnt put NULL values in there
-                //$insert = "INSERT INTO Users (UserID, Fname, Lname, Uname, Pass, Email, Age, Phone, ProPic, PDesc, ActiveBan) 
-                //VALUES ('$id', '$fname', '$lname', '$user', '$pass', '$email', '$age', '$phone', 'autopic.png', 'New User', 0)";
-                //$added = mysqli_query($gamesdb, $insert);  
+                $insert = "INSERT INTO Users (UserID, Fname, Lname, Uname, Pass, Email, Age, Phone, ProPic, PDesc, ActiveBan) 
+                VALUES ('$id', '$fname', '$lname', '$user', '$pass', '$email', '$age', '$phone', 'autopic.png', 'New User', 0)";
+                $added = mysqli_query($gamesdb, $insert);  
 
-                $stmt = $gamesdb->prepare("INSERT INTO Users (UserID, Fname, Lname, Uname, Pass, Email, Age, Phone) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?");
-                $stmt->bind_param('ss', $id, $fname, $lname, $user, $pass, $email, $age, $phone);
-
-                $stmt->execute();
-                if (!$stmt) {
+                if (!$added) {
                     echo "Couldn't enter data: ".mysqli_error($gamesdb);
                 } else {
                     echo "User Added Successfully";
