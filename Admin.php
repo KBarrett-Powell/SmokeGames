@@ -22,7 +22,7 @@ session_start();
         }?>
 </td></tr></table><br>
 
-<div class='proTitle'><h3>Admin</h3><a href='Sessions.php'><button>Log Out</button></a></div><br>
+<div class='proTitle'><a href='AccountManager.php'><button style="position: absolute; left: 1.5%; ">Accounts</button><h3>Admin</h3><a href='Sessions.php'><button>Log Out</button></a></div><br>
 
 <?php
     // creating neat display for reports and upload games forms
@@ -33,7 +33,6 @@ session_start();
     } 
 
     echo "<table class=scorestab><tr><th>ID</th><th>Report</th></tr>";
-    // collect data from reports table where report is currently unresolved
     $retrieve = "SELECT * FROM Reports WHERE Resolved = false;";
     $result = mysqli_query($gamesdb, $retrieve);
     if (mysqli_num_rows($result) > 0) {
@@ -41,7 +40,6 @@ session_start();
             $id = $row['UserID1'];
             $report = $row['Report'];
 
-            // fill in each row with user reported and what they were reported for
             echo "<tr><td>$id</td><td>$report</td></tr>";
         }
         echo "</table></td>";
@@ -56,8 +54,6 @@ session_start();
     echo "Banner Image: <input type='file' id='img1' name='img1'><br>";
     echo "Small Image: <input type='file' id='img2' name='img2'><br>";
     echo "<input class=button type='submit' value='Upload Game'></form><br></td></tr></table>";
-
-    //upload new game info
 
 
 ?>
