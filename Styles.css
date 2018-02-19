@@ -329,3 +329,74 @@ table.scorestab td{
 .proeditform input:hover { 
     background: #6161d1; 
     }
+
+.delete-ID {
+    left: 48%;
+    position: absolute;
+    text-align: center;
+    top: 53%;
+    font-size: 24px;
+    display: block;
+    color: white;
+    margin-bottom: 0px;
+}
+
+.form-delete-ID {
+    width: 50px;
+    height: 50px;
+    font-size: 24pt;
+    text-align: center;
+}
+
+.delete-submit-1 {
+    left: 41.5%;
+    top: 65%;
+    position: absolute;
+
+}
+
+.form-delete-submit {
+    width: 200px;
+    height: 40px;
+    margin-left: 20px;
+    font-size: 16pt;
+    text-align: center;
+    background-color: Transparent;
+    color: white;
+}
+
+.form-delete-heplbutton {
+    font-size: 14pt;
+    color: white;
+    left: 38.5%;
+    top: 72%;
+    position: absolute;
+    text-align: center;
+
+}
+
+.registered_sc {
+    position: absolute;
+    text-align: center;
+    top: 54%;
+    width: 100%;
+    font-size: 30px;
+    display: block;
+    color: white;
+}
+
+.adddeletescript-add {
+    left: 37.5%;
+    top: 70%;
+    position: absolute;
+}
+
+.adddeletescript-add-button {
+    width: 300px;
+    height: 40px;
+    margin-left: 20px;
+    font-size: 14pt;
+    text-align: center;
+    background-color: Transparent;
+    color: white;
+}
