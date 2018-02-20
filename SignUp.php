@@ -57,21 +57,21 @@
 <!-- onSubmit="return verifyCreate()" -->
 <tr><td><form class=signinform  method="post">
     <h2>Sign Up</h2>
-    <input type="text" id="fname" name="fname" placeholder="First Name">
-    <input type="text" id="lname" name="lname" placeholder="Last Name">
-    <input type="text" id="user" name="user" placeholder="Username">
+    <input type="text" id="fname" name="fname" required="required" placeholder="First Name">
+    <input type="text" id="lname" name="lname" required="required" placeholder="Last Name">
+    <input type="text" id="newuser" name="newuser" required="required" placeholder="Username">
     <input type="number" id="age" name="age" min="6" max="100" value="NULL" style="margin-left:17%; margin-right:15%" placeholder="Age">
     <input type="email" id="email" name="email" placeholder="Email">
     <input type="number" id="phoneno" name="phoneno" maxlength="15" value="NULL" placeholder="Phone Number">
-    <input type="password" id="pass1" name="pass1" placeholder="Password">
-    <input type="password" id="pass2" name="pass2" placeholder="Re-enter Password">
+    <input type="password" id="pass1" name="pass1" required="required" placeholder="Password">
+    <input type="password" id="pass2" name="pass2" required="required" placeholder="Re-enter Password">
 
     <input class="button" type="submit" value="Sign Up" name="submit_create"></form></td>
 
     <td><form class=signinform action="" name="login" method="post">
     <h2>Login</h2>
-    <input type="text" id="user" name="user" placeholder="Username">
-    <input type="password" id="pass" name="pass" placeholder="Password">
+    <input type="text" id="user" name="user" required="required" placeholder="Username">
+    <input type="password" id="pass" name="pass" required="required" placeholder="Password">
 
     <input class="button" type="submit" value="Login" name="submit_login"></form></div></td></tr></table>
 
@@ -85,37 +85,46 @@
     if($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST['submit_login'])) {
             $username = mysqli_real_escape_string($gamesdb, $_POST['user']);
-            $password = mysqli_real_escape_string($gamesdb, $_POST['pass']);
-        
+            $password = $_POST['pass'];
+            
             // search users table for one with matching credentials to those entered by user
-            $retrieve = "SELECT * FROM Users WHERE Uname = '$username' AND Pass = '$password'";
+            $retrieve = "SELECT UserID, Pass FROM Users WHERE Uname = '$username'";
             $result = mysqli_query($gamesdb, $retrieve);
             if (mysqli_num_rows($result) == 1) {
                 $row = mysqli_fetch_assoc($result);
                 $id = $row['UserID'];
-                // sort session variables of information about user
-                $_SESSION['loggedin'] = true;
-                $_SESSION['username'] = $username;
-                $_SESSION['id'] = $id;
+                $hash = $row['Pass'];
+                
+                if (password_verify($password, $hash)) {
+                    // sort session variables of information about user
+                    $_SESSION['loggedin'] = true;
+                    $_SESSION['username'] = $username;
+                    $_SESSION['id'] = $id;
 
-                // check if user is an admin
-                $retrieve = "SELECT * FROM Admins WHERE UserID = '$id'";
-                $result = mysqli_query($gamesdb, $retrieve);
-                if (mysqli_num_rows($result) == 1) { $_SESSION['admin'] = true; }
+                    // check if user is an admin
+                    $retrieve = "SELECT * FROM Admins WHERE UserID = '$id'";
+                    $result = mysqli_query($gamesdb, $retrieve);
+                    if (mysqli_num_rows($result) == 1) { $_SESSION['admin'] = true; }
 
-                // return user to main page
-                header("Location: index.php");
-                exit;
-            } else {echo "Username Or Password Incorrect. Please Try Again.";}
+                    // return user to main page
+                    header("Location: index.php");
+                    exit;
+
+                } else {
+                    echo "Password Incorrect. Please Try Again.";
+                }
+            } else {echo "Username Incorrect. Please Try Again.";}
             
         } elseif(isset($_POST['submit_create'])) {
             $fname = mysqli_real_escape_string($gamesdb, $_POST['fname']);
             $lname = mysqli_real_escape_string($gamesdb, $_POST['lname']);
-            $user = mysqli_real_escape_string($gamesdb, $_POST['user']);
+            $user = mysqli_real_escape_string($gamesdb, $_POST['newuser']);
             $age = mysqli_real_escape_string($gamesdb, $_POST['age']);
             $phone = mysqli_real_escape_string($gamesdb, $_POST['phoneno']);
             $email = mysqli_real_escape_string($gamesdb, $_POST['email']);
-            $pass = mysqli_real_escape_string($gamesdb, $_POST['pass1']);
+            $plainPass = $_POST['pass1'];
+            $cryptpass = password_hash($plainPass, PASSWORD_DEFAULT);
+            $pass = mysqli_real_escape_string($gamesdb, $cryptpass);
 
             $nextId = "SELECT max(UserID) FROM Users";
             $result = mysqli_query($gamesdb, $nextId);
