@@ -9,13 +9,13 @@ session_start();
 
 <table class=heading><tr><td><img src='images/logo.png' width=100></td>
 <h1><td class=title><a href="index.php">Smoke Games</td></h1></a>
-<td class=links><form id="searchForm" method="POST" action="SearchItems.php">
+<td class=links><form id="searchForm" method="GET" action="SearchItems.php">
 <span><input type="text" name="searchvalue" class="mainsearch" placeholder="Search..."></span></form></td>
 <td><?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
              if (isset($_SESSION['admin']) && $_SESSION['admin'] == true){
-                  echo "<a href='Admin.php'>Admin</a>";
+                echo "<a href='Admin.php'>Admin</a>";
              } else {
-                echo "<a href='Profile.php'>".$_SESSION['username']."</a>";
+                echo "<a href='Profile.php?id=".$_SESSION['id']."'>".$_SESSION['username']."</a>";
              }
         } else {
             echo "<a href='SignUp.php'>Login / Sign Up</a>";
@@ -24,7 +24,7 @@ session_start();
 
 <?php
     // read in searchvalue from search bar
-    $search = $_POST['searchvalue'];
+    $search = $_GET['searchvalue'];
 
     echo "<h2>Search Results For: ".$search."</h2><br>";
 
@@ -45,8 +45,8 @@ session_start();
            $img = $row["Gimg2"];
 
            // table to output all information stored on any returned game
-           echo "<a href='IndGame.php?id=$id'><div class='game'><img src='images/$img' alt='Could not find' class='gameimage'>";
-           echo "<h2>$name</h2></a>";
+           echo "<div class='game'><a href='IndGame.php?id=$id'><img src='images/$img' alt='Could not find' class='gameimage'>";
+           echo "<h2>$name</h2></a></div>";
        }
        echo "</div></div>";
     } else { echo "No results"; }

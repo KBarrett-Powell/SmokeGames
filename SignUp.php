@@ -12,9 +12,6 @@
     function verifyCreate() {
         var fname = document.getElementById("fname").value;
         var lname = document.getElementById("lname").value;
-        var age = document.getElementById("age").value;
-        var email = document.getElementById("email").value;
-        var phoneno = document.getElementById("phoneno").value;
         var pass1 = document.getElementById("pass1").value;
         var pass2 = document.getElementById("pass2").value;
         var errors = "";
@@ -26,13 +23,14 @@
             errors += "Please make sure their are no symbols or numbers in your Last Name"
         }
         //check username unique
-        if (!(/^([1-9][0-9]?)$/.test(age))) {
-            errors += "Please enter an age between 0 and 100"
+        if (pass1 != pass2) {
+            errors += "Passwords do not match!"
         }
         //tests for email and passwords too
 
         if (!errors == "") {
-            alert(errors); return false;
+            alert(errors); 
+            return false;
         } else {
             alert("Your account has been created");
             return true;
@@ -43,19 +41,24 @@
 
 <table class=heading><tr><td><img src='images/logo.png' width=100></td>
 <h1><td class=title><a href="index.php">Smoke Games</td></h1></a>
-<td class=links><form id="searchForm" method="POST" action="SearchItems.php">
+<td class=links><form id="searchForm" method="GET" action="SearchItems.php">
 <span><input type="text" name="searchvalue" class=mainsearch placeholder="Search..."></span></form></td>
 <td><?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
-    echo "<a href='Profile.php'>".$_SESSION['username']."</a>";
-    } else {
-    echo "<a href='SignUp.php'>Login / Sign Up</a>";
-    }?>
+             // display a different page in nav bar depending on if user is logged in and what type of user they are
+             if (isset($_SESSION['admin']) && $_SESSION['admin'] == true){
+                  echo "<a href='Admin.php'>Admin</a>";
+             } else {
+                echo "<a href='Profile.php?id=".$_SESSION['id']."'>".$_SESSION['username']."</a>";
+             }
+        } else {
+            echo "<a href='SignUp.php'>Login / Sign Up</a>";
+        }?>
 </td></tr></table><br><br>
 
 <!-- creating 2 forms on the page so user can sign up or log in. This first form is to sign up -->
 <table class=forms><col width="50%"><col width="50%">
 <!-- onSubmit="return verifyCreate()" -->
-<tr><td><form class=signinform  method="post">
+<tr><td><form class=signinform  onsubmit="return verifyCreate()" method="post">
     <h2>Sign Up</h2>
     <input type="text" id="fname" name="fname" required="required" placeholder="First Name">
     <input type="text" id="lname" name="lname" required="required" placeholder="Last Name">
@@ -85,7 +88,7 @@
     if($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST['submit_login'])) {
             $username = mysqli_real_escape_string($gamesdb, $_POST['user']);
-            $password = $_POST['pass'];
+            $password = mysqli_real_escape_string($gamesdb, $_POST['pass']);
             
             // search users table for one with matching credentials to those entered by user
             $retrieve = "SELECT UserID, Pass FROM Users WHERE Uname = '$username'";
@@ -95,7 +98,8 @@
                 $id = $row['UserID'];
                 $hash = $row['Pass'];
                 
-                if (password_verify($password, $hash)) {
+                //if (password_verify($password, $hash)) {
+                if ($password == $hash) {
                     // sort session variables of information about user
                     $_SESSION['loggedin'] = true;
                     $_SESSION['username'] = $username;
@@ -122,9 +126,9 @@
             $age = mysqli_real_escape_string($gamesdb, $_POST['age']);
             $phone = mysqli_real_escape_string($gamesdb, $_POST['phoneno']);
             $email = mysqli_real_escape_string($gamesdb, $_POST['email']);
-            $plainPass = $_POST['pass1'];
-            $cryptpass = password_hash($plainPass, PASSWORD_DEFAULT);
-            $pass = mysqli_real_escape_string($gamesdb, $cryptpass);
+            $plainPass = mysqli_real_escape_string($gamesdb, $_POST['pass1']);
+            //$cryptpass = password_hash($plainPass, PASSWORD_DEFAULT);
+            //$pass = mysqli_real_escape_string($gamesdb, $cryptpass);
 
             $nextId = "SELECT max(UserID) FROM Users";
             $result = mysqli_query($gamesdb, $nextId);

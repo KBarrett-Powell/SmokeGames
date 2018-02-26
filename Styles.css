@@ -48,6 +48,8 @@ table.heading td.title{
     max-width: 1024px;
     position: relative;
     margin: auto;
+    margin-left: 0;
+    margin-right: 0;
     }
 
 .imgs {
