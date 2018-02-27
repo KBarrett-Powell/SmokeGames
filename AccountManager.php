@@ -22,7 +22,7 @@ session_start();
         }?>
 </td></tr></table><br>
 
-<div class='proTitle'><a href='DeleteManager.php'><button style="position: absolute; left: 1.5%; ">Delete</button><h3>Admin</h3><a href='Sessions.php'><button>Log Out</button></a></div><br>
+<div class='proTitle'><a href='DeleteManager.php'><button style="position: absolute; left: 1.5%; ">Delete</button><a href='Admin.php'><h3>Admin</h3></a><a href='Sessions.php'><button>Log Out</button></a></div><br>
 
 <?php
     
