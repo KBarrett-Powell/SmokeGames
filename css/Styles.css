@@ -1,0 +1,402 @@
+body {
+	font-family: Georgia, 'Times New Roman', Times, serif;
+	background-color: #13133a;
+	font-size: 18pt;
+	text-align: center;
+    color: #ededf8;
+	}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    }
+
+h1 {
+    margin: 0px auto;
+	font-size: 36pt;
+	}
+
+table.heading{
+    background-color: #19194d;
+    font-variant: small-caps;
+    font-weight: lighter;
+	text-align: center;
+    font-size: 20pt;
+    border-radius: 4px;
+    width: 100%;
+    }
+
+table.heading td.links{
+    margin-right: 5%;
+    }
+
+table.heading td.title{
+    font-size: 48pt;
+    margin-left: 5%;
+    }
+
+.mainsearch { 
+    font-size: 14pt;
+	padding: 6px 15px 6px 30px;
+	margin: 3px; 
+	border-radius: 15px; 
+	-moz-border-radius: 15px; 
+	-webkit-border-radius: 15px; 
+    }
+
+.imgDisplay {
+    max-width: 1024px;
+    position: relative;
+    margin: auto;
+    }
+
+.imgs {
+    display: none;
+    }
+
+.imgNav {
+    position: absolute;
+    width :100%;
+    padding: 0.01em 16px;
+    margin-bottom: 16px;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    -ms-transform: translate(-50%, 0%);
+    text-align: center;
+    }
+
+.leftNav {
+    float: left;
+    cursor: pointer;
+    }
+
+.rightNav {
+    float: right;
+    cursor: pointer;
+    }
+
+.leftNav:hover, .rightNav:hover {
+    color: #7777d4;
+    }
+
+.viewNum {
+    display: inline-block;
+    cursor: pointer;
+    height: 13px;
+    width: 13px;
+    border: 1px solid white;
+    border-radius: 50%;
+    text-align: center;
+    background-color: transparent;
+    }
+
+.white {
+    color: black;
+    background-color: white;
+    }
+
+.games-sort {
+    width: 100%;
+    margin: 0;
+    border-radius: 4px;
+    background: #19194d;
+    overflow: hidden;
+    font-size: 20pt;
+    text-align: left;
+    padding: 5px;
+    }
+
+.games-sort input {
+    background: white;
+    border-radius: 10px;
+    }
+
+.games-sort input:hover {
+    background: #19194d;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    }
+
+h2 {
+    text-align: center;
+    font-size: 30pt;
+    }
+
+.filterOpt {
+    float: left;
+    }
+
+.sortOpt {
+    float: right;
+    }
+
+.filterOpt select, input, .sortOpt select, input {
+    font-size: 14pt;
+    border-radius: 15px; 
+	-moz-border-radius: 15px; 
+	-webkit-border-radius: 15px; 
+    } 
+
+.games {
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 0 1rem;
+    } 
+
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    }
+
+.game {
+    width: 29%;
+    margin: 1rem;
+    font-weight: lighter;
+	text-align: center;
+}
+
+.game a {
+    font-size: 14pt;
+    text-decoration: none;
+    display: block;
+}
+
+.game a:hover {
+    background: #19194d;
+    border-radius: 10px;
+}
+
+.game img {
+    display: block;
+}
+
+.gameimage {
+    margin: auto;
+    max-width: 80%;
+}
+
+table.forms {
+    width: 100%;
+    }
+
+.signinform {
+	margin: 0px auto;
+    text-align: center;
+	background-color: #19194d;
+    border-radius: 10px;
+    padding: 5%;
+	width: 75%;
+    }
+
+.signinform input { 
+    border: none;
+    padding: 1%;
+    margin: 3%;
+    font-size: 14pt;
+    text-align: center;
+    }
+
+.signinform button {
+    padding: 4%;
+    border-radius: 10px;
+    background: #19194d;
+    color: white;
+    }
+
+.signinform input:hover { 
+    background: #6161d1; 
+    }
+
+.gameTitle {
+    background: #19194d;
+    text-align: center;
+    }
+
+.gameTitle button {
+    margin: 1.5% 1% 1% 0;
+    float: right;
+    padding: 1%;
+    background: #19194d;
+    color: white;
+    border: solid;
+    border-radius: 19px;
+    font-size: 24pt;
+    }
+
+.gameTitle button:hover {
+    background: #6161d1; 
+    }
+
+h3 {
+    margin-left: 10%;
+    display: inline-block;
+    font-size: 28pt;
+    font-weight: lighter;
+    font-variant: small-caps;
+    }
+
+h4 {
+    width: 100%;
+    padding: 1% 0;
+    background: #19194d;
+    font-size: 28pt;
+    font-weight: lighter;
+    font-variant: small-caps;
+    }
+
+.proTitle {
+    background: #19194d;
+    width: 100%;
+    }
+
+.proTitle p {
+    float: left;
+    font-size: 20pt;
+    font-weight: lighter;
+    font-variant: small-caps;
+    padding: 1% 0 0 3%;
+    }
+
+.proTitle button {
+    margin: 20px 10px 20px 0;
+    float: right;
+    padding: 1%;
+    background: #19194d;
+    color: white;
+    border: solid;
+    border-radius: 19px;
+    font-size: 24pt;
+    }
+
+.proTitle button:hover {
+    background: #6161d1; 
+    }
+
+.userimage {
+    width: 90%;
+    padding-left: 5%;
+    }
+
+table.scorestab  {
+    width: 90%;
+    margin: 5% 0 3% 2%;
+    border: 2px solid white;
+    border-radius: 10px;
+    }
+
+table.scorestab th{
+    border-radius: 10px;
+    background: #19194d;
+    font-size: 24pt;
+    font-weight: lighter;
+    font-variant: small-caps;
+    }
+
+table.scorestab td{
+    border-radius: 10px;
+    background: #6161d1;
+    font-size: 20pt;
+    font-weight: lighter;
+    }
+
+.proeditform {
+    margin: 0px auto;
+    text-align: center;
+	background-color: #19194d;
+    border-radius: 10px;
+    padding: 1% 5% 0 5%;
+	width: 70%;
+    }
+
+.proeditform input { 
+    border: none;
+    padding: 1%;
+    margin: 3%;
+    font-size: 14pt;
+    text-align: center;
+    }
+
+.proeditform button {
+    padding: 2%;
+    font-size: 14pt;
+    border-radius: 10px;
+    background: #19194d;
+    color: white;
+    }
+    
+.proeditform input:hover { 
+    background: #6161d1; 
+    }
+
+.delete-ID {
+    left: 48%;
+    position: absolute;
+    text-align: center;
+    top: 53%;
+    font-size: 24px;
+    display: block;
+    color: white;
+    margin-bottom: 0px;
+}
+
+.form-delete-ID {
+    width: 50px;
+    height: 50px;
+    font-size: 24pt;
+    text-align: center;
+}
+
+.delete-submit-1 {
+    left: 41.5%;
+    top: 65%;
+    position: absolute;
+
+}
+
+.form-delete-submit {
+    width: 200px;
+    height: 40px;
+    margin-left: 20px;
+    font-size: 16pt;
+    text-align: center;
+    background-color: Transparent;
+    color: white;
+}
+
+.form-delete-heplbutton {
+    font-size: 14pt;
+    color: white;
+    left: 38.5%;
+    top: 72%;
+    position: absolute;
+    text-align: center;
+
+}
+
+.registered_sc {
+    position: absolute;
+    text-align: center;
+    top: 54%;
+    width: 100%;
+    font-size: 30px;
+    display: block;
+    color: white;
+}
+
+.adddeletescript-add {
+    left: 37.5%;
+    top: 70%;
+    position: absolute;
+}
+
+.adddeletescript-add-button {
+    width: 300px;
+    height: 40px;
+    margin-left: 20px;
+    font-size: 14pt;
+    text-align: center;
+    background-color: Transparent;
+    color: white;
+}
