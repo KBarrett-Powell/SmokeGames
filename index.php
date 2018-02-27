@@ -3,9 +3,9 @@ session_start();
 ?>
 <!DOCTYPE html>
 <html><head>
-    <title>Smoke Games</title>
-    <link rel="stylesheet" type="text/css" href="css/Styles.css">
-    <link rel="stylesheet" type="text/css" href="css/slider.css">
+<title>Smoke Games</title>
+<link rel="stylesheet" type="text/css" href="css/Styles.css">
+ <link rel="stylesheet" type="text/css" href="css/slider.css">
 
     <!-- #region Jssor Slider Begin -->
 
@@ -44,6 +44,9 @@ session_start();
         <div data-u="slides" style="cursor:default;position:relative;top:0px;left:0px;width:980px;height:380px;overflow:hidden;">
             <div data-p="225.00">
                 <img data-u="image" src="images/BannerImages/Ghost.jpg" />
+            </div>
+            <div data-p="225.00">
+                <img data-u="image" src="images/BannerImages/mathopoly.jpg" />
             </div>
             <div data-p="225.00">
                 <img data-u="image" src="images/BannerImages/Bounce.jpg" />
