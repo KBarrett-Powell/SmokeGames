@@ -47,7 +47,8 @@ session_start();
             echo "<a href='Sessions.php'><button>Log Out</button></a></div><br>";
         } else {
             // Username as title, with link to add friend
-            echo "<div class='proTitle'><h3>$uname</h3><button type='submit' name='addfriend' value='$id'>Add Friend</button></div>";
+            echo "<div class='proTitle'><h3>$uname</h3><form method='post'>";
+            echo "<button type='submit' name='addfriend' value='$id'>Add Friend</button></form></div>";
         }
     
         // displaying that information in a table
@@ -75,21 +76,45 @@ session_start();
         name='searchvalue' class='mainsearch' placeholder='Search for friends'></span></form></tr><tr><th colspan='2'>Friends List</th></tr>";
 
         // collecting any users linked to current user in the friends table and adding their username to this list
-        $retrieve = "SELECT u.Uname, u.ProPic FROM Users u JOIN Friends f ON u.UserID = f.UserID1 WHERE f.UserID2 = '$id'
-        UNION SELECT u.Uname, u.ProPic FROM  Users u JOIN Friends f ON u.UserID = f.UserID2 WHERE f.UserID1 = '$id';";
+        $retrieve = "SELECT u.UserID, u.Uname, u.ProPic FROM Users u JOIN Friends f ON u.UserID = f.UserID1 WHERE f.UserID2 = '$id'
+        UNION SELECT u.UserID, u.Uname, u.ProPic FROM  Users u JOIN Friends f ON u.UserID = f.UserID2 WHERE f.UserID1 = '$id';";
         $result = mysqli_query($gamesdb, $retrieve);
         if (mysqli_num_rows($result) > 0) {
             while($row = mysqli_fetch_assoc($result)) {
+                $frid = $row['UserID'];
                 $fUser = $row['Uname'];
                 $fPic = $row['ProPic'];
 
-                echo "<tr><td><img src='images/$fPic' alt='Could not find' class='userimage'></td><td>$fUser</td></tr>";
+                echo "<tr><td><a href='Profile.php?id=$frid'><img src='images/$fPic' alt='Could not find' class='userimage'></a></td><td>$fUser</td></tr>";
             }
             echo "</table></td></tr></table>";
         } else {
             echo "<tr><td>--No Friends Found--</td></tr></table></td></tr></table>";
         }
     } else { echo "error";}
+
+    if($_SERVER["REQUEST_METHOD"] == "POST") {
+        if(isset($_POST['addfriend'])) {
+            $friendId = $_POST['addfriend'];
+
+            $retrieve = "SELECT max(FID) FROM Friends;";
+            $result = mysqli_query($gamesdb, $retrieve);
+            $row = mysqli_fetch_assoc($result);
+            $fid = $row["max(FID)"] + 1;
+
+            $id1 = $_SESSION['id'];
+            $date = date('Y-m-d');
+
+            $addNew = "INSERT INTO Friends(FID, UserID1, UserID2, DateEstab) VALUES ('$fid', '$id1', '$friendId', '$date')";
+            $added = mysqli_query($gamesdb, $addNew);
+
+            if ($added) {
+                "<script type='text/javascript'>alert('Friend Successfully added.')</script>";
+            } else {
+                "<script type='text/javascript'>alert('Friend couldn't be added, please try again.')</script>";
+            }
+        }
+    }
 
     mysqli_close($gamesdb);
 ?>

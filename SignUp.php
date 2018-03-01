@@ -16,10 +16,10 @@
         var pass2 = document.getElementById("pass2").value;
         var errors = "";
 
-        if (!(/^([a-zA-Z]{30})$/.test(fname))) {
+        if (!(/^([a-zA-Z]{1,30})$/.test(fname))) {
             errors += "Please make sure their are no symbols or numbers in your First Name"
         }
-        if (!(/^([a-zA-Z]{40})$/.test(lname))) {
+        if (!(/^([a-zA-Z]{1,40})$/.test(lname))) {
             errors += "Please make sure their are no symbols or numbers in your Last Name"
         }
         //check username unique
@@ -32,7 +32,6 @@
             alert(errors); 
             return false;
         } else {
-            alert("Your account has been created");
             return true;
         }
         
@@ -126,7 +125,8 @@
             $age = mysqli_real_escape_string($gamesdb, $_POST['age']);
             $phone = mysqli_real_escape_string($gamesdb, $_POST['phoneno']);
             $email = mysqli_real_escape_string($gamesdb, $_POST['email']);
-            $plainPass = mysqli_real_escape_string($gamesdb, $_POST['pass1']);
+            $pass = mysqli_real_escape_string($gamesdb, $_POST['pass1']);
+            //$plainPass = mysqli_real_escape_string($gamesdb, $_POST['pass1']);
             //$cryptpass = password_hash($plainPass, PASSWORD_DEFAULT);
             //$pass = mysqli_real_escape_string($gamesdb, $cryptpass);
 
@@ -145,7 +145,7 @@
                 if (!$added) {
                     echo "Couldn't enter data: ".mysqli_error($gamesdb);
                 } else {
-                    echo "User Added Successfully";
+                    echo "<script>alert('Your account has been created')</script>";
                     // sort session variables of information about user
                     $_SESSION['loggedin'] = true;
                     $_SESSION['username'] = $user;
