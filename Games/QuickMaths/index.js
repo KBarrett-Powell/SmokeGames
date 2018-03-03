@@ -36,9 +36,9 @@ var io = require('socket.io').listen(server);
 // This module is needed for this application as the game creates random usernames, the moniker module is used to generate these names 
 var Moniker = require('moniker');
 
-// Here we declare the file we want to send to the client when a new user connects to the server, in this example it is page.HTML
+// Here we declare the file we want to send to the client when a new user connects to the server, in this example it is index.php
 app.get('/', function(req,res) {
-	res.sendFile(__dirname + '/page.HTML');
+	res.sendFile(__dirname + '/index.php');
 });
 // We will run the web server on port 8080 which is the standard for a web server application
 server.listen(process.env.PORT || 8080);
