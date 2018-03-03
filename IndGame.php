@@ -56,7 +56,7 @@
         // echo "<div id='galleryinfo'>";
 
         // Layout of the page with name at center top, play buttom at right top, and the images below them
-        echo "<div class='gameTitle'><h3>".$name."</h3><button class='playbutton'>Play Now</button></div><br>";
+        echo "<div class='gameTitle'><h3>".$name."</h3><a href='GameFrame.php?GameID=".$id."'><button class='playbutton'>Play Now</button></a></div><br>";
         echo "<img src='images/".$img."'><br>";
         // Then the description of the game and the top scores in a column on the left
         // The average rating and reviews in column on the right
@@ -101,5 +101,6 @@
 
         echo "</td></tr></table>";
         mysqli_close($gamesdb);
-?>
+?><br>
+<div class="footer"><?php include "footer.php" ?></div>
 </body></html>

@@ -537,7 +537,7 @@ attributes: {
 
 	<!--Div displayed to winner of game when they have scored 10 points -->
 	<div id="finalStats" style="display:none;">
-		<p>You are the winner of the game, congradulations!</p>
+		<p>You are the winner of the game, congratulations!</p>
 		<br>
 
 		<!-- Form to search for new game when you are only player left in game, this can eventually just be that
@@ -553,7 +553,7 @@ attributes: {
 
 
 		<h1>Maths Question Game</h1>
-		<h5> This is a maths game where the first player to correctly answer all 10 questions is the winner of the game. The green rectangles will show yours and others progress!</h5>
+		<h5> This is a maths game where the first player to correctly answer all 10 questions is the winner of the game. The green rectangles will show yours and others' progress!</h5>
 		<br>
 
 
