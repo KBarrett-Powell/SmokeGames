@@ -1,9 +1,5 @@
 <?php
-    if(!isset($_SESSION)) 
-    { 
-        session_start(); 
-    } 
-    include "config.php";
+    session_start(); 
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,13 +12,10 @@
 
     <?php include "references.php"; ?>
 
-
 </head>
 
 <body>
     <?php include "navigation.php"; ?>
-
-
 
     <div id="all">
 
@@ -48,8 +41,7 @@
                 </div>
             </div>
 
-            <!-- *** ADVANTAGES HOMEPAGE ***
- _________________________________________________________ -->
+            <!-- HOMEPAGE -->
             <div id="advantages">
 
                 <div class="container">
@@ -92,10 +84,9 @@
             </div>
             <!-- /#advantages -->
 
-            <!-- *** ADVANTAGES END *** -->
+            <!-- ADVANTAGES END -->
 
-            <!-- *** HOT PRODUCT SLIDESHOW ***
- _________________________________________________________ -->
+            <!-- HOT PRODUCT SLIDESHOW -->
             <div id="hot">
 
                 <div class="box">
@@ -106,53 +97,50 @@
                     </div>
                 </div>
                 
-                
                 <div class="container">
                     <div class="product-slider">
                 
-                
                         <?php
+                            try{
+                                $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
+                                $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                        $retrieve = "SELECT * FROM Games ORDER BY Gname ASC;";
-                        $result = mysqli_query($gamesdb, $retrieve);
-                        if (mysqli_num_rows($result) > 0) {
-                           while ($row = mysqli_fetch_assoc($result)) {
-                               $id = $row["GameID"];
-                               $name = $row["Gname"];
-                               $img = $row["Gimg1"];
-                               //Need to create "flip" / similar versions of each image.
-                               //$img = $row["Alternate Image...."];
-                               
-                               // Display an image of the game above the name, user clicking on this takes them to another page with more info about the game
-                                echo "<div class='item'>";
-                                    echo "<div class='product'>";
-                                        echo "<div class='flip-container'>";
-                                            echo "<div class='flipper'>";
-                                                echo "<div class='front'>";
-                                                    echo "<a href='detail.php?id=$id'>";
-                                                        echo "<img src='$img' alt='' class='img-responsive'>";
-                                                    echo "</a></div>";
-                                                echo "<div class='back'>";
-                                                    echo "<a href='detail.php?id=$id'>";
-                                                        echo "<img src='$img' alt='' class='img-responsive'>";
-                                                    echo "</a></div></div></div>";
-                                        echo "<a href='detail.php?id=$id' class='invisible'>";
-                                            echo "<img src='$img' alt='' class='img-responsive'>";
-                                        echo "</a>";
-                                        echo "<div class='text'>";
-                        
-                                            echo "<h3><a href='detail.php?id=$id'>$name</a></h3>";
-                                            echo "<p class='price'>PLAY!</p>";
-                                        echo "</div>";
-                                        //<!-- /.text -->
-                                    echo "</div>";
-                                    //<!-- /.product -->
-                                echo "</div>";
-                           }
-                           echo "</div></div>";
-                        } 
-                        else { echo "No results"; }
+                                 // This SQL query defines how the items are sorted and what they are filtered by
+                                if (isset($_GET['sortwhat']) && isset($_GET['filterby'])) {
+                                    $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE Category LIKE '%?%' ORDER BY ? ? ");
+                                    $retrieve->execute([$_GET['filterby'], $_GET['sortwhat'], $_GET['sorthow']]);
+                                } else if (isset($_GET['sortwhat'])) {
+                                    $retrieve = $gamesdb->prepare("SELECT * FROM Games ORDER BY ? ?");
+                                    $retrieve->execute([$_GET['sortwhat'], $_GET['sorthow']]);
+                                } else if (isset($_GET['filterby'])) {
+                                    $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE Category LIKE '%?%' ORDER BY Gname ASC");
+                                    $retrieve->execute([$_GET['filterby']]);
+                                } else {    
+                                    $retrieve = $gamesdb->prepare("SELECT * FROM Games ORDER BY Gname ASC");
+                                    $retrieve->execute();
+                                }
+                                
+                                if ($retrieve->rowCount() > 0) {
+                                    foreach ($retrieve as $row) {
+                                        $id = $row["GameID"];
+                                        $name = $row["Gname"];
+                                        $img = $row["Gimg1"];
+                                        $flip = $row["Gimg2"];
+                                        echo "<div class='item'><div class='product'><div class='flip-container'>";
+                                        echo "<div class='flipper'><div class='front'>";
+                                        echo "<a href='detail.php?id=$id'><img src='$img' alt='' class='img-responsive'></a></div>";
+                                        echo "<div class='back'><a href='detail.php?id=$id'><img src='$img' alt='' class='img-responsive'></a></div></div></div>";
+                                        echo "<a href='detail.php?id=$id' class='invisible'><img src='$img' alt='' class='img-responsive'></a>";
+                                        echo "<div class='text'><h3><a href='detail.php?id=$id'>$name</a></h3><p class='price'>PLAY!</p>";
+                                        echo "</div></div></div>";
+                                    }
+                                    echo "</div></div>";
+                                } else { echo "No results";}
 
+                            }catch(PDOException $e) {
+                                echo "Connection failed: " . $e->getMessage();
+                            }
+                            $gamesdb = null;
                         ?>
                 
                     <!-- Add this in the Product DIV if desired... -->
@@ -180,7 +168,7 @@
             <!-- *** BLOG HOMEPAGE ***
  _________________________________________________________ -->
 
-            <div class="box text-center" data-animate="fadeInUp">
+            <!-- <div class="box text-center" data-animate="fadeInUp">
                 <div class="container">
                     <div class="col-md-12">
                         <h3 class="text-uppercase">From our blog</h3>
@@ -189,8 +177,8 @@
                         </p>
                     </div>
                 </div>
-            </div>
-
+            </div> -->
+<!--  
             <div class="container">
 
                 <div class="col-md-12" data-animate="fadeInUp">
@@ -223,16 +211,16 @@
 
                         </div>
 
-                    </div>
+                    </div> */ -->
                     <!-- /#blog-homepage -->
-                </div>
-            </div>
+                <!-- </div>
+            </div> -->
             <!-- /.container -->
 
             <!-- *** BLOG HOMEPAGE END *** -->
 
 
-        </div>
+        <!-- </div> -->
         <!-- /#content -->
     <?php include "footer.php"; ?>
 </body>

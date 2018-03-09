@@ -1,22 +1,19 @@
-<!-- *** TOPBAR ***
-_________________________________________________________ -->
 <div id="top">
     <div class="container">
         <div class="col-md-6 offer" data-animate="fadeInDown">
-            <a href="#" class="btn btn-success">SIGN UP NOW!</a>  <a href="#" id="SignUpNow">Sign up now to play exclusive games for free!</a>
+            <a href="#" id="SignUpNow">Sign up now to play exclusive games for free!</a>
         </div>
         <div class="col-md-6" data-animate="fadeInDown">
             <ul class="menu">
                 <?php 
-                    if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
+                    if (isset($_SESSION['username'])){
                     // display a different page in nav bar depending on if user is logged in and what type of user they are
                          if (isset($_SESSION['admin']) && $_SESSION['admin'] == true){
                               echo "<li><a href='Admin.php'>Admin</a></li>";
                          } 
                         else {                        
-                            echo "<li><a href='profile.php?id=".$_SESSION['id']."'>".$_SESSION['username']."</a></li>";
+                            echo "<li><a href='profile.php?id=".$_SESSION['username']."'>".$_SESSION['username']."</a></li>";
                             echo "<li><a href='logout.php'>Logout</a></li>";
-                            //echo "<a href='Profile.php?id=".$_SESSION['id']."'>".$_SESSION['username']."</a>";
                         }
                     } 
                     else {
@@ -24,15 +21,12 @@ _________________________________________________________ -->
                         echo "<li><a href='register.php'>Register</a></li>";
                     }
                 
-                ?>
-                <!--<li><a href="#" data-toggle="modal" data-target="#login-modal">Login</a></li>
-                <li><a href="register.php">Register</a></li>-->
+                ?>      
                 
-                
-                <li><a href="contact.php">Contact</a>
+                <li><a href="contact.php">Contact Us</a>
                 </li>
-                <li><a href="#">Report</a>
-                </li>
+                <!-- <li><a href="#">Report</a>
+                </li> -->
             </ul>
         </div>
     </div>
@@ -42,26 +36,22 @@ _________________________________________________________ -->
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="Login">Customer login</h4>
+                    <h4 class="modal-title" id="Login">Login</h4>
                 </div>
                 <div class="modal-body">
                     <form action="" name="login" method="post">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="user" name="name" required="required" placeholder="Username">
+                            <input type="text" class="form-control" id="user" name="user" required="required" placeholder="Username">
                         </div>
                         <div class="form-group">
                             <input type="password" class="form-control" id="pass" name="pass" required="required"  placeholder="Password">
                         </div>
 
                         <p class="text-center">
-                            <button class="btn btn-primary" type="submit" value="Login" name="submit_login"><i class="fa fa-sign-in"></i> Log in</button>
+                            <button class="btn btn-primary" type="submit" value="Login" name="nav_login"><i class="fa fa-sign-in"></i> Log in</button>
                         </p>
 
                     </form>
-
-                    <p class="text-center text-muted">Not registered yet?</p>
-                    <p class="text-center text-muted"><a href="register.php"><strong>Register now</strong></a>! It is easy and done in 1&nbsp;minute and gives you access to special discounts and much more!</p>
-
                 </div>
             </div>
         </div>
@@ -69,10 +59,9 @@ _________________________________________________________ -->
 
 </div>
 
-<!-- *** TOP BAR END *** -->
+<!-- TOP BAR END -->
 
-<!-- *** NAVBAR ***
-_________________________________________________________ -->
+<!-- NAVBAR -->
 
 <div class="navbar navbar-default yamm" role="navigation" id="navbar">
     <div class="container">
@@ -91,9 +80,6 @@ _________________________________________________________ -->
                     <span class="sr-only">Toggle search</span>
                     <i class="fa fa-search"></i>
                 </button>
-                <a class="btn btn-default navbar-toggle" href="#">
-                    <i class="fa fa-shopping-cart"></i>  <span class="hidden-xs">Donate</span>
-                </a>
             </div>
         </div>
         <!--/.navbar-header -->
@@ -179,9 +165,9 @@ _________________________________________________________ -->
 
         <div class="navbar-buttons">
 
-            <div class="navbar-collapse collapse right" id="basket-overview">
+            <!-- <div class="navbar-collapse collapse right" id="basket-overview">
                 <a href="#" class="btn btn-primary navbar-btn"><i class="fa fa-shopping-cart"></i><span class="hidden-sm">Donate!</span></a>
-            </div>
+            </div> -->
             <!--/.nav-collapse -->
 
             <div class="navbar-collapse collapse right" id="search-not-mobile">
@@ -217,50 +203,60 @@ _________________________________________________________ -->
 <!-- *** NAVBAR END *** -->
 
 <?php 
-    // login query
-    if($_SERVER["REQUEST_METHOD"] == "POST") {
-        if(isset($_POST['submit_login'])) {
-            include "config.php";
-            $username = mysqli_real_escape_string($gamesdb, $_POST['user']);
-            $password = mysqli_real_escape_string($gamesdb, $_POST['pass']);
-            
-            
-            // search users table for one with matching credentials to those entered by user
-            $retrieve = "SELECT UserID, Pass FROM Users WHERE Uname = '$username'";
-            $result = mysqli_query($gamesdb, $retrieve);
-            if (mysqli_num_rows($result) == 1) {
-                $row = mysqli_fetch_assoc($result);
-                $id = $row['UserID'];
-                $hash = $row['Pass'];
-                
-                //if (password_verify($password, $hash)) {
-                if ($password == $hash) {
-                    // sort session variables of information about user
-                    $_SESSION['loggedin'] = true;
-                    $_SESSION['username'] = $username;
-                    $_SESSION['id'] = $id;
+    try{
+        $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
+        $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                    // check if user is an admin
-                    $retrieve = "SELECT * FROM Admins WHERE UserID = '$id'";
-                    $result = mysqli_query($gamesdb, $retrieve);
-                    if (mysqli_num_rows($result) == 1) { $_SESSION['admin'] = true; }
+        // Login query
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            if(isset($_POST['nav_login'])) {
+                $username = $_POST['user'];
+                $password = $_POST['pass'];
 
-                    // return user to main page
-                    echo "<script>alert('You are now logged in!')</script>";
-                    header("Location: index.php");
-                    exit;
+                // Try to find user account with details entered
+                $retrieve = $gamesdb->prepare("SELECT u.Pass, u.Verified, p.ProName FROM Users u, Profiles p WHERE u.Uname = ? AND u.Uname = p.Uname");
+                $retrieve->execute([$username]);
 
-                } 
-                else {
-                    echo "Password Incorrect. Please Try Again.";
-                }
-            }
-            else {
-                echo "Username Incorrect. Please Try Again.";
+                if ($retrieve->rowCount() == 1) {
+                    $row = $retrieve->fetch(PDO::FETCH_ASSOC);
+                    $hash = $row['Pass'];
+                    $verf = $row['Verified'];
+                    $pname = $row['ProName'];
+                    
+                    // Check if account verified
+                    if ($verf == 1){
+
+                        // Compare passwords
+                        //if (password_verify($password, $hash)) {
+                        if ($password == $hash) {
+
+                            // Set session variables
+                            $_SESSION['username'] = $username;
+                            $_SESSION['proname'] = $pname;
+
+                            // Check if user is an admin
+                            $retrieve = $gamesdb->prepare("SELECT * FROM Admins WHERE Uname = ?");
+                            $retrieve->execute([$username]);
+                            
+                            if ($retrieve->rowCount() == 1) { 
+                                $_SESSION['admin'] = true; 
+                            }
+
+                            // Take user to main page
+                            echo "<script type='text/javascript'>alert('Successfully Logged In.')</script>";
+                            echo "<script type='text/javascript'>location.href = 'index.php';</script>";
+                            
+                        } else {echo "<script type='text/javascript'>alert('Password Incorrect. ' . (5 - $attempts) . 'Please Try Again.')</script>";}
+
+                    } else {echo "<script type='text/javascript'>alert('Please Verify Account Before Trying To Log In')</script>";}
+
+                } else {echo "<script type='text/javascript'>alert('Username Incorrect. Please Try Again.')</script>";}
             }
         }
+    }catch(PDOException $e) {
+        echo "Connection failed: " . $e->getMessage();
     }
-
+    $gamesdb = null;
 ?>
 
 

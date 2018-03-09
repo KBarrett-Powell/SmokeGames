@@ -81,7 +81,7 @@
 
         echo "</table></td><td><table class=scorestab><tr><th colspan='3'>Reviews</th></tr>";
 
-        $retrieve = $gamesdb->prepare("SELECT u.Uname, r.Review, r.Rating FROM Users u, Reviews r WHERE r.GameID = ? AND u.UserID = r.UserID");
+        $retrieve = $gamesdb->prepare("SELECT p.ProName, r.Review, r.Rating FROM Profiles p, Reviews r WHERE r.GameID = ? AND p.Uname = r.Uname");
         $retrieve->execute([$id]);
 
         if ($retrieve->rowCount() > 0) {

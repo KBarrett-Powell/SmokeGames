@@ -38,7 +38,7 @@
                 }
 
                 if($uname != strip_tags($uname)) {
-                    "<script>errors += 'Please don't put any tags in your username\n'</script";
+                    echo "<script>errors += 'Please don't put any tags in your username\n'</script";
                 }
 
             }catch(PDOException $e) {

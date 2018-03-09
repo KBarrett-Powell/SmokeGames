@@ -1,5 +1,4 @@
-    <!-- *** FOOTER ***
-_________________________________________________________ -->
+    <!-- FOOTER -->
     <div id="footer" data-animate="fadeInUp">
         <div class="container">
             <div class="row">
@@ -24,7 +23,7 @@ _________________________________________________________ -->
                     <ul>
                         <li><a href="" data-toggle="modal" data-target="#login-modal">Login</a>
                         </li>
-                        <li><a href="register.php">Regiter</a>
+                        <li><a href="register.php">Register</a>
                         </li>
                     </ul>
 
@@ -133,13 +132,12 @@ _________________________________________________________ -->
     </div>
     <!-- /#footer -->
 
-    <!-- *** FOOTER END *** -->
+    <!-- FOOTER END -->
 
 
 
 
-    <!-- *** COPYRIGHT ***
-_________________________________________________________ -->
+    <!-- COPYRIGHT -->
     <div id="copyright">
         <div class="container">
             <div class="col-md-6">
@@ -153,18 +151,14 @@ _________________________________________________________ -->
             </div>
         </div>
     </div>
-    <!-- *** COPYRIGHT END *** -->
+    <!-- COPYRIGHT END -->
 
 
 
 </div>
 <!-- /#all -->
 
-
-
-
-<!-- *** SCRIPTS TO INCLUDE ***
-_________________________________________________________ -->
+<!-- SCRIPTS TO INCLUDE -->
 <script src="js/jquery-1.11.0.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/jquery.cookie.js"></script>
@@ -173,4 +167,3 @@ _________________________________________________________ -->
 <script src="js/bootstrap-hover-dropdown.js"></script>
 <script src="js/owl.carousel.min.js"></script>
 <script src="js/front.js"></script>
-

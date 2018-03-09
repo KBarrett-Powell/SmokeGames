@@ -31,8 +31,7 @@
                 </div>
 
                 <div class="col-md-3">
-                    <!-- *** PAGES MENU ***
- _________________________________________________________ -->
+                    <!-- PAGES MENU -->
                     <div class="panel panel-default sidebar-menu">
 
                         <div class="panel-heading">
@@ -42,14 +41,14 @@
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
                                 <li>
-                                    <a href="#">Games</a>
+                                    <a href="#">Contact Information</a>
                                 </li>
-                                <li>
+                                <!-- <li>
                                     <a href="#">Profile</a>
                                 </li>
                                 <li>
                                     <a href="#">Report a Player</a>
-                                </li>
+                                </li> -->
 
                             </ul>
 

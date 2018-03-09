@@ -1,23 +1,16 @@
 <?php
-    if(!isset($_SESSION)) 
-    { 
         session_start(); 
-    }    
-    include "config.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
   
     <title>
         Smoke Games
     </title>
 
     <?php include "references.php"; ?>
-
-
 
 </head>
 
@@ -26,16 +19,30 @@
     <?php include "navigation.php"; ?>
     
     <?php
-        $retrieve = "SELECT * FROM Games WHERE GameID =".$_GET['id'].";";
-        $result = mysqli_query($gamesdb, $retrieve);
-        $row = mysqli_fetch_assoc($result);
-        $id = $row["GameID"];
-        $name = $row["Gname"];
-        $desc = $row["Description"];
-        $img = $row["Gimg1"];
-        $squareImg = $row["GimgSquare"];
-        $age = $row["AgeRating"];
-    
+        try{
+            $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
+            $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE GameID = ?");
+            $retrieve->execute([$_GET['id']]);
+
+            if ($retrieve->rowCount() == 1){
+                $row = $retrieve->fetch(PDO::FETCH_ASSOC);
+                $id = $row["GameID"];
+                $name = $row["Gname"];
+                $desc = $row["Description"];
+                $img = $row["Gimg1"];
+                $squareImg = $row["GimgSquare"];
+                $age = $row["AgeRating"];
+            } else {
+                header("Location: 404.html");
+                exit;
+            }
+
+        }catch(PDOException $e) {
+            echo "Connection failed: " . $e->getMessage();
+        }
+        $gamesdb = null;
     ?>
     
     <div id="all">
@@ -55,8 +62,7 @@
                 </div>
 
                 <div class="col-md-3">
-                    <!-- *** MENUS AND FILTERS ***
- _________________________________________________________ -->
+                    <!-- MENUS AND FILTERS -->
                     <div class="panel panel-default sidebar-menu">
 
                         <div class="panel-heading">
@@ -112,7 +118,7 @@
                         </div>
                     </div>
 
-                    <!-- *** MENUS AND FILTERS END *** -->
+                    <!-- MENUS AND FILTERS END -->
 
                 </div>
 
@@ -211,51 +217,56 @@
                     <!-- THERE IS AN ERROR IN THE CODE BELOW!! -->
                     
                     <?php
-                    
-                    $recc = "SELECT * FROM Games WHERE Recommended=1 ORDER BY Gname ASC";
-                    $result = mysqli_query($gamesdb, $recc);
-                    if (mysqli_num_rows($result) > 0) {
-                       while ($row = mysqli_fetch_assoc($result)) {
-                           $id = $row["GameID"];
-                           $name = $row["Gname"];
-                           $img = $row["Gimg1"];
+                        try{
+                            $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
+                            $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                        
+                            $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE Recommended = 1 ORDER BY Gname ASC");
+                            $retrieve->execute();
 
-                            echo "<div class='row same-height-row'>";
-                                echo "<div class='col-md-3 col-sm-6'>";
-                                    echo "<div class='product same-height'>";
-                                        echo "<div class='flip-container'>";
-                                            echo "<div class='flipper'>";
-                                                echo "<div class='front'>";
-                                                    echo "<a href='#'>";
-                                                        echo "<img src='$img' alt='' class='img-responsive'>";
-                                                    echo "</a>";
-                                                echo "</div>";
-                                                echo "<div class='back'>";
-                                                    echo "<a href='#'";
-                                                        echo "<img src='$img' alt='' class='img-responsive'>";
-                                                    echo "</a>";
+                            if($retrieve->rowCount() > 0) {
+                                foreach($retrieve as $row){
+                                    $recid = $row["GameID"];
+                                    $recname = $row["Gname"];
+                                    $recimg = $row["Gimg1"];
+
+                                    echo "<div class='row same-height-row'>";
+                                    echo "<div class='col-md-3 col-sm-6'>";
+                                        echo "<div class='product same-height'>";
+                                            echo "<div class='flip-container'>";
+                                                echo "<div class='flipper'>";
+                                                    echo "<div class='front'>";
+                                                        echo "<a href='#'>";
+                                                            echo "<img src='$recimg' alt='' class='img-responsive'>";
+                                                        echo "</a>";
+                                                    echo "</div>";
+                                                    echo "<div class='back'>";
+                                                        echo "<a href='#'";
+                                                            echo "<img src='$recimg' alt='' class='img-responsive'>";
+                                                        echo "</a>";
+                                                    echo "</div>";
                                                 echo "</div>";
                                             echo "</div>";
+                                            echo "<a href='#' class='invisible'>";
+                                                echo "<img src='$recimg' alt='' class='img-responsive'>";
+                                            echo "</a>";
+                                            echo "<div class='text'>";
+                                                echo "<h3>$recname</h3>";
+                                                echo "<p class='price'>PLAY NOW!</p>";
+                                            echo "</div>";
                                         echo "</div>";
-                                        echo "<a href='#' class='invisible'>";
-                                            echo "<img src='$img' alt='' class='img-responsive'>";
-                                        echo "</a>";
-                                        echo "<div class='text'>";
-                                            echo "<h3>$name</h3>";
-                                            echo "<p class='price'>PLAY NOW!</p>";
-                                        echo "</div>";
+                                        //<!-- /.product -->
                                     echo "</div>";
-                                    //<!-- /.product -->
-                                echo "</div>";
-                           
-                       }
-                       
-                    }                     
-                    else { 
-                        echo "No results"; 
-                    }
-                    echo "</div>";
-                    
+                                }
+                            } else {
+                                echo "No results";
+                            }
+                            echo "</div>";
+
+                        }catch(PDOException $e) {
+                            echo "Connection failed: " . $e->getMessage();
+                        }
+                        $gamesdb = null;                 
                     ?>
 
                 </div>
@@ -265,10 +276,8 @@
         </div>
         <!-- /#content -->
 
-    </div>
-        <?php include "footer.php"; ?>
-
-
+    </div>      
+    <?php include "footer.php"; ?>
 </body>
 
 </html>

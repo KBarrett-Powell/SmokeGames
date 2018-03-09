@@ -1,22 +1,16 @@
 <?php
-    if(!isset($_SESSION)) 
-    { 
-        session_start(); 
-    } 
-    include "config.php";
+    session_start(); 
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
     <title>
         Smoke Games - Edit Profile
     </title>
 
-    <?php include "references.php"; ?>
+    <?php include "references.php"; 
 
-    <?php
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             //Code to update password:
             
@@ -78,8 +72,7 @@
                 </div>
 
                 <div class="col-md-3">
-                    <!-- *** CUSTOMER MENU ***
- _________________________________________________________ -->
+                    <!-- CUSTOMER MENU -->
                     <div class="panel panel-default sidebar-menu">
 
                         <div class="panel-heading">
@@ -107,7 +100,7 @@
                     </div>
                     <!-- /.col-md-3 -->
 
-                    <!-- *** CUSTOMER MENU END *** -->
+                    <!-- CUSTOMER MENU END -->
                 </div>
 
                 <div class="col-md-9">
