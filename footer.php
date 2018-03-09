@@ -69,16 +69,14 @@
 
                     <h4>Where to find us</h4>
 
-                    <p><strong>Smoke Games.</strong>
+                    <p><strong>Smoke Games</strong>
                         <br>Queens Building
                         <br>Cardiff University
-                        <br>Cardiff, Wales
-                        <br>CF24 3AA.
+                        <br>Cardiff
+                        <br>CF24 3AA
                         <br>
                         <strong>United Kingdom</strong>
                     </p>
-
-                    <a href="contact.php">Go to contact page</a>
 
                     <hr class="hidden-md hidden-lg">
 
@@ -141,7 +139,7 @@
     <div id="copyright">
         <div class="container">
             <div class="col-md-6">
-                <p class="pull-left">© 2018 Group 4, Computer Science.</p>
+                <p class="pull-left">© 2018 Group 4</p>
 
             </div>
             <div class="col-md-6">
