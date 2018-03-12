@@ -63,7 +63,6 @@
         $gamesdb = null;
     ?>
     
-
 </head>
 
 <body>
@@ -71,7 +70,6 @@
  <?php include "navigation.php"; ?>
     
     <div id="all">
-
         <div id="content">
             <div class="container">
 
@@ -86,9 +84,30 @@
                         <?php echo "<li>".$_SESSION['username']."</li>"; ?>
                     </ul>
                 </div>
+                
+                <div class="col-md-3">
+                    <?php
+                        if ($uname == $_SESSION['username']){
+                            // Links to log out and view account info
+                            echo "<div class='panel panel-default sidebar-menu'>";
+                            echo "<div class='panel-heading'><h3 class='panel-title'>My Account</h3></div>";
+                            echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li class='active'><a href='profile.php?id=$uname'><i class='fa fa-list'></i>My profile</a></li>";
+                            echo "<li><a href='editProfile.php'><i class='fa fa-heart'></i> Edit Profile</a></li>";
+                            echo "<li><a href='editAccount.php'><i class='fa fa-user'></i> Edit Account</a></li>";
+                            echo "<li><a href='logout.php'><i class='fa fa-sign-out'></i> Logout</a></li></ul></div></div>";
+
+                        } else {
+                            // Link to add friend
+                            echo "<div class='panel panel-default sidebar-menu'>";
+                            echo "<div class='panel-heading'><h3 class='panel-title'>Currently Online / Offline</h3></div>";
+                            echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li><a href='#'><form method='post'>";
+                            echo "<button style='border:none; background-color: transparent;' type='submit' name='addfriend' value='$uname'>Add Friend</button></form></a></li>";
+                            echo "<li><a href='blog.html'>Message</a></li></ul></div></div>";
+                        }
+                    ?>       
+                </div>
 
                 <div class="col-sm-9" id="blog-post">
-
 
                     <div class="box">
 
@@ -102,7 +121,7 @@
                                 <?php echo "<img src='$banner' class='img-responsive' alt='User Banner Image Not Found'>" ?>
                             </p>              
 
-                         <div class="box">
+                            <div class="box">
 
                             <h1>Top Scores</h1>
                                 <div class="table-responsive">
@@ -134,15 +153,15 @@
                                 ?>     
                                 </div>
                             
-                            <div class="box-footer">
-                                <div class="pull-left">
-                                    <!-- Incase we want anything on the left side of the table.-->
-                                </div>
-                                <div class="pull-right">
-                                    <!--<a href="profile.php" class="btn btn-default">Next Page <i class="fa fa-chevron-right"></i></a>-->
+                                <div class="box-footer">
+                                    <div class="pull-left">
+                                        <!-- Incase we want anything on the left side of the table.-->
+                                    </div>
+                                    <div class="pull-right">
+                                        <!--<a href="profile.php" class="btn btn-default">Next Page <i class="fa fa-chevron-right"></i></a>-->
+                                    </div>
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="box">
@@ -186,10 +205,9 @@
                                     <!--<a href="profile.php" class="btn btn-default">Next Page <i class="fa fa-chevron-right"></i></a>-->
                                 </div>
                             </div>
-
                         </div>                              
-
                     </div>
+                </div>
 
                         <!-- <div id="comments" data-animate="fadeInUp">
                             <h4>1 comments</h4>
@@ -263,30 +281,11 @@
 
                         </div> -->
                         <!-- /#comment-form -->
-
-                    </div>
                     <!-- /.box -->
-                </div>
+                
                 <!-- /#blog-post -->
 
-                <div class="col-md-3">
-                    <?php
-                        if ($uname == $_SESSION['username']){
-                            // Links to log out and view account info
-                            echo "<div class='panel panel-default sidebar-menu'>";
-                            echo "<div class='panel-heading'><h3 class='panel-title'>View Account</h3></div>";
-                            echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li><a href='viewAccount.php'>Account Details</a></li>";
-                            echo "<li><a href='logout.php'>Logout</a></li></ul></div></div>";
-
-                        } else {
-                            // Link to add friend
-                            echo "<div class='panel panel-default sidebar-menu'>";
-                            echo "<div class='panel-heading'><h3 class='panel-title'>Currently Online / Offline</h3></div>";
-                            echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li><a href='#'><form method='post'>";
-                            echo "<button style='border:none; background-color: transparent;' type='submit' name='addfriend' value='$uname'>Add Friend</button></form></a></li>";
-                            echo "<li><a href='blog.html'>Message</a></li></ul></div></div>";
-                        }
-                    ?>                             
+                                     
                     
                     <!-- <div class="panel panel-default sidebar-menu">
 
@@ -310,24 +309,18 @@
                     
 
                     <!-- *** EDIT PROFILE MENU END *** -->
-<!-- 
+                    <!-- 
                     <div class="banner">
                          <a href="#">
                              <img src="img/banner.jpg" alt="sales 2014" class="img-responsive">
                          </a>
                     </div> -->
-                </div>
-
-
             </div>
             <!-- /.container -->
         </div>
         <!-- /#content -->
-
     </div>
     <!-- /#all -->
     
     <?php include "footer.php"; ?>
-
-
 </body></html>

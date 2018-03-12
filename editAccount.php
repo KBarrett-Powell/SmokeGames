@@ -12,26 +12,25 @@
     <?php 
         include "references.php"; 
         include "require.php";
+
+        if(!isset($_SESSION['verified']) || $_SESSION['verified'] == false){
+            echo "<script type='text/javascript'>location.href = 'verification.php';</script>";
+        }
         try{
             $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
             $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
             $retrieve = $gamesdb->prepare("SELECT * FROM Users WHERE Uname = ?");
             $retrieve->execute([$_SESSION['username']]);
         
             if ($retrieve->rowCount() == 1) {
                 $row = $retrieve->fetch(PDO::FETCH_ASSOC);
                 $uname = $row['Uname'];
-                $fname = $row['Fname'];
-                $lname = $row['Lname'];
-
-                $retrieve = $gamesdb->prepare("SELECT * FROM Profiles WHERE Uname = ?");
-                $retrieve->execute([$_SESSION['username']]);
-                $row = $retrieve->fetch(PDO::FETCH_ASSOC);
-                $pname = $row['ProName'];
-                $desc = $row['PDesc'];
-                $img = $row['ProPic'];
-                $banner = $row['Banner'];
+                $email = $row['Email'];
+                $age = $row['Age'];
+                $phone = $row['Phone'];
+                if ($email != null) {
+                    $email = substr($email, 0, 3).str_repeat("*", strlen($email) - 3);
+                }
 
             } else {
                 echo "<script type='text/javascript'>location.href = '404.html';</script>";
@@ -41,7 +40,8 @@
             echo "Connection failed: " . $e->getMessage();
         }
         $gamesdb = null;
-    ?>
+    ?>   
+
 </head>
 
 <body>
@@ -56,9 +56,8 @@
                 <div class="col-md-12">
 
                     <ul class="breadcrumb">
-                        <li><a href="#">Home</a>
-                        </li>
-                        <li>Edit Profile</li>
+                        <li><a href="#">Home</a></li>
+                        <li>View Account</li>
                     </ul>
 
                 </div>
@@ -77,69 +76,57 @@
                                 <li>
                                     <?php echo "<a href='profile.php?id=$uname'><i class='fa fa-list'></i>My profile</a>"; ?>
                                 </li>
-                                <li class="active">
-                                    <a href="#"><i class="fa fa-heart"></i> Edit Profile</a>
-                                </li>
                                 <li>
-                                    <a href="editAccount.php"><i class="fa fa-user"></i> Edit account</a>
+                                    <a href="editProfile.php"><i class="fa fa-heart"></i> Edit Profile</a>
+                                </li>
+                                <li class="active">
+                                    <a href="#"><i class="fa fa-user"></i> Edit Account</a>
                                 </li>
                                 <li>
                                     <a href="logout.php"><i class="fa fa-sign-out"></i> Logout</a>
                                 </li>
                             </ul>
                         </div>
-
                     </div>
-                    <!-- /.col-md-3 -->
-
-                    <!-- CUSTOMER MENU END -->
                 </div>
 
                 <div class="col-md-9">
                     <div class="box">
-                        <h1>Edit Profile</h1>
-                        <p class="lead">Update Profile Here.</p>
-
+                        <h1>My account</h1>
+                        <p class="lead">View your personal details here.</p>
+                        
                         <hr>
 
-                        <form onSubmit='' method='post' name='editPro'>
+                        <h3>Change password</h3>
+
+                        <form onSubmit='' method='post' name='editPass'>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="password_1">New password</label>
+                                        <input class="form-control" type="password" id="InputPassword2" placeholder="New Password..." name="newPassword">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="password_2">Retype new password</label>
+                                        <input class="form-control" type="password" id="InputPassword3" placeholder="Confirm Password" name="confirmPassword">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12 text-center">
+                                <button type="submit" value="send" class="btn btn-primary"><i class="fa fa-save"></i> Save new password</button>
+                            </div>
+                        </form>
+
+                        <!-- FORM FOR EDIT DETAILS. -->
+                        <form action="" method="post" name="edit_form">
                             <div class="row">
                                 <div class="col-sm-8">
                                     <div class="form-group">
-                                        <label for="newpname">Profile Name </label>
-                                        <?php echo "<input type='text' class='form-control' id='newpname' placeholder='$pname'>"; ?>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-5">
-                                    <div class="form-group">
-                                        <label for="newfirst">First Name</label>
-                                        <?php echo "<input type='text' class='form-control' id='newfirst' placeholder='$fname'>"; ?>
-                                    </div>
-                                </div>
-                                <div class="col-sm-5">
-                                    <div class="form-group">
-                                        <label for="newlast">Last Name</label>
-                                        <?php echo "<input type='text' class='form-control' id='newlast' placeholder='$lname'>"; ?>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="newpic">Profile Image</label>
-                                        <?php echo "<img src='$img' style='width:30%; vertical-align:top;'>"; ?>
-                                        <input type="file" class="form-control" id="newpic">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="banpic">Banner Image</label>
-                                        <?php echo "<img src='$banner' style='width:30%; vertical-align:top;'>"; ?>
-                                        <input type="file" class="form-control" id="banpic">
+                                        <label for="newuser">Username </label>
+                                        <?php echo "<input type='text' class='form-control' id='newuser' placeholder='$uname'>"; ?>
                                     </div>
                                 </div>
                             </div>
@@ -147,15 +134,31 @@
                             <div class="row">
                                 <div class="col-sm-8">
                                     <div class="form-group">
-                                        <label for="newdesc">Description</label>
-                                        <?php echo "<input type='text' class='form-control' id='newdesc' placeholder='$desc'>"; ?>
+                                        <label for="newemail">Email </label>
+                                        <?php echo "<input type='text' class='form-control' id='newemail' placeholder='$email'>"; ?>
                                     </div>
                                 </div>
                             </div>
 
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <div class="form-group">
+                                        <label for="newage">Age </label>
+                                        <?php echo "<input type='text' class='form-control' id='newage' placeholder='$age'>"; ?>
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="form-group">
+                                        <label for="newphone">Phone Number </label>
+                                        <?php echo "<input type='text' class='form-control' id='newphone' placeholder='$phone'>"; ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- On submit require password to be entered -->
                             <div class="row">
                                 <div class="col-sm-12 text-center">
-                                    <button type="submit" class="btn btn-primary" name="edit_pro"><i class="fa fa-save"></i> Save changes</button>
+                                    <button type="submit" class="btn btn-primary" name="edit_acc"><i class="fa fa-save"></i> Save changes</button>
                                     <button type="cancel" class="btn btn-primary"><i class="fa fa-save"></i> Cancel</button>
                                 </div>
                             </div>
@@ -163,28 +166,21 @@
                     </div>
                 </div>
             </div>
+            <!-- /.container -->
         </div>
+        <!-- /#content -->
     </div>
+    <!-- /#all -->
 
-<?php 
-    include "footer.php"; 
-
+<?php include "footer.php"; 
     try{
         $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
         $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         if($_SERVER["REQUEST_METHOD"] == "POST") {
-            if(isset($_POST['edit_pro'])) {
-                $curuser = $_SESSION['username'];
-                $nfirst = $_POST['newfirst'];
-                $nlast = $_POST['newlast'];
-                $npname = $_POST['newpname'];
-                $npic = $_POST['newpic'];
-                $nban = $_POST['banpic'];
-                $ndesc = $_POST['newdesc'];
-
-                $update = $gamesdb->prepare("UPDATE Users SET FName = ? WHERE Uname = ?");
-                $update->execute([$nFirst, $curuser]);
+            if(isset($_POST['edit_acc'])) {
+                // NEED to make user log in for the rest of this????
+                
             }
         }
 
@@ -192,6 +188,6 @@
         echo "Connection failed: " . $e->getMessage();
     }
     $gamesdb = null;
-?>
+?>  
 </body>
 </html>

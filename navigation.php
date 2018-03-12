@@ -6,6 +6,10 @@
         <div class="col-md-6" data-animate="fadeInDown">
             <ul class="menu">
                 <?php 
+                    if (isset($_SESSION['verified']) && $_SESSION['verified'] == true && basename(__FILE__) != 'editAccount.php') {
+                        $_SESSION['verified'] = false;
+                    }
+
                     if (isset($_SESSION['username'])){
                     // display a different page in nav bar depending on if user is logged in and what type of user they are
                          if (isset($_SESSION['admin']) && $_SESSION['admin'] == true){

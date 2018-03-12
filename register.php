@@ -31,6 +31,9 @@
             }
             if ($pass !== $repass) {
                 array_push($errors, ' Passwords don\'t match');
+            } 
+            if (preg_match('~(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])^[a-zA-Z0-9$£\\\'"@-_]{8,40}$~', $pass) == 0) {
+                array_push($errors, ' Passwords must contain at least one number, one uppercase, and one lowercase letter, and must be between 8-40 characters');
             }
 
             try{
@@ -54,7 +57,7 @@
                 return true;
             } else {
                 $js_errors = json_encode($errors);
-                echo "<script type='text/javascript'>alert(". $js_errors .".toString());</script>";
+                echo "<script type='text/javascript'>alert(". $js_errors .";</script>";
                 return false;
             }
         }
@@ -243,16 +246,15 @@
                     $retrievepro->execute([$user, $user, 'autopic.png', 'New User']);
 
                     // Creating email to send to users on registration
-                    $message = '
-                        Hi '.$user.'
+                    $msg = "
+                        Hi ".$user."
                         Thanks for signing up to Smoke Games!
 
                         Your account has been created, please verify by clicking the link below:
-                        http://www.group.cs.cf.ac.uk/group4/verify.php?email='.$email.'&hash='.$hash.'
-                        ';
+                        http://www.group.cs.cf.ac.uk/group4/verify.php?email=".$email."&hash=".$hash."";
                         
-                    $headers = 'From:smokegames2018@gmail.com' . "\r\n";
-                    mail($email, 'Signup | Verification', $message, $headers);
+                    $headers = "From:smokegames2018@gmail.com" . "\r\n";
+                    mail($email, "Signup | Verification", $msg, $headers);
 
                     // Set session variables
                     $_SESSION['username'] = $user;
