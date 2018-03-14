@@ -13,8 +13,7 @@
     <?php include "references.php";
 
         try{
-            $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
-            $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            include "config.php";
 
             $uname = $_GET['id'];
             // Collecting info on current user
@@ -29,7 +28,7 @@
                 $pname = $row['ProName'];
                 $desc = $row['PDesc'];
                 $img = $row['ProPic'];
-                $banner = $row['Banner'];
+                $banner = $row['PBan'];
             
             } else {
                 header("Location: 404.html");
@@ -81,7 +80,7 @@
                         </li>
                         <li><a href="blog.html">Profile</a>
                         </li>
-                        <?php echo "<li>".$_SESSION['username']."</li>"; ?>
+                        <?php echo "<li>".$_SESSION['proname']."</li>"; ?>
                     </ul>
                 </div>
                 
@@ -111,14 +110,14 @@
 
                     <div class="box">
 
-                        <?php echo "<img src='$img' style='width:10%;' alt='User Profile Image Not Found'><h1>$pname</h1>"; ?>
+                        <?php echo "<img src='images/UserProfiles/$img' style='width:10%;' alt='User Profile Image Not Found'><h1>$pname</h1>"; ?>
                         
                         <?php echo "<p class='lead'>$desc</p>"; ?>
 
                         <div id="post-content">
 
                             <p>
-                                <?php echo "<img src='$banner' class='img-responsive' alt='User Banner Image Not Found'>" ?>
+                                <?php echo "<img src='images/UserBanners/$banner' class='img-responsive' alt='User Banner Image Not Found'>" ?>
                             </p>              
 
                             <div class="box">
@@ -127,8 +126,7 @@
                                 <div class="table-responsive">
                                 <?php 
                                     try{
-                                        $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
-                                        $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                                        include "config.php";
                                         echo "<table class='table'><tr><th>Game Name</th><th>Score</th></tr>";
                                         
                                         // Retrieving scores connected to current user profile
@@ -170,8 +168,7 @@
                                 <div class="table-responsive">
                                 <?php 
                                     try{
-                                        $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
-                                        $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                                        include "config.php";
                                         echo "<table class='table'><tr><th colspan='2'>Friends</th></tr>";
 
                                         $retrieve = $gamesdb->prepare("SELECT u.Uname, p.ProPic FROM Users u JOIN Profiles p ON u.Uname = p.Uname JOIN Friends f ON u.Uname = f.Uname1 WHERE f.Uname2 = ?
@@ -183,7 +180,7 @@
                                                 $fUser = $row['Uname'];
                                                 $fPic = $row['ProPic'];
 
-                                                echo "<tr><td><a href='Profile.php?id=$fUser'><img src='images/$fPic' alt='Could not find' class='userimage'></a></td><td>$fUser</td></tr>";
+                                                echo "<tr><td><a href='Profile.php?id=$fUser'><img src='images/userProfiles/$fPic' alt='Could not find' class='userimage'></a></td><td>$fUser</td></tr>";
                                             }
                                             echo "</table></td></tr></table>";
                                         } else {
@@ -322,5 +319,5 @@
     </div>
     <!-- /#all -->
     
-    <?php include "footer.php"; ?>
+<?php include "footer.php"; ?>
 </body></html>

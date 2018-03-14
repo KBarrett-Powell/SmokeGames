@@ -9,8 +9,6 @@
 
     <?php include "references.php"; ?>
 
-
-
 </head>
 
 <body>
@@ -67,7 +65,6 @@
                 </div>
 
                 <div class="col-md-9">
-
 
                     <div class="box" id="contact">
                         <h1>Contact</h1>
@@ -159,30 +156,17 @@
                             </div>
                             <!-- /.row -->
                         </form>
-
-
                     </div>
-
-
                 </div>
                 <!-- /.col-md-9 -->
             </div>
             <!-- /.container -->
         </div>
         <!-- /#content -->
-
-
-
-
     </div>
     <!-- /#all -->
 
-
-    
-  <?php include "footer.php"; ?>
-
-
-
+<?php include "footer.php"; ?>
 </body>
 
 </html>

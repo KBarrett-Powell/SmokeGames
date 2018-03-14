@@ -16,7 +16,7 @@
                               echo "<li><a href='Admin.php'>Admin</a></li>";
                          } 
                         else {                        
-                            echo "<li><a href='profile.php?id=".$_SESSION['username']."'>".$_SESSION['username']."</a></li>";
+                            echo "<li><a href='profile.php?id=".$_SESSION['username']."'>".$_SESSION['proname']."</a></li>";
                             echo "<li><a href='logout.php'>Logout</a></li>";
                         }
                     } 
@@ -208,8 +208,7 @@
 
 <?php 
     try{
-        $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
-        $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        include "config.php";
 
         // Login query
         if($_SERVER["REQUEST_METHOD"] == "POST") {

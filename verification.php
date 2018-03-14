@@ -44,7 +44,7 @@
 
                             <ul class="nav nav-pills nav-stacked">
                                 <li>
-                                    <?php echo "<a href='profile.php?id=". $_SESSION['username'] ."'><i class='fa fa-list'></i>My profile</a>"; ?>
+                                    <?php echo "<a href='profile.php?id=". $_SESSION['proname'] ."'><i class='fa fa-list'></i>My profile</a>"; ?>
                                 </li>
                                 <li>
                                     <a href="editProfile.php"><i class="fa fa-heart"></i> Edit Profile</a>
@@ -93,8 +93,7 @@
 
 <?php 
     try{
-        $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
-        $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        include "config.php";
         
         if($_SERVER["REQUEST_METHOD"] == "POST") {
 
