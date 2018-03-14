@@ -150,7 +150,7 @@
                                 <p class="price">Age: <?php echo $age; ?></p>
 
                                 <p class="text-center buttons">
-                                    <a href="#" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> PLAY GAME</a> 
+                                    <?php echo "<a href=\"play.php?GameID=\"$_GET['id']class=\"btn btn-primary\"><i class=\"fa fa-shopping-cart\"></i> PLAY GAME</a>";?>
                                 </p>
 
 

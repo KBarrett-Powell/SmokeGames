@@ -1,0 +1,65 @@
+div.navigation {
+	border-style: hidden;
+}
+
+div.gameContainer {
+	margin: auto;
+}
+
+div.game {
+	width:1280px;
+	height:720px;
+	border-color: #555555;
+	border-width: 1px;
+	border-style: solid;
+	margin-left:5px;
+}
+
+div.gameDetails {
+	margin-bottom: 600px;
+}
+
+
+div.gameInfo {
+	margin-top: 50px;
+	float: left;
+	width:  45%;
+}
+
+h2.gameInfo {
+	font-size: 50pt;
+	text-align: center;
+}
+
+h3.gameInfo {
+	font-size: 36pt;
+	text-align: center;
+}
+
+p.gameInfo {
+	color: white;
+	line-height: 20px;
+}
+
+div.gameReviews {
+	float: right;
+	width: 54%;
+}
+
+table.reviews {
+	color: white;
+}
+
+tr.reviews {
+	margin-bottom: 15px;
+	border-bottom: 2pt solid #555555;
+}
+
+td.reviews {
+	padding: 10px;
+	vertical-align: top;
+}
+
+p.reviews {
+	line-height: 20px;
+}

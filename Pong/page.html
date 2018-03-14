@@ -1,0 +1,485 @@
+<!-- Author: Benedict Uttley
+	 Last Revision: 13/02/2018
+	 Version 1.1 -->
+
+<!-- This html file is served to users upon connection. It essentially consists of three elements. The CSS for some extremelly simple styling. Secondly there is the javascript which contains emits to the node server and there are also listeners that listen for incoming messages from the node server. Finally there is the HTML which is very simple. The HTML mostly consists of divs that contain various data such as the question, others that will increase in size, the size for a div increase when the corresponding user that the div represents answers a question correctly. -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<style>
+
+	.leaderboards {
+			width: 800px;
+			margin: 0 auto;
+			position: relative;
+			left:10%;
+			top: 200px;
+
+	}
+	.promo {
+			width: 250px;
+			background-color: white;
+			color:#13133a;
+			float: left;
+
+
+	}
+	.player {
+			padding: 10px 0 0 0;
+
+	}
+	.player span {
+			display: block;
+			text-align: center;
+	}
+	.player span:first-of-type {
+			font-size: 23px;
+	}
+	.player span:last-of-type {
+			font-size: 13px;
+	}
+	.promo .score {
+			display: block;
+			width: 250px;
+			background: #13133a; ;
+			margin: 15px 0 10px 0;
+			text-align: center;
+			font-size: 23px;
+			padding: 17px 0 17px 0;
+			color: white;
+
+	}
+	ul {
+			display: block;
+			margin: 20px 0 10px 0;
+			padding: 0;
+			list-style-type: none;
+			text-align: center;
+			color: #13133a;
+	}
+	li {
+			display: block;
+			margin: 10px 0 0 0;
+	}
+	button {
+			border: none;
+			border-radius: 40px;
+			background-color:#13133a;
+			color: white;
+			padding: 10px 37px;
+			margin: 10px 0 20px 60px;
+
+	}
+	.scale {
+			transform: scale(1.2);
+			box-shadow: 0 0 6px 3px rgba(20, 20, 20, 0.8);
+	}
+	.scale button {
+			background-color:#13133a;
+	}
+
+	.scale .score {
+		background: #13133a;
+		color: white;
+	}
+
+
+
+	.gameover p {
+			margin-top: 0px;
+			margin-bottom: 0px;
+			font-size: 30px;
+			line-height: 120px;
+			text-align: center;
+			font-family: 'Arial',cursive;
+			color: #13133a;
+	}
+
+
+	    .pong{
+
+	      position: absolute;
+				background-color: red;
+
+	    }
+
+	    .u{
+	      background-color: blue;
+	      width: 600px;
+	      height: 400px;
+	      position: relative;
+	      left:30%;
+	      top: 200px;
+	    }
+
+	</style>
+	<meta charset="UTF-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="emojionearea.min.css" media="screen">
+
+	<link rel="import" href="gamePage.html">
+	<script type="text/javascript" src="emojionearea.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<link rel="stylesheet" type="text/css" href="frameStyle.css" media="screen">
+	<script src = "pong.js"></script>
+
+	<title>Real time game</title>
+
+
+<script type="text/javascript">
+
+// Chat emoji plugin alterations and setting its properties
+
+$("#facea").click(function() {
+  $("#texttest").append('<img src="https://cdn.okccdn.com/media/img/emojis/apple/1F60C.png"/>');
+});
+
+$(document).ready(function() {
+	$("#example1").emojioneArea({
+
+		events: {
+			keydown: function(editor, event) {
+				// catches everything but enter
+				if (event.which == 13) {
+					$('#rs').append(this.getText());
+					socket.emit('clientMessage', this.getText());
+					 $("div.emojionearea-editor").data("emojioneArea").setText('');
+					 event.preventDefault();
+					 return false;
+				} else {
+
+				}
+			}
+		},
+		autocomplete: false,
+		 emojiPlaceholder: ":smile_cat:",
+		 useInternalCDN: true,
+		 buttonTitle: "Browse emoji's!",
+			pickerPosition: "left",
+		 search: false,
+		 tones: false,
+
+		 textcomplete: {
+			maxCount  : 5,
+			placement : 'absleft'
+	},
+
+attributes: {
+		 spellcheck : true,
+
+	 }
+ }
+);
+});
+
+
+/*	The front-end part of the game involves connecting the client to the http server that node provides, on port 8080.
+	There are also several listeners that update various div containers when the listener is triggered as a result of an
+	emit from the server.*/
+
+		var socket = io();
+
+
+
+		var username = prompt('What username would you like to use?');
+		var playerName = username;
+
+
+		var room = prompt('Lobby to join:');
+		socket.on('connect', function() {
+			// Connected, let's sign-up for to receive messages for this room
+			socket.emit('login', username);
+			console.log('logged in as: ' + username);
+			socket.emit('room', room);
+			console.log('Chat Room: ' + room);
+
+		});
+
+			var myGame;
+			window.onload = function() {
+
+
+		socket.on('message', function(content) {
+					addMessage(content);
+
+				});
+
+
+
+			// Assigning the HTML elements to be used to variables...
+			var welcome = document.getElementById("welcome");
+			document.getElementById('leaderboard').style.display = "none";
+			var results = document.getElementById("results");
+
+			var messagesElement = document.getElementById('logged_in_users');
+			var messagesElement2 = document.getElementById('messages');
+			var lastMessageElement = null;
+			var lastMessageElement2 = null;
+
+			function addMessage(message) {
+				var newMessageElement = document.createElement('div');
+				newMessageElement.className="messagesnew";
+				var newMessageText = document.createTextNode(message);
+
+				newMessageElement.appendChild(newMessageText);
+				messagesElement.insertBefore(newMessageElement,
+				lastMessageElement);
+				lastMessageElement = newMessageElement;
+				var elem = document.getElementById('logged_in_users');
+				elem.scrollTop = 0;
+
+			}
+
+			function setUpScores(users){
+				var s = document.getElementById('scoreCount');
+				s.innerHTML = '';
+				console.log("Triggered123");
+				for(var i=0; i<users.length; i++){
+					console.log("Triggered");
+
+
+				var newMessageElement = document.createElement('div');
+				newMessageElement.className="messagesnew";
+				newMessageElement.setAttribute("id", users[i].name);
+				var newMessageText = document.createTextNode(users[i].name + " Score: 0");
+
+				newMessageElement.appendChild(newMessageText);
+				s.append(newMessageElement);
+				}
+			}
+
+			function updateScores(name, score){
+				console.log("this is the name: " + name);
+				document.getElementById(name).innerHTML= name + " Score: " + score;
+
+			}
+
+
+var count;	// needs to be param
+var counter; //1000 will  run it every 1 second
+
+function timer(){
+	count=count-1;
+  if (count == 0)
+  	{
+     socket.emit("lobbyOver", myGame);
+		 return;
+  }
+			document.getElementById("timer").innerHTML = count + " secs";
+			}
+
+
+			/* Start game when enough users have joined. Currntly this just means hiding the loading screen and displaying the game
+			   window. In future versions i will make a sort of waiting lobby that then closes (or a new html page is displayed) when
+			   the start game emit is recieved. */
+			socket.on('gameStarted', function(data) {
+				console.log("WTF IS GOING ON!!??");
+				document.getElementById('loader').style.display = "none";
+				document.getElementById("o").style.display = "block";
+				count = 30;	// needs to be param
+
+				counter = setInterval(timer, 1000); //1000 will  run it every 1 second
+			});
+
+			socket.on('playerJoin', function(users){
+
+				setUpScores(users.users);
+				console.log("triggered score setup");
+
+			});
+
+			socket.on('scoreUpdate', function(data){
+				console.log("this was also triggered");
+				updateScores(data.player, data.score);
+			});
+
+
+
+
+			socket.on('yourGame', function(data) {
+				myGame = data;
+				console.log(myGame);
+			});
+
+
+			/* When the game is over and the emit is recieved, the game window is hidden and the final stats div, that still needs to be
+			   developed, is displayed to the user. There eill then need to be options displayed including finding a new game or exiting
+			   the game (bare minimum). */
+
+			socket.on('gameEnded', function(data) {
+				var y = [];
+				console.log("users ---" + data.users.length);
+				for(var i = 0; i< data.users.length; i++){
+						console.log("NEXT");
+						y.push(data.users[i]);
+				}
+
+				y.sort(function(a,b) {
+					return a[1] -b[1];
+				});
+				console.log(y);
+				// sort scores from 1st to last client side...
+				y.reverse();
+
+
+
+				console.log("Game Over!");
+
+				document.getElementById('o').style.display = "none";
+				document.getElementById("leaderboard").style.display = "block";
+
+				// test for game winner display...
+				if(y.length > 0){
+				document.getElementById("1st_Name").innerHTML = y[0].name;
+				document.getElementById("1st_Score").innerHTML = "Score: " + y[0].score;
+			}
+			else{
+					document.getElementById('1st_Place').style.display = "none";
+			}
+
+				// test for game runner up display...
+				if(y.length > 1){
+				document.getElementById("2nd_Name").innerHTML = y[1].name;
+				document.getElementById("2nd_Score").innerHTML = "Score: " + y[1].score;
+				}
+				else{
+						document.getElementById('2nd_Place').style.display = "none";
+				}
+				// test for game third place display...
+				if(y.length > 2){
+				document.getElementById("3rd_Name").innerHTML = y[2].name;
+				document.getElementById("3rd_Score").innerHTML = "Score: " + y[2].score;
+				}
+				else{
+						document.getElementById('3rd_Place').style.display = "none";
+				}
+				//window.location.href = data;
+			});
+			game();
+		}
+	</script>
+
+</head>
+
+
+<!-- HTML elements for game frame and outside elements -->
+
+<body class="main">
+
+	<!-- This div is the loading screen which is shown untill enough players have joined the game -->
+
+
+
+	<div id='container'>
+
+	    <h5 id='roomName'></h5>
+	    <h5 id='uname'></h5>
+
+
+
+	  <div  id='logged_in_users' class="ts" >
+	  </div>
+
+	<br/>
+
+
+	<div class="span6" id="lol">
+	<textarea id="example1"></textarea>
+	</div>
+
+	<div id="scoreCount"></div>
+	<span id="timer"></span>
+
+	</div>
+
+	<div id="loader" class="loader"></div>
+
+	<!--Div displayed to winner of game when they have scored 10 points -->
+	<div id="finalStats" style="display:none;">
+		<p>You are the winner of the game, congradulations!</p>
+		<br>
+
+		<!-- Form to search for new game when you are only player left in game, this can eventually just be that
+				 the player is routed to the main menu but is awarded winner points. In addition this form will need
+				 to be integrated into the final stats display -->
+		<form id="findGame">
+			<input id="fGame" type="button" value="Find New Game">
+		</form>
+
+	</div>
+
+
+
+
+	<div class="leaderboards" id="leaderboard">
+
+		<div class="promo" id="2nd_Place">							<!-- Stats card for runner up -->
+				<div class="player">
+						<span>2nd Place!</span>
+						<span id="2nd_Name"></span>
+						</div>
+				<span class="score" id="2nd_Score"></span>
+				<ul class="features">
+					<li>Thank you for playing!</li>
+					<li>Be sure to checkout out our other games!</li>
+					<li>Or play again?</li>
+				</ul>
+				<button>Play Again</button>
+		</div>
+
+
+	<div class="promo scale" id="1st_Place">			<!-- Stats card for winner -->
+		<div class="player">
+			<span>WINNER!</span>
+			<span id="1st_Name"></span>
+		</div>
+		<span class="score" id="1st_Score"></span>
+		<ul class="features">
+			<li>Thank you for playing!</li>
+			<li>Be sure to checkout our other games!</li>
+			<li>Or play again?</li>
+		</ul>
+		<button>Play Again</button>
+	</div>
+
+
+	<div class="promo" id="3rd_Place">					<!-- Stats card for 3rd place -->
+		<div class="player">
+			<span>3rd Place!</span>
+			<span id="3rd_Name"></span>
+		</div>
+		<span class="score" id="3rd_Score"></span>
+		<ul class="features">
+			<li>Thank you for playing!</li>
+			<li>Be sure to checkout out our other games!</li>
+			<li>Or play again?</li>
+		</ul>
+		<button>Play Again</button>
+	</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+	<div class="u" id = "o">
+
+
+	</div>
+
+
+
+</body>
+
+</html>
