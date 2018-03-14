@@ -44,7 +44,7 @@
 
                             <ul class="nav nav-pills nav-stacked">
                                 <li>
-                                    <?php echo "<a href='profile.php?id=". $_SESSION['proname'] ."'><i class='fa fa-list'></i>My profile</a>"; ?>
+                                    <?php echo "<a href='profile.php?id=". $_SESSION['username'] ."'><i class='fa fa-list'></i>My profile</a>"; ?>
                                 </li>
                                 <li>
                                     <a href="editProfile.php"><i class="fa fa-heart"></i> Edit Profile</a>
