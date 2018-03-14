@@ -4,8 +4,6 @@
 
 <!-- This html file is served to users upon connection. It essentially consists of three elements. The CSS for some extremelly simple styling. Secondly there is the javascript which contains emits to the node server and there are also listeners that listen for incoming messages from the node server. Finally there is the HTML which is very simple. The HTML mostly consists of divs that contain various data such as the question, others that will increase in size, the size for a div increase when the corresponding user that the div represents answers a question correctly. -->
 
-<!DOCTYPE html>
-<html>
 
 <head>
 	<meta charset="UTF-8">
@@ -39,14 +37,13 @@
 			margin:0px;
 	}
 	#container{
- vertical-align:top;
- position: absolute;
- width: auto;
-border-right: 2px solid white;
- margin: none;
- height: 100%;
- padding: 8px;
-
+ 		vertical-align:top;
+ 		position: absolute;
+ 		width: auto;
+		border-right: 2px solid white;
+		margin: none;
+		height: 100%;
+		padding: 8px;
 	}
 
 	#emoji_list{
@@ -54,6 +51,7 @@ border-right: 2px solid white;
 			height: 50px;
 			background-color: white;
 	}
+
 	#game{
 		position: absolute;
 		right: 500px;
@@ -115,21 +113,7 @@ border-right: 2px solid white;
 	::-webkit-scrollbar-thumb:hover {
 			background: #555;
 	}
-</style>
 
-
-
-
-
-
-
-
-
-
-
-
-
-	<style type="text/css">
 		html,
 		body {
 			margin: 0;
@@ -537,7 +521,7 @@ attributes: {
 
 	<!--Div displayed to winner of game when they have scored 10 points -->
 	<div id="finalStats" style="display:none;">
-		<p>You are the winner of the game, congradulations!</p>
+		<p>You are the winner of the game, congratulations!</p>
 		<br>
 
 		<!-- Form to search for new game when you are only player left in game, this can eventually just be that
