@@ -2,10 +2,15 @@
   "name": "maths_game_demo",
   "version": "1.0.0",
   "description": "Demo multiuser game where first user to correctly answer question wins the round",
-  "main": "index.js",
+  "main": "MathsMania.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node MathsMania.js"
   },
   "author": "Benedict (based on krasimir example on GitHub)",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2",
+    "moniker": "^0.1.2",
+    "socket.io": "^2.0.4"
+  }
 }
