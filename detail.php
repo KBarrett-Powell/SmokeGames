@@ -51,10 +51,8 @@
 
                 <div class="col-md-12">
                     <ul class="breadcrumb">
-                        <li><a href="#">Home</a>
-                        </li>
-                        <li><a href="#">Games</a>
-                        </li>
+                        <li><a href="index.php">Home</a></li>
+                        <li><a href="#">Games</a></li>
                         <li><?php echo $name; ?></li>
                     </ul>
 
@@ -150,7 +148,7 @@
                                 <p class="price">Age: <?php echo $age; ?></p>
 
                                 <p class="text-center buttons">
-                                    <?php echo "<a href=\"play.php?GameID=\"$_GET['id']class=\"btn btn-primary\"><i class=\"fa fa-shopping-cart\"></i> PLAY GAME</a>";?>
+                                    <?php echo "<a href='play.php?GameID=".$_GET['id']."' class='btn btn-primary'><i class='fa fa-shopping-cart'></i> PLAY GAME</a>";?>
                                 </p>
 
 

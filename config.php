@@ -1,4 +1,6 @@
 <?php
-    $gamesdb = new PDO("mysql:host=localhost;port=3306;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
+    //$gamesdb = new PDO("mysql:host=localhost;port=3306;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
+    //$gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
     $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 ?>

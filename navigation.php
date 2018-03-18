@@ -50,11 +50,9 @@
                         <div class="form-group">
                             <input type="password" class="form-control" id="pass" name="pass" required="required"  placeholder="Password">
                         </div>
-
                         <p class="text-center">
                             <button class="btn btn-primary" type="submit" value="Login" name="nav_login"><i class="fa fa-sign-in"></i> Log in</button>
                         </p>
-
                     </form>
                 </div>
             </div>
@@ -71,9 +69,9 @@
     <div class="container">
         <div class="navbar-header">
 
-            <a class="navbar-brand home" href="index.php" data-animate-hover="bounce">
+            <a class="navbar-brand home" href="index.php">
                 <img src="images/Logos/long-logo-white.png" alt="Smoke Games logo" class="hidden-xs" height="50px" width="300">
-                <img src="img/logo-small.png" alt="Smoke Games logo" class="visible-xs"><span class="sr-only">Smoke Games homepage</span>
+                <img src="images/Logos/logo-small.png" alt="Smoke Games logo" class="visible-xs"><span class="sr-only">Smoke Games homepage</span>
             </a>
             <div class="navbar-buttons">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation">
@@ -92,8 +90,6 @@
 
             <ul class="nav navbar-nav navbar-left">
                 <li class="active"><a href="index.php">Home</a></li>
-
-
                 <li class="dropdown yamm-fw">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">All Games <b class="caret"></b></a>
                     <ul class="dropdown-menu">
@@ -185,26 +181,17 @@
 
         <div class="collapse clearfix" id="search">
 
-            <form class="navbar-form" role="search">
+            <form class="navbar-form" role="search" id="searchForm" method="GET" action="search.php">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search">
+                    <input type="text" name="searchvalue" class="form-control" placeholder="Search">
                     <span class="input-group-btn">
-
-        <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
-
-        </span>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                    </span>
                 </div>
             </form>
-
         </div>
-        <!--/.nav-collapse -->
-
     </div>
-    <!-- /.container -->
 </div>
-<!-- /#navbar -->
-
-<!-- *** NAVBAR END *** -->
 
 <?php 
     try{

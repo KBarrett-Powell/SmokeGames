@@ -2,13 +2,11 @@
 <html lang="en">
 
 <head>
-
     <title>
-        Smoke Games Contact
+        Smoke Games - Contact
     </title>
 
     <?php include "references.php"; ?>
-
 </head>
 
 <body>
@@ -21,8 +19,7 @@
 
                 <div class="col-md-12">
                     <ul class="breadcrumb">
-                        <li><a href="index.php">Home</a>
-                        </li>
+                        <li><a href="index.php">Home</a></li>
                         <li>Contact</li>
                     </ul>
 

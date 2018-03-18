@@ -6,7 +6,7 @@
 
 <head>
     <title>
-        Smoke Games - Edit Profile
+        Smoke Games - Edit Account
     </title>
 
     <?php 
@@ -55,7 +55,8 @@
                 <div class="col-md-12">
 
                     <ul class="breadcrumb">
-                        <li><a href="#">Home</a></li>
+                        <li><a href="index.php">Home</a></li>
+                        <?php echo "<li><a href='profile.php?id=".$_SESSION['username'].">Profile</a></li>"?>
                         <li>View Account</li>
                     </ul>
 
