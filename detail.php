@@ -20,8 +20,7 @@
     
     <?php
         try{
-            $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
-            $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            include "config.php";
 
             $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE GameID = ?");
             $retrieve->execute([$_GET['id']]);
@@ -52,10 +51,8 @@
 
                 <div class="col-md-12">
                     <ul class="breadcrumb">
-                        <li><a href="#">Home</a>
-                        </li>
-                        <li><a href="#">Games</a>
-                        </li>
+                        <li><a href="index.php">Home</a></li>
+                        <li><a href="#">Games</a></li>
                         <li><?php echo $name; ?></li>
                     </ul>
 
@@ -213,8 +210,7 @@
                     
                     <?php
                         try{
-                            $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
-                            $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                            include "config.php";
                         
                             $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE Recommended = 1 ORDER BY Gname ASC");
                             $retrieve->execute();

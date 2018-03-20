@@ -13,8 +13,7 @@
         include "references.php"; 
         include "require.php";
         try{
-            $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
-            $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            include "config.php";
 
             $retrieve = $gamesdb->prepare("SELECT * FROM Users WHERE Uname = ?");
             $retrieve->execute([$_SESSION['username']]);
@@ -56,8 +55,8 @@
                 <div class="col-md-12">
 
                     <ul class="breadcrumb">
-                        <li><a href="#">Home</a>
-                        </li>
+                        <li><a href="index.php">Home</a></li>
+                        <?php echo "<li><a href='profile.php?id=".$_SESSION['username'].">Profile</a></li>"?>
                         <li>Edit Profile</li>
                     </ul>
 
@@ -170,9 +169,7 @@
     include "footer.php"; 
 
     try{
-        $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
-        $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+        include "config.php";
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST['edit_pro'])) {
                 $curuser = $_SESSION['username'];

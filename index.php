@@ -52,7 +52,7 @@
                                 </div>
 
                                 <h3><a href="#">We love our players!</a></h3>
-                                <p>To give something back, we will be offering exclusive access to brand new games for our users! Sign up now!</p>
+                                <p>We offer exclusive access to brand new games for our users! Sign up now!</p>
                             </div>
                         </div>
 
@@ -62,7 +62,7 @@
                                 </div>
 
                                 <h3><a href="#">Exclusive games!</a></h3>
-                                <p>dab.dab.dab.dab.</p>
+                                <p>Explore our amazing game library now!</p>
                             </div>
                         </div>
 
@@ -76,16 +76,9 @@
                             </div>
                         </div>
                     </div>
-                    <!-- /.row -->
-
                 </div>
-                <!-- /.container -->
-
             </div>
-            <!-- /#advantages -->
-
-            <!-- ADVANTAGES END -->
-
+            
             <!-- HOT PRODUCT SLIDESHOW -->
             <div id="hot">
 
@@ -102,8 +95,7 @@
                 
                         <?php
                             try{
-                                $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
-                                $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                                include "config.php";
 
                                  // This SQL query defines how the items are sorted and what they are filtered by
                                 if (isset($_GET['sortwhat']) && isset($_GET['filterby'])) {
@@ -142,86 +134,13 @@
                             }
                             $gamesdb = null;
                         ?>
-                
-                    <!-- Add this in the Product DIV if desired... -->
-                    <!--
-                    <div class="ribbon new">
-                        <div class="theribbon">NEW</div>
-                        <div class="ribbon-background"></div>
-                    </div>
-                    -->
-                                <!-- /.ribbon -->
                             </div>
-                            <!-- /.product -->
                         </div>
-
                     </div>
-                    <!-- /.product-slider -->
                 </div>
-                <!-- /.container -->
-
             </div>
-            <!-- /#hot -->
-
-            <!-- *** HOT END *** --> 
-
-            <!-- *** BLOG HOMEPAGE ***
- _________________________________________________________ -->
-
-            <!-- <div class="box text-center" data-animate="fadeInUp">
-                <div class="container">
-                    <div class="col-md-12">
-                        <h3 class="text-uppercase">From our blog</h3>
-
-                        <p class="lead">What's new in the world of fashion? <a href="blog.html">Check our blog!</a>
-                        </p>
-                    </div>
-                </div>
-            </div> -->
-<!--  
-            <div class="container">
-
-                <div class="col-md-12" data-animate="fadeInUp">
-
-                    <div id="blog-homepage" class="row">
-                        <div class="col-sm-6">
-                            <div class="post">
-                                <h4><a href="post.html">Fashion now</a></h4>
-                                <p class="author-category">By <a href="#">John Slim</a> in <a href="">Fashion and style</a>
-                                </p>
-                                <hr>
-                                <p class="intro">Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean
-                                    ultricies mi vitae est. Mauris placerat eleifend leo.</p>
-                                <p class="read-more"><a href="post.html" class="btn btn-primary">Continue reading</a>
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="post">
-                                <h4><a href="post.html">Who is who - example blog post</a></h4>
-                                <p class="author-category">By <a href="#">John Slim</a> in <a href="">About Minimal</a>
-                                </p>
-                                <hr>
-                                <p class="intro">Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean
-                                    ultricies mi vitae est. Mauris placerat eleifend leo.</p>
-                                <p class="read-more"><a href="post.html" class="btn btn-primary">Continue reading</a>
-                                </p>
-                            </div>
-
-                        </div>
-
-                    </div> */ -->
-                    <!-- /#blog-homepage -->
-                <!-- </div>
-            </div> -->
-            <!-- /.container -->
-
-            <!-- *** BLOG HOMEPAGE END *** -->
-
-
-        <!-- </div> -->
-        <!-- /#content -->
+        </div>
+    </div>
     <?php include "footer.php"; ?>
 </body>
 

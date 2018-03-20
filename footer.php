@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-md-3 col-sm-6">
                     <h4>Pages</h4>
-
+                    <hr>
                     <ul>
                         <li><a href="contact.php">About us</a>
                         </li>
@@ -15,11 +15,12 @@
                         <li><a href="contact.php">Contact us</a>
                         </li>
                     </ul>
+                </div>
 
-                    <hr>
+                <div class="col-md-3 col-sm-6">
 
                     <h4>User section</h4>
-
+                    <hr>
                     <ul>
                         <li><a href="" data-toggle="modal" data-target="#login-modal">Login</a>
                         </li>
@@ -30,45 +31,11 @@
                     <hr class="hidden-md hidden-lg hidden-sm">
 
                 </div>
-                <!-- /.col-md-3 -->
-                <!--
-                <div class="col-md-3 col-sm-6">
-
-                    <h4>Top categories</h4>
-
-                    <h5>Men</h5>
-
-                    <ul>
-                        <li><a href="category.html">T-shirts</a>
-                        </li>
-                        <li><a href="category.html">Shirts</a>
-                        </li>
-                        <li><a href="category.html">Accessories</a>
-                        </li>
-                    </ul>
-
-                    <h5>Ladies</h5>
-                    <ul>
-                        <li><a href="category.html">T-shirts</a>
-                        </li>
-                        <li><a href="category.html">Skirts</a>
-                        </li>
-                        <li><a href="category.html">Pants</a>
-                        </li>
-                        <li><a href="category.html">Accessories</a>
-                        </li>
-                    </ul>
-
-                    <hr class="hidden-md hidden-lg">
-
-                </div>
-                -->
-                <!-- /.col-md-3 -->
 
                 <div class="col-md-3 col-sm-6">
 
                     <h4>Where to find us</h4>
-
+                    <hr>
                     <p><strong>Smoke Games</strong>
                         <br>Queens Building
                         <br>Cardiff University
@@ -81,59 +48,38 @@
                     <hr class="hidden-md hidden-lg">
 
                 </div>
-                <!-- /.col-md-3 -->
-
-
 
                 <div class="col-md-3 col-sm-6">
 
-                    <h4>Get the news</h4>
-
+                    <!-- <h4>Get the news</h4>
+                    <hr>
                     <p class="text-muted">Sign up here to receive weekly newsletters about upcoming games & events!</p>
 
                     <form>
                         <div class="input-group">
-
                             <input type="text" class="form-control" placeholder="Email address:">
-
                             <span class="input-group-btn">
-
-            <button class="btn btn-default" type="button">Subscribe!</button>
-
-        </span>
-
+                                <button class="btn btn-default" type="button">Subscribe!</button>
+                            </span>
                         </div>
-                        <!-- /input-group -->
                     </form>
 
-                    <hr>
+                    <hr> -->
 
                     <h4>Stay in touch</h4>
-
+                    <hr>
                     <p class="social">
-                        <a href="#" class="facebook external" data-animate-hover="shake"><i class="fa fa-facebook"></i></a>
-                        <a href="#" class="twitter external" data-animate-hover="shake"><i class="fa fa-twitter"></i></a>
-                        <a href="#" class="instagram external" data-animate-hover="shake"><i class="fa fa-instagram"></i></a>
-                        <a href="#" class="gplus external" data-animate-hover="shake"><i class="fa fa-google-plus"></i></a>
-                        <a href="#" class="email external" data-animate-hover="shake"><i class="fa fa-envelope"></i></a>
+                        <a href="#" class="facebook external"><i class="fa fa-facebook"></i></a>
+                        <a href="#" class="twitter external"><i class="fa fa-twitter"></i></a>
+                        <a href="#" class="instagram external"><i class="fa fa-instagram"></i></a>
+                        <a href="#" class="gplus external"><i class="fa fa-google-plus"></i></a>
+                        <a href="#" class="email external"><i class="fa fa-envelope"></i></a>
                     </p>
 
-
                 </div>
-                <!-- /.col-md-3 -->
-
             </div>
-            <!-- /.row -->
-
         </div>
-        <!-- /.container -->
     </div>
-    <!-- /#footer -->
-
-    <!-- FOOTER END -->
-
-
-
 
     <!-- COPYRIGHT -->
     <div id="copyright">
@@ -150,8 +96,6 @@
         </div>
     </div>
     <!-- COPYRIGHT END -->
-
-
 
 </div>
 <!-- /#all -->

@@ -75,8 +75,7 @@
                 <div class="col-md-12">
 
                     <ul class="breadcrumb">
-                        <li><a href="#">Home</a>
-                        </li>
+                        <li><a href="index.php">Home</a></li>
                         <li>Sign Up / Log in</li>
                     </ul>
 
@@ -170,8 +169,7 @@
     
     $attempts = 0;
     try{
-        $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
-        $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        include "config.php";
         
         if($_SERVER["REQUEST_METHOD"] == "POST") {
 
