@@ -4,6 +4,9 @@ div.navigation {
 
 div.gameContainer {
 	margin: auto;
+	height: 1000px;
+	width: 100%;
+	background-color: white;
 }
 
 div.game {

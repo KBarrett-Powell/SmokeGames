@@ -98,8 +98,8 @@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a href="#">Rate The Game:  <span class="badge pull-right">4.7</span></a>
-                                    <ul>
+                                    <a href="#">Average rating:  <span class="badge pull-right">4.7</span></a>
+                                    <!--<ul>
                                         <li><a href="#">1 Smoke</a>
                                         </li>
                                         <li><a href="#">2 Smoke</a>
@@ -110,7 +110,7 @@
                                         </li>
                                         <li><a href="#">5 Smoke</a>
                                         </li>
-                                    </ul>
+                                    </ul>-->
                                 </li>
 
                             </ul>
@@ -146,12 +146,12 @@
                         <div class="col-sm-6">
                             <div class="box">
                                 <h1 class="text-center"><?php echo $name; ?></h1>
-                                <p class="goToDescription"><a href="#details" class="scroll-to">Scroll to Game Information.</a>
+                                <p class="goToDescription"><a href="#details" class="scroll-to">See more information</a>
                                 </p>
-                                <p class="price">Age: <?php echo $age; ?></p>
+                                <p class="price">Age: <?php echo $age; ?>+</p>
 
                                 <p class="text-center buttons">
-                                    <?php echo "<a href=\"play.php?GameID=\"$_GET['id']class=\"btn btn-primary\"><i class=\"fa fa-shopping-cart\"></i> PLAY GAME</a>";?>
+                                    <?php echo "<a href=\"play.php?GameID=".$_GET['id']."\"class=\"btn btn-primary\"><i class=\"fa fa-shopping-cart\"></i> PLAY GAME</a>";?>
                                 </p>
 
 
@@ -181,18 +181,13 @@
 
                     <div class="box" id="details">
                         <p>
-                            <h4>Product details:</h4>
+                            <h4>Game details</h4>
                             <p><?php echo $desc; ?></p>
                             <h4>How to play:</h4>
                             <ul>
                                 <li>Make table for this information.</li>
                                 <li>in the sql database.</li>
                             </ul>
-
-                            <blockquote>
-                                <p><em>Be sure to leave a rating and a review to help us improve our game and our platform.</em>
-                                </p>
-                            </blockquote>
 
                             <hr>
                             <div class="social">

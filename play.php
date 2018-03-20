@@ -7,130 +7,160 @@
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <title>
         Smoke Games
     </title>
-
     <?php include "references.php"; ?>
-	<link rel="stylesheet" type="text/css" href="css/GameFrameStyle.css">
+    <style>
+      div.navigation {
+        border-style: hidden;
+      }
 
+      div.gameContainer {
+        margin: auto;
+      }
+
+      div.game {
+        width:1280px;
+        height:720px;
+        border-color: #555555;
+        border-width: 1px;
+        border-style: solid;
+        margin: auto;
+      }
+
+      div.gameDetails {
+        margin-bottom: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        width:1280px;
+      }
+
+      div.gameInfo {
+        margin-top: 50px;
+        float: left;
+        width: 45%;
+        margin: auto;
+        width: 50%;
+      }
+
+      h2.gameInfo {
+        font-size: 50pt;
+        text-align: center;
+      }
+
+      h3.gameInfo {
+        font-size: 36pt;
+        text-align: center;
+      }
+
+      p.gameInfo {
+        color: white;
+        line-height: 20px;
+      }
+
+      div.gameReviews {
+        float: right;
+        width: 50%;
+        padding-left: 50px;
+      }
+
+      table.reviews {
+        color: white;
+      }
+
+      tr.reviews {
+        margin-bottom: 15px;
+        border-bottom: 2pt solid #555555;
+      }
+
+      td.reviews {
+        padding: 10px;
+        vertical-align: top;
+      }
+
+      p.reviews {
+        line-height: 20px;
+      }
+    </style>
 </head>
 
 <body>
     <div class="navigation"><?php include "navigation.php"; ?></div>
-    <div class="gameContainer">
+    <div class="gameContainer" style="margin: auto; width: 100%;">
     <?php
-		$gamesdb = mysqli_connect("csmysql.cs.cf.ac.uk", "group4.2017", "WKPrte4YHjB34F", "group4_2017");
-		if (!$gamesdb) { die("Failed to connect: " . mysqli_connect_error()); } 
-		$retrieve = "SELECT * FROM Games WHERE GameID = " . $_GET["GameID"] . ";";
-		$result = mysqli_query($gamesdb, $retrieve);
+      $gamesdb = mysqli_connect("csmysql.cs.cf.ac.uk", "group4.2017", "WKPrte4YHjB34F", "group4_2017");
+      if (!$gamesdb) { die("Failed to connect: " . mysqli_connect_error()); } 
+      $retrieve = "SELECT * FROM Games WHERE GameID = " . $_GET["GameID"] . ";";
+      $result = mysqli_query($gamesdb, $retrieve);
 
-       	$gameInfo = mysqli_fetch_assoc($result);
+      $gameInfo = mysqli_fetch_assoc($result);
 
-       	$GLOBALS['gameName'] = $gameInfo["Gname"];
-       	$GLOBALS['gameDesc'] = $gameInfo["Description"];
-       	$GLOBALS['gameImg1'] = $gameInfo["GImg1"];
-       	$GLOBALS['gameImg2'] = $gameInfo["GImg2"];
-       	$GLOBALS['gameCategory'] = $gameInfo["Category"];
-       	$GLOBALS['gameAgeRating'] = $gameInfo["AgeRating"];
-       	$GLOBALS['gameCredits'] = $gameInfo["Credits"];
-       	$GLOBALS['gameTags'] = $gameInfo["Tags"];
-       	echo "<h2 class='gameInfo' style=\"color: white;\">$gameName</h2>";
+      $GLOBALS['gameName'] = $gameInfo["Gname"];
+      $GLOBALS['gameDesc'] = $gameInfo["Description"];
+      $GLOBALS['gameImg1'] = $gameInfo["GImg1"];
+      $GLOBALS['gameImg2'] = $gameInfo["GImg2"];
+      $GLOBALS['gameCategory'] = $gameInfo["Category"];
+      $GLOBALS['gameAgeRating'] = $gameInfo["AgeRating"];
+      $GLOBALS['gameCredits'] = $gameInfo["Credits"];
+      $GLOBALS['gameTags'] = $gameInfo["Tags"];
+      echo "<h2 class='gameInfo' style=\"color: white;\">$gameName</h2>";
 
       mysqli_close($gamesdb);
     ?>
     <div class="chat">
-    	<?php
+    </div>
+    <div class="game">
+      <?php
         //include "Games/MathsMania/page.html";
-        // create a streaming socket, of type TCP/IP
-        //$sock = socket_create(AF_INET, SOCK_STREAM, 0);
-        // "bind" the socket to the address to "localhost", on port $port
-        // so this means that all connections on this port are now our resposibility to send/recv data, disconnect, etc..
-        //socket_bind($sock, 0, 8081);
-        // start listen for connections
-        //socket_listen($sock);
+        //$sock = socket_create(AF_INET, SOCK_STREAM, 0); // create a streaming socket, of type TCP/IP
+        //socket_bind($sock, 0, 8081); // "bind" the socket to the address to "localhost", on port $port
+        //socket_listen($sock); // start listen for connections
 
-        // create a list of all the clients that will be connected to us..
-        // add the listening socket to this list
-        //$clients = array($sock);
-        
-        /*while (true) {
-            // create a copy, so $clients doesn't get modified by socket_select()
-            $read = $clients;
-            
-            // get a list of all the clients that have data to be read from
-            // if there are no clients with data, go to next iteration
-            if (socket_select($read, $write = NULL, $except = NULL, 0) < 1)
-                continue;
-            
-            // check if there is a client trying to connect
-            if (in_array($sock, $read)) {
-                // accept the client, and add him to the $clients array
-                $clients[] = $newsock = socket_accept($sock);
-                
-                // send the client a welcome message
-                socket_write($newsock, "no noobs, but ill make an exception :)\n".
-                "There are ".(count($clients) - 1)." client(s) connected to the server\n");
-                
-                socket_getpeername($newsock, $ip);
-                echo "New client connected: {$ip}\n";
-                
-                // remove the listening socket from the clients-with-data array
-                $key = array_search($sock, $read);
-                unset($read[$key]);
-            }
-        }*/
+        //exec('/usr/local/bin/node Games/MathsMania/start.js > /dev/null &');
+        // so change the directory to where node is installed on the server. Also Games/'.str_replace(" ","",$GLOBALS['gameName']).'/start.js
+        //exec("kill " . $processid);
+        //socket_close($sock); // close the listening socket
+        ?>
+    </div>
+  </div>
 
-        //exec('/usr/local/bin/node Games/'.str_replace(" ","",$GLOBALS['gameName']).'/start.js &', $output);
-        exec('/usr/local/bin/node Games/MathsMania/start.js > /dev/null &');
-        // so change the directory to where node is installed on the server
-        //echo $output;
-	    	//exec("kill " . $processid);
-
-
-        // close the listening socket
-        //socket_close($sock);
-    	?></div>
-	<div class="game">
-	</div>
-	</div>
-
-	<div class="gameDetails">
-		<div class="gameInfo">
-			<?php
-	       	echo "<h3 class='gameInfo'>".$GLOBALS['gameName']." Game Details</h2><br>
-				<p class='gameInfo'>".$GLOBALS['gameDesc']."<br><br>
-				Category: ".$GLOBALS['gameCategory']."<br>
-				Age Rating: ".$GLOBALS['gameAgeRating'] . "+<br>
-				Credits: ".$GLOBALS['gameCredits']."<br>
-				Tags: ".$GLOBALS['gameTags']."</p>";
-			?>
-		</div>
-		<div class="gameReviews">
+  <div class="gameDetails">
+    <div class="gameInfo">
+      <?php
+        echo "<h3 class='gameInfo'>".$GLOBALS['gameName']." Game Details</h2><br>
+        <p class='gameInfo' style='font-size: 14pt;'>".$GLOBALS['gameDesc']."</p><br><p class='gameInfo'>
+        Category: ".$GLOBALS['gameCategory']."<br>
+        Age Rating: ".$GLOBALS['gameAgeRating'] . "+<br>
+        Credits: ".$GLOBALS['gameCredits']."<br>
+        Tags: ".$GLOBALS['gameTags']."</p>";
+      ?>
+    </div>
+    <div class="topScores">
+    </div>
+    <div class="gameReviews">
       <?php
       echo "<h3 class=\"gameReviews\" style=\"text-align: center;\">".$GLOBALS['gameName']." Reviews</h2><br><table class=\"reviews\">";
 
       //if (isset($_SESSION['loggedin']) && $_SESSION['loggedin']) {
       echo '<form id="reviewForm">
-        <input type="text" id="review" placeholder="Leave a review?" style="width: 75%; height: 100px; color: black; padding-top: 0px"><br><br>
-        <img src="images/1star.png" onclick="setRating(1)" width=75px>
-        <img src="images/1star.png" onclick="setRating(2)" width=75px>
-        <img src="images/1star.png" onclick="setRating(3)" width=75px>
-        <img src="images/1star.png" onclick="setRating(4)" width=75px>
-        <img src="images/1star.png" onclick="setRating(5)" width=75px>
+        <input type="text" id="review" placeholder="Be sure to leave a rating and a review to help us improve the Smoke gaming experience." style="width: 75%; height: 100px; color: black; padding-top: 0px"><br><br>
+        <img src="images/logo.png" onclick="setRating(1)" width=75px>
+        <img src="images/logo.png" onclick="setRating(2)" width=75px>
+        <img src="images/logo.png" onclick="setRating(3)" width=75px>
+        <img src="images/logo.png" onclick="setRating(4)" width=75px>
+        <img src="images/logo.png" onclick="setRating(5)" width=75px>
         <input type="hidden" id="rating" value="">
-        <p id="currentRating"></p>
-        <input type="submit" name=submitReview value="Review" alt="Submit review" onsubmit="validateReview()" style="color: black;">
-      </form>';
+        <p id="currentRating" style="display:inline;"></p>
+        <input type="submit" name=submitReview value="Submit Review" alt="Submit review" onsubmit="validateReview()" style="color: black;">
+      </form><br><br>';
       //} else { echo '<p>Log in to leave your own review.</p>'; }
       ?>
       <script>
         function setRating(num) {
           document.getElementById("rating").value = num.toString();
-          document.getElementById("currentRating").innerHTML = "Your rating: " + num;
+          document.getElementById("currentRating").innerHTML = "Your rating: " + num + "   ";
         }
 
         function validateReview() {
@@ -184,7 +214,7 @@
           echo "<tr class=\"reviews\"><td><img src=\"images/profilepictures/$profilepicfilename\" style=\"width: 75px;\"></td><td class=\"reviews\"><p class=\"reviews\"><b>$uname</b> posted on $date  <br>";
 
           for ($i = 1; $i <= $rating; $i++) {
-            echo "<img src=\"images/1star.png\" width=\"25px;\">";
+            echo "<img src=\"images/logo.png\" width=\"25px;\">";
           }
 
           echo "<br>$review</p></tr>";
@@ -195,8 +225,8 @@
       ?>
 
     </div>
-	</div>
-	<div class="footer"><?php include "footer.php"; ?></div>
+  </div>
+  <div class="footer"><?php include "footer.php"; ?></div>
 
 </body>
 </html>
