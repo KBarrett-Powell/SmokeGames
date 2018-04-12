@@ -10,6 +10,10 @@
                         $_SESSION['verified'] = false;
                     }
 
+                    if (isset($_SESSION['temp_used']) && $_SESSION['temp_used'] == true && basename(__FILE__) != 'forceChange.php') {
+                        echo "<script type='text/javascript'>location.href = 'forceChange.php';</script>";
+                    }
+
                     if (isset($_SESSION['username'])){
                     // display a different page in nav bar depending on if user is logged in and what type of user they are
                          if (isset($_SESSION['admin']) && $_SESSION['admin'] == true){

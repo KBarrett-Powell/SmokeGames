@@ -33,13 +33,45 @@
                 $banner = $row['Banner'];
 
             } else {
-                echo "<script type='text/javascript'>location.href = '404.html';</script>";
+                echo "<script type='text/javascript'>location.href = '404.php';</script>";
             }
 
         } catch(PDOException $e) {
             echo "Connection failed: " . $e->getMessage();
         }
         $gamesdb = null;
+
+        function verifyEdit() {
+            $nfirst = $_POST['newfirst'];
+            $nlast = $_POST['newlast'];
+            $npname = $_POST['newpname'];
+            $npic = $_POST['newpic'];
+            $nban = $_POST['banpic'];
+            $ndesc = $_POST['newdesc'];
+            $errors = array();
+
+            if (preg_match('/^[a-zA-Z\-]{1,30}$/', $nfirst) == 0) {
+                array_push($errors, ' First name should only be 1 to 30 letters');
+            }
+            if (preg_match('/^[a-zA-Z\-]{1,40}$/', $nlast) == 0) {
+                array_push($errors, ' Last name should only be 1 to 40 letters');
+            }
+            if ($npname != strip_tags($npname)) {
+                array_push($errors, ' Please don\'t use tags in your profile name');
+            }
+            if ($ndesc != strip_tags($ndesc)) {
+                array_push($errors, ' Please don\'t use tags in your description');
+            }
+            // picture checks here!!
+
+            if(empty($errors)) {
+                return true;
+            } else {
+                $js_errors = json_encode($errors);
+                echo "<script type='text/javascript'>alert(". $js_errors .";</script>";
+                return false;
+            }
+        }
     ?>
 </head>
 
@@ -101,7 +133,7 @@
 
                         <hr>
 
-                        <form onSubmit='' method='post' name='editPro'>
+                        <form onsubmit="return verifyEdit()" method='post' name='editPro'>
                             <div class="row">
                                 <div class="col-sm-8">
                                     <div class="form-group">
@@ -170,6 +202,7 @@
 
     try{
         include "config.php";
+
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST['edit_pro'])) {
                 $curuser = $_SESSION['username'];
@@ -179,12 +212,38 @@
                 $npic = $_POST['newpic'];
                 $nban = $_POST['banpic'];
                 $ndesc = $_POST['newdesc'];
+                
+                if ($nfirst != "") {
+                    $update = $gamesdb->prepare("UPDATE Users SET FName = ? WHERE Uname = ?");
+                    $update->execute([$nfirst, $curuser]);
+                }
+                if ($nlast != "") {
+                    $update = $gamesdb->prepare("UPDATE Users SET LName = ? WHERE Uname = ?");
+                    $update->execute([$nlast, $curuser]);
+                } 
+                if ($npname != "") {
+                    $update = $gamesdb->prepare("UPDATE Profiles SET ProName = ? WHERE Uname = ?");
+                    $update->execute([$npname, $curuser]);
+                } 
+                if ($ndesc != "") {
+                    $update = $gamesdb->prepare("UPDATE Profiles SET PDesc = ? WHERE Uname = ?");
+                    $update->execute([$ndesc, $curuser]);
+                } 
+                if ($npic != "") {
+                    // uploading images stuff here !!
+                    $update = $gamesdb->prepare("UPDATE Profiles SET ProPic = ? WHERE Uname = ?");
+                    $update->execute([$npic, $curuser]);
+                } 
+                if ($nban != "") {
+                    // uploading images stuff here !!
+                    $update = $gamesdb->prepare("UPDATE Profiles SET Banner = ? WHERE Uname = ?");
+                    $update->execute([$nban, $curuser]);
+                } 
 
-                $update = $gamesdb->prepare("UPDATE Users SET FName = ? WHERE Uname = ?");
-                $update->execute([$nFirst, $curuser]);
+                echo "<script type='text/javascript'>alert('Successfully Updated Profile')</script>";
+                echo "<script type='text/javascript'>location.href = 'editProfile.php';</script>";
             }
         }
-
     } catch(PDOException $e) {
         echo "Connection failed: " . $e->getMessage();
     }

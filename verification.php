@@ -71,18 +71,15 @@
 
                         <form action="" name="login" method="post">
                             <div class="form-group">
-                                <label for="email">Username</label>
+                                <label for="user">Username</label>
                                 <input class="form-control" type="text" id="user" name="user" required="required" placeholder="Username">
                             </div>
                             <div class="form-group">
-                                <label for="password">Password</label>
+                                <label for="pass">Password</label>
                                 <input class="form-control" type="password" id="pass" name="pass" required="required" placeholder="Password">
                             </div>
                             <div class="text-center">
                                 <button class="btn btn-primary" type="submit" value="Login" name="submit_login"><i class="fa fa-sign-in"></i> Log in</button>
-                            </div>
-                            <div class="text-center">
-                                <button class="btn btn-primary" type="submit" value="ForgotPass" name="forgot_pass"><i class="fa fa-sign-in"></i> Forgotten Password</button>
                             </div>
                         </form>
                     </div>
@@ -133,7 +130,7 @@
     $gamesdb = null;
 ?>
 </div>
- <!-- /#all -->
+
 <?php include "footer.php"; ?>
     
 </body>

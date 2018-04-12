@@ -10,7 +10,12 @@
     </title>
 
     <?php 
+        if (isset($_SESSION['username'])) {
+            echo "<script type='text/javascript'>location.href = '404.php';</script>";
+        }
         include "references.php"; 
+        include "requireMail.php";
+        
         function verifyCreate() {
             $uname = $_POST['newuser'];
             $fname = $_POST['fname'];
@@ -37,8 +42,7 @@
             }
 
             try{
-                $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
-                $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                include "config.php";
 
                 $find = $gamesdb->prepare("SELECT * FROM Users WHERE Uname = ?");
                 $find->execute([$uname]);
@@ -57,7 +61,7 @@
                 return true;
             } else {
                 $js_errors = json_encode($errors);
-                echo "<script type='text/javascript'>alert(". $js_errors .";</script>";
+                echo "<script type='text/javascript'>alert(". $js_errors .");</script>";
                 return false;
             }
         }
@@ -162,12 +166,7 @@
         <!-- /#content -->
 
 <?php 
-    if (isset($_SESSION['username'])) {
-        header("Location: 404.html");
-        exit;
-    }
-    
-    $attempts = 0;
+    //$attempts = 0;
     try{
         include "config.php";
         
@@ -175,18 +174,19 @@
 
             // If login form has been filled out:
             if(isset($_POST['submit_login'])) {
-                $attempts += 1;
+                //$attempts += 1;
                 $username = $_POST['user'];
                 $password = $_POST['pass'];
 
                 // Try to find user account with details entered
-                $retrieve = $gamesdb->prepare("SELECT u.Pass, u.Verified, p.ProName FROM Users u, Profiles p WHERE u.Uname = ? AND u.Uname = p.Uname");
+                $retrieve = $gamesdb->prepare("SELECT u.Pass, u.Verified, u.Temp, p.ProName FROM Users u, Profiles p WHERE u.Uname = ? AND u.Uname = p.Uname");
                 $retrieve->execute([$username]);
 
                 if ($retrieve->rowCount() == 1) {
                     $row = $retrieve->fetch(PDO::FETCH_ASSOC);
                     $hash = $row['Pass'];
                     $verf = $row['Verified'];
+                    $tempPass = $row['Temp'];
                     $pname = $row['ProName'];
                     
                     // Check if account verified
@@ -209,18 +209,35 @@
                             }
 
                             // Take user to main page
-                            echo "<script type='text/javascript'>alert('Successfully Logged In.')</script>";
-                            echo "<script type='text/javascript'>location.href = 'index.php';</script>";
-                            
-                        } else {echo "<script type='text/javascript'>alert('Password Incorrect. ' . (5 - $attempts) . 'Please Try Again.')</script>";}
+                            echo "<script type='text/javascript'>alert('Successfully Logged In.'); location.href = 'index.php';</script>";
+                        
+                        } else if ($password == $tempPass){
+                             
+                            // Set session variables
+                             $_SESSION['username'] = $username;
+                             $_SESSION['proname'] = $pname;
+                             $_SESSION['temp_used'] = true;
+ 
+                             // Check if user is an admin
+                             $retrieve = $gamesdb->prepare("SELECT * FROM Admins WHERE Uname = ?");
+                             $retrieve->execute([$username]);
+                             
+                             if ($retrieve->rowCount() == 1) { 
+                                 $_SESSION['admin'] = true; 
+                             }
+ 
+                             // Take user to main page
+                             echo "<script type='text/javascript'>alert('Successfully Logged In With Temporary Password.'); location.href = 'forceChange.php';</script>";
+                        
+                        } else {echo "<script type='text/javascript'>alert('Password Incorrect. Please Try Again.')</script>";}
 
                     } else {echo "<script type='text/javascript'>alert('Please Verify Account Before Trying To Log In')</script>";}
 
                 } else {echo "<script type='text/javascript'>alert('Username Incorrect. Please Try Again.')</script>";}
 
-                if($attempts > 5){
-                    {echo "<script type='text/javascript'>alert('Attempted to login too many times, please try again later.')</script>";}
-                }
+                // if($attempts > 5){
+                //     {echo "<script type='text/javascript'>alert('Attempted to login too many times, please try again later.')</script>";}
+                // }
                 
             // If sign up form has been filled out:
             } elseif(isset($_POST['submit_create'])) {
@@ -231,38 +248,54 @@
                     $email = $_POST['email'];
                     $age = $_POST['age'];
                     $phone = $_POST['phoneno'];
+                    if($phone == 0) {
+                        $phone = NULL;
+                    }
                     $hash = md5( rand(0,1000) );
                     $pass = $_POST['pass1'];
-        +           //$plainPass = $_POST['pass1'];
+                    //$plainPass = $_POST['pass1'];
                     //$pass = password_hash($plainPass, PASSWORD_DEFAULT);
 
                     // Inserting new user details into the Users and Profiles tables
                     $retrieve = $gamesdb->prepare("INSERT INTO Users (Uname, Fname, Lname, Pass, Email, Age, Phone, ActiveBan, Hashid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
                     $retrieve->execute([$user, $fname, $lname, $pass, $email, $age, $phone, 0, $hash]);
 
-                    $retrievepro = $gamesdb->prepare("INSERT INTO Profiles (Uname, ProName, ProPic, PDesc) VALUES (?, ?, ?, ?)");
-                    $retrievepro->execute([$user, $user, 'autopic.png', 'New User']);
+                    $retrievepro = $gamesdb->prepare("INSERT INTO Profiles (Uname, ProName, ProPic, PDesc, Banner) VALUES (?, ?, ?, ?, ?)");
+                    $retrievepro->execute([$user, $user, 'autopic.png', 'New User', 'autoBan.png']);
 
-                    // Creating email to send to users on registration
-                    $msg = "
-                        Hi ".$user."
+                    try {
+                        // Add header and subject variables to the email
+                        $mail->SetFrom('smokegames2018@gmail.com', 'Smoke Games');
+                        $mail->AddAddress($email);
+                        $mail->Subject  = 'Account Successfully Created!';
+
+                        // Creating email to send to users on registration
+                        $mail->Body     = "Hi ".$user.",
                         Thanks for signing up to Smoke Games!
 
                         Your account has been created, please verify by clicking the link below:
-                        http://www.group.cs.cf.ac.uk/group4/verify.php?email=".$email."&hash=".$hash."";
+                        https://www.group.cs.cf.ac.uk/group4/verify.php?user=".$user."&hash=".$hash."";
                         
-                    $headers = "From:smokegames2018@gmail.com" . "\r\n";
-                    mail($email, "Signup | Verification", $msg, $headers);
+                        // Sending Email
+                        $mail->Send();
 
-                    // Set session variables
-                    $_SESSION['username'] = $user;
-                    $_SESSION['proname'] = $user;
+                        // Set session variables
+                        $_SESSION['username'] = $user;
+                        $_SESSION['proname'] = $user;
                             
-                    echo "<script type='text/javascript'>alert('Successfully Created Account. An email has been sent to you, so you can verify your account.')</script>";
-                    echo "<script type='text/javascript'>location.href = 'index.php';</script>";
+                        // Send user success message, and take them to main page
+                        echo "<script type='text/javascript'>alert('Successfully Created Account. An email has been sent to you, so you can verify your account.')</script>";
+                        echo "<script type='text/javascript'>location.href = 'index.php';</script>";
+                    
+                    } catch (phpmailerException $e) {
+                        echo "<script type='text/javascript'>alert('Email could not be sent. Please check details and try again later.')</script>";
+                        echo $e->errorMessage(); 
+                    }
                 }
+
             } elseif(isset($_POST['forgot_pass'])) { 
-                echo "<script type='text/javascript'>alert('We will send an email with a temporary password to the email linked to your account')</script>";
+                // Checking if user wants to reset password
+                echo "<script type='text/javascript'>if (confirm('Are You Sure You Want To Reset Your Password?')) {location.href = 'forgotPass.php';}</script>";
             }
         } 
 
@@ -271,8 +304,7 @@
     }
     $gamesdb = null;
 ?>
-    </div>
-    <!-- /#all -->
+</div>
 <?php include "footer.php"; ?>
     
 </body>

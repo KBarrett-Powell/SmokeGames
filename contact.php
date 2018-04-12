@@ -1,3 +1,6 @@
+<?php
+    session_start(); 
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,17 +10,19 @@
     </title>
 
     <?php include "references.php"; ?>
+
 </head>
 
 <body>
     <?php include "navigation.php"; ?>
 
     <div id="all">
-
         <div id="content">
             <div class="container">
 
+                <!-- Top of page links back to home -->
                 <div class="col-md-12">
+
                     <ul class="breadcrumb">
                         <li><a href="index.php">Home</a></li>
                         <li>Contact</li>
@@ -25,8 +30,9 @@
 
                 </div>
 
+                <!-- Side bar menu -->
                 <div class="col-md-3">
-                    <!-- PAGES MENU -->
+
                     <div class="panel panel-default sidebar-menu">
 
                         <div class="panel-heading">
@@ -38,29 +44,12 @@
                                 <li>
                                     <a href="#">Contact Information</a>
                                 </li>
-                                <!-- <li>
-                                    <a href="#">Profile</a>
-                                </li>
-                                <li>
-                                    <a href="#">Report a Player</a>
-                                </li> -->
-
                             </ul>
-
                         </div>
-                    </div>
-
-                    <!-- *** PAGES MENU END *** -->
-
-                    <!-- incase we want to add a side picture, like a helping report player message -->
-                    <!-- <div class="banner">
-                        <a href="#">
-                            <img src="" alt="sales 2014" class="img-responsive">
-                        </a>
-                    </div>-->
-                    
+                    </div>            
                 </div>
 
+                <!-- Information part of page -->
                 <div class="col-md-9">
 
                     <div class="box" id="contact">
@@ -72,7 +61,9 @@
                         <hr>
 
                         <div class="row">
+
                             <div class="col-sm-4">
+
                                 <h3><i class="fa fa-map-marker"></i> Address</h3>
                                 <p>Smoke Games
                                     <br>Queens Building
@@ -83,33 +74,34 @@
                                     <strong>United Kingdom</strong>
                                 </p>
                             </div>
-                            <!-- /.col-sm-4 -->
+                            
                             <div class="col-sm-4">
+
                                 <h3><i class="fa fa-phone"></i> Call center</h3>
                                 <p class="text-muted">This number is toll free if calling from Great Britain otherwise we advise you to use the electronic form of communication. (General enquireies for Cardiff University).</p>
                                 <p><strong>+44(0)20920874000</strong>
                                 </p>
                             </div>
-                            <!-- /.col-sm-4 -->
+
                             <div class="col-sm-4">
+
                                 <h3><i class="fa fa-envelope"></i> Electronic support</h3>
                                 <p class="text-muted">Please feel free to write an email to us or to use our electronic ticketing system.</p>
                                 <ul>
-                                    <li><strong><a href="mailto:">help@smokegames.com</a></strong>
-                                    </li>
+                                    <li><strong>help@smokegames.com</strong></li>
                                     <li>We aim to respond or act on messages within 24 hours.</li>
                                 </ul>
                             </div>
-                            <!-- /.col-sm-4 -->
+
                         </div>
-                        <!-- /.row -->
 
                         <hr>
 
-                        <!--<div id="map"></div>-->
+                        <!-- Display google maps in site -->
                         <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d8854.259464543067!2d-3.1713377680972283!3d51.48307448912269!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2suk!4v1519879877813" width="780" height="480" frameborder="0" style="border:0" allowfullscreen></iframe>
 
                         <hr>
+
                         <h2>Contact form</h2>
                         <!-- Still needs implementing to send an email. -->
 
@@ -151,19 +143,13 @@
 
                                 </div>
                             </div>
-                            <!-- /.row -->
                         </form>
                     </div>
                 </div>
-                <!-- /.col-md-9 -->
             </div>
-            <!-- /.container -->
         </div>
-        <!-- /#content -->
     </div>
-    <!-- /#all -->
-
 <?php include "footer.php"; ?>
-</body>
 
+</body>
 </html>

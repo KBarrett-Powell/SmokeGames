@@ -31,11 +31,11 @@
                 $banner = $row['Banner'];
             
             } else {
-                header("Location: 404.html");
+                header("Location: 404.php");
                 exit;
             }
         
-            // Code to add new friend
+            // Code to add new friend and leave a comment
             if($_SERVER["REQUEST_METHOD"] == "POST") {
                 if(isset($_POST['addfriend'])) {
                     $friendId = $uname;
@@ -113,9 +113,9 @@
                             // Link to add friend
                             echo "<div class='panel panel-default sidebar-menu'>";
                             echo "<div class='panel-heading'><h3 class='panel-title'>Currently Online / Offline</h3></div>";
-                            echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li><a href='#'><form method='post'>";
-                            echo "<button style='border:none; background-color: transparent;' type='submit' name='addfriend'>Add Friend</button></form></a></li>";
-                            echo "<li><a href='blog.html'>Message</a></li></ul></div></div>";
+                            echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li><form method='post'>";
+                            echo "<button style='border:none; background-color: transparent;' type='submit' name='addfriend'>Add Friend</button></form></li>";
+                            echo "<li><a href='#'>Message</a></li></ul></div></div>";
                         }
                     ?>       
                 </div>
@@ -237,23 +237,24 @@
 
                         <div id="comment-form" data-animate="fadeInUp">
 
-                        <h4>Leave comment</h4>
+                            <h4>Leave comment</h4>
 
-                        <form method="post">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="form-group">
-                                        <label for="comment">Comment <span class="required">*</span></label>
-                                        <textarea class="form-control" id="comment" name="comment" rows="4"></textarea>
+                            <form method="post">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="comment">Comment <span class="required">*</span></label>
+                                            <textarea class="form-control" id="comment" name="comment" rows="4"></textarea>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12 text-right">
-                                    <button class="btn btn-primary" type="submit" name="leaveComment"><i class="fa fa-comment-o"></i> Post comment</button>
+                                <div class="row">
+                                    <div class="col-sm-12 text-right">
+                                        <button class="btn btn-primary" type="submit" name="leaveComment"><i class="fa fa-comment-o"></i> Post comment</button>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div> 
                 </div>
             </div>

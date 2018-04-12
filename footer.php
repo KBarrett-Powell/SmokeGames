@@ -6,14 +6,7 @@
                     <h4>Pages</h4>
                     <hr>
                     <ul>
-                        <li><a href="contact.php">About us</a>
-                        </li>
-                        <li><a href="contact.php">Terms and conditions</a>
-                        </li>
-                        <li><a href="contact.php">FAQ</a>
-                        </li>
-                        <li><a href="contact.php">Contact us</a>
-                        </li>
+                        <li><a href="contact.php">Contact us</a></li>
                     </ul>
                 </div>
 
@@ -50,21 +43,6 @@
                 </div>
 
                 <div class="col-md-3 col-sm-6">
-
-                    <!-- <h4>Get the news</h4>
-                    <hr>
-                    <p class="text-muted">Sign up here to receive weekly newsletters about upcoming games & events!</p>
-
-                    <form>
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Email address:">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">Subscribe!</button>
-                            </span>
-                        </div>
-                    </form>
-
-                    <hr> -->
 
                     <h4>Stay in touch</h4>
                     <hr>
