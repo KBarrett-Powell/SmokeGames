@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Pong!</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<!-- <script src = "pong.js"></script> -->
+<link rel="stylesheet" type="text/css" href="emojionearea.min.css" media="screen">
+<script type="text/javascript" src="emojionearea.js"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+#container{
+padding-top: 20%;
+position: relative;
+height: auto;
+}
+
+
+.leaderboards {
+    width: 50%;
+    margin: 0 auto;
+    position: relative;
+    left:10%;
+    top: 20%;
+
+}
+.promo {
+    width: 250px;
+    background-color: white;
+    color:#13133a;
+    float: left;
+}
+.player {
+    padding: 10px 0 0 0;
+
+}
+.player span {
+    display: block;
+    text-align: center;
+}
+.player span:first-of-type {
+    font-size: 23px;
+}
+.player span:last-of-type {
+    font-size: 13px;
+}
+.promo .score {
+    display: block;
+    width: 250px;
+    background: #13133a; ;
+    margin: 15px 0 10px 0;
+    text-align: center;
+    font-size: 23px;
+    padding: 17px 0 17px 0;
+    color: white;
+
+}
+ul {
+    display: block;
+    margin: 20px 0 10px 0;
+    padding: 0;
+    list-style-type: none;
+    text-align: center;
+    color: #13133a;
+}
+li {
+    display: block;
+    margin: 10px 0 0 0;
+}
+button {
+    border: none;
+    border-radius: 40px;
+    background-color:#13133a;
+    color: white;
+    padding: 10px 37px;
+    margin: 10px 0 20px 60px;
+
+}
+.scale {
+    transform: scale(1.2);
+    box-shadow: 0 0 6px 3px rgba(20, 20, 20, 0.8);
+}
+.scale button {
+    background-color:#13133a;
+}
+
+.scale .score {
+  background: #13133a;
+  color: white;
+}
+
+
+</style>
+
+<style>
+
+.container {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  height:auto;
+  justify-content: space-around;
+  margin: 0 auto;
+  max-width: 650px;
+  min-width: 200px;
+  position: relative;
+  top: 40%;
+  transform: translateY(-50%);
+}
+
+.canvas {
+  align-items: center;
+  background: #eeeeee;
+  border-radius: 50%;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  display: flex;
+  height: 10em;
+  justify-content: center;
+  margin: 1em 1em 2em 1em;
+  width: 10em;
+}
+
+.spinner6 {
+  background: #263238;
+  border-radius: 50%;
+  height: 1em;
+  margin: .1em;
+  width: 1em;
+}
+
+.p1 {
+  animation: fall 1s linear .3s infinite;
+}
+
+.p2 {
+  animation: fall 1s linear .2s infinite;
+}
+
+.p3 {
+  animation: fall 1s linear .1s infinite;
+}
+
+.p4 {
+  animation: fall 1s linear infinite;
+}
+
+.loadingFrame {
+  position: relative;
+  background-color: black;
+  border: 2px solid white;
+  text-align: center;
+  height: 100%;
+}
+
+.loadingFrame .found {
+  position: relative;
+  top: 50%;
+  height: auto;
+  }
+
+.loadingFrame .found h2 {
+  color: White;
+}
+
+.loadingFrame h1 {
+  color: white;
+  font-family: Arial;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-15px);
+  }
+  25%, 75% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-15px);
+  }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+  <h1>Pong</h1>
+</div>
+
+<div class="topnav">
+  <a href="#">Quit</a>
+  <i id="volume_on" style="color:white; position:relative; top: calc(50% - 10px);
+         padding-left: 1%" class="fa">&#xf027;</i>
+
+    <i id="volume_off" style="color:white; position:relative; top: calc(50% - 10px);
+           padding-left: 1%; display:none" class="fa">&#xf026;</i>
+         </div>
+</div>
+
+
+<div class="row">
+  <div class="column" id="chat">
+<div id="scoreboard">
+    <div class="chat_window"><div class="top_menu"><div class="buttons"><div class="button close"></div><div class="button minimize">
+    </div><div class="button maximize"></div></div><div class="title">Game Chat</div></div><ul class="messages"></ul>
+    </div>
+    <div class="message_template">
+    <li class="message"><div class="avatar"></div><div class="text_wrapper"><div class="text"></div></div></li></div>
+
+      <div class="span6">
+      <input hidden id="sender"/>
+    </div>
+
+<div id="container"></div>
+<div class="send_message"><div class="icon"></div><div class="text">Send</div></div>
+</div>
+
+  </div>
+
+  <div class="columnone" id="game_view">
+
+    <div id="loader" class="loadingFrame">
+    <h1>Waiting For Players</h1>
+    <div class="container">
+
+      <div class="canvas canvas6">
+        <div class="spinner6 p1"></div>
+        <div class="spinner6 p2"></div>
+        <div class="spinner6 p3"></div>
+        <div class="spinner6 p4"></div>
+      </div>
+
+  </div>
+  <div class="found">
+    <h2>FOUND: 1/2 PLAYERS</h2>
+  </div>
+    </div>
+
+
+    <style>
+    table{
+      position: relative;
+      color: White;
+      border-spacing: 0;
+      width: 100%;
+      height:100%;
+    }
+
+    tr:first-child{
+      background-color: gray;
+      height: 10%;
+      color: white;
+    }
+
+    tr:nth-child(2) > td{
+      border-top-width: 0;
+    }
+
+    tr{
+      background-color: @table-color;
+    }
+
+    th, td{
+      margin: 0;
+      text-align: center;
+      border-width: @horizontal-border-width 0;
+      border-color: @header-color;
+      border-style: solid;
+    }
+
+    th{
+      border-bottom-width: @horizontal-border-width;
+    }
+
+    th:nth-child(even){
+      border-width: 0 @vertical-border-width;
+      border-color: @table-color;
+      border-style: solid;
+    }
+
+    td:nth-child(even){
+      border-width: @horizontal-border-width @vertical-border-width;
+      border-color: @header-color;
+      border-style: solid;
+    }
+    </style>
+
+    <table id="final_stats" style="display:none">
+      <tbody>
+        <tr>
+        	<th>Position</th>
+        	<th>Username</th>
+        	<th>Points</th>
+          <th>High Score</th>
+        </tr>
+        <!-- Table row entries will be dynamically inserted here. -->
+      </tbody>
+    </table>
+
+    <canvas id="pong" style="display:none" class="game_view">
+    </canvas>
+
+    <!--- Hidden Top 3 view -->
+    	<div style="display:none"class="leaderboards" id="leaderboard">
+
+    		<div class="promo" id="2nd_Place">							<!-- Stats card for runner up -->
+    				<div class="player">
+    						<span>2nd Place!</span>
+    						<span id="2nd_Name"></span>
+    						</div>
+    				<span class="score" id="2nd_Score"></span>
+    				<ul class="features">
+    					<li>Thank you for playing!</li>
+    					<li>Be sure to checkout out our other games!</li>
+    					<li>Or play again?</li>
+    				</ul>
+    				<button>Play Again</button>
+    		</div>
+
+
+    	<div class="promo scale" id="1st_Place">			<!-- Stats card for winner -->
+    		<div class="player">
+    			<span>WINNER!</span>
+    			<span id="1st_Name"></span>
+    		</div>
+    		<span class="score" id="1st_Score"></span>
+    		<ul class="features">
+    			<li>Thank you for playing!</li>
+    			<li>Be sure to checkout our other games!</li>
+    			<li>Or play again?</li>
+    		</ul>
+    		<button>Play Again</button>
+    	</div>
+
+
+    	<div class="promo" id="3rd_Place">					<!-- Stats card for 3rd place -->
+    		<div class="player">
+    			<span>3rd Place!</span>
+    			<span id="3rd_Name"></span>
+    		</div>
+    		<span class="score" id="3rd_Score"></span>
+    		<ul class="features">
+    			<li>Thank you for playing!</li>
+    			<li>Be sure to checkout out our other games!</li>
+    			<li>Or play again?</li>
+    		</ul>
+    		<button>Play Again</button>
+    	</div>
+
+    </div>
+
+  </div>
+
+  <div class="column" id="score"> <!--Score container, copied and changed so that each player
+  has an associcated score container.-->
+
+      <div class="rowtest" id="ts">
+        <div class="name">Player1</div><div class="score">100000000</div>
+      </div>
+
+  </div>
+
+
+
+  </div>
+
+</div>
+
+<!-- Chat Script -->
+
+<script>
+var textToSend;
+var a;
+(function () {
+    var Message;
+    Message = function (arg) {
+        this.text = arg.text, this.message_side = arg.message_side;
+        this.draw = function (_this) {
+            return function () {
+                var $message;
+                $message = $($('.message_template').clone().html());
+                $message.addClass(_this.message_side).find('.text').html(_this.text);
+                $('.messages').append($message);
+                return setTimeout(function () {
+                    return $message.addClass('appeared');
+                }, 0);
+            };
+        }(this);
+        return this;
+    };
+    $(function () {
+        var getMessageText, message_side, sendMessage;
+        message_side = 'right';
+
+        $('.send_message').click(function (e) {
+            var text = $("#sender").data("emojioneArea").getText()
+          socket.emit('clientMessage', text);
+          $("#sender").data("emojioneArea").setText('');
+
+        });
+    });
+}.call(this));
+
+
+</script>
+
+<script type="text/javascript">
+var textToSend;
+var a;
+
+  $(document).ready(function() {
+      document.getElementById("ts").style.display = "none";
+    $("#sender").emojioneArea({
+      container: "#container",
+      hideSource: false,
+      events: {
+      keydown: function(editor, event) {
+             // catches everything but enter
+             if (event.which == 13) {
+               $('.send_message').trigger('click');
+             }
+
+           }
+         },
+    });
+
+  });
+</script>
+
+
+<script>
+
+
+var socket = io();
+var username = "";
+var room = "";
+socket.on("details", function(data){
+username = data.username;
+console.log("***" + username);
+room = data.room;
+});
+
+//var username = prompt("What username would you like to use?");
+var playerName = username;
+var myGame;
+
+//var room = prompt('Lobby to join:');
+socket.on('connect', function() {
+  socket.emit('login', username);
+	socket.emit('room', room);
+
+  socket.on('test', function(data) {
+    console.log("this is a test");
+  });
+
+/// WORKING ON THIS ///
+
+  socket.on('playerJoin', function(users){
+
+    setUpScores(users.users);
+    console.log("---" + users.users);
+
+  });
+
+  function setUpScores(users){
+
+    console.log("Triggered123");
+    for(var i=0; i<users.length; i++){
+      console.log(users[i].name);
+    var elmnt = document.getElementById('ts');
+    var cln = elmnt.cloneNode(true);
+    cln.querySelectorAll('[class="name"]')[0].innerHTML = users[i].name;
+    cln.id = users[i].name;
+    cln.querySelectorAll('[class="score"]')[0].innerHTML = "0";
+    cln.style.display = "block";
+    document.getElementById('score').appendChild(cln)
+    }
+  }
+
+
+
+  socket.on('scoreUpdate', function(data){
+    console.log("this was also triggered");
+    updateScores(data.player, data.score);
+  });
+
+  function updateScores(name, score){
+    console.log("this is the name: " + name);
+    document.getElementById(name).querySelectorAll('[class="score"]')[0].innerHTML= score;
+    sortIt();
+  }
+
+
+/// WORKING ON THIS ///
+
+
+});
+
+window.onload = function() {
+
+socket.on('message', function(content) {
+    addMessage(content);
+  });
+
+  function addMessage(message) {
+    // TODO: Add new message to the chat window...
+
+            Message = function (arg) {
+                this.text = arg.text, this.message_side = arg.message_side;
+                this.draw = function (_this) {
+                    return function () {
+                        var $message;
+                        $message = $($('.message_template').clone().html());
+                        $message.addClass(_this.message_side).find('.text').html(_this.text);
+                        $('.messages').append($message);
+                        return setTimeout(function () {
+                            return $message.addClass('appeared');
+                        }, 0);
+                    };
+                }(this);
+                return this;
+            };
+        var $messages, message;
+
+       $('#sender').val('');
+        $messages = $('.messages');
+        var message_side;
+        var chosenValue = Math.random() < 0.5 ? 0 : 1;
+        if (chosenValue == 0 ) {
+          message_side = 'right';
+        } else {
+          message_side = 'left';
+        }
+        console.log("-------------------------------" + message_side);
+        message = new Message({
+            text: message,
+            message_side: message_side
+        });
+        message.draw();
+        return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+
+
+  }
+
+
+      socket.on('here', function(data) {
+            console.log(data);
+          });
+
+
+}
+
+var playerNumber;
+
+socket.on("playerNumber", function(P_Num){  // Gets (1) or (0) from server
+
+  playerNumber = P_Num;
+  console.log(" you are: " + playerNumber);
+});
+
+socket.on('yourGame', function(data) {
+      myGame = data;
+      console.log(myGame);
+    });
+
+</script>
+
+<script>
+
+function game() {
+  console.log("activated");
+
+  // Assigning the HTML elements to be used to variables...
+    //var link = document.querySelector('link[rel="import"]');
+  //  console.log(link);
+    //var content = link.import;
+
+    console.log("test test 123");
+
+    // Grab DOM from warning.html's document.
+    //var el = content.querySelector('#pong');
+    var el = document.getElementById('pong');
+    //document.getElementById("o").appendChild(el.cloneNode(true));	// load the games HTML file
+    fitToContainer(document.getElementById("pong"));
+    console.log(document.getElementById("pong").width);
+    console.log(document.getElementById("pong").height);
+
+    function fitToContainer(canvas){
+      // Make it visually fill the positioned parent
+      canvas.style.width ='100%';
+      canvas.style.height='100%';
+      // ...then set the internal size to match
+      canvas.width  = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
+
+
+var canvas = document.getElementById('pong'); // Create the canvas that will have the pong paddles and ball written onto it
+//var playerNumber; // Stores (1) for player one and (2) for player two, this is needed in identifying which paddle is which.
+console.log(canvas);
+
+// Transmit canvas size when server requests...
+socket.on("getDimensions", function(data){
+  socket.emit("setDimensions", {"canvas_width": canvas.width, "canvas_height": canvas.height});
+});
+
+
+socket.on("drawBall", function(data){   // This is where update is performed on the canvas to display new paddle and ball positions
+  console.log(data.y1 + "|" + data.y2);
+  canvas.getContext('2d').fillStyle = '#011a27';
+  canvas.getContext('2d').fillRect(0, 0, canvas.width, canvas.height)
+
+  canvas.getContext('2d').fillStyle = '#e1315b';
+  canvas.getContext('2d').fillRect(data.x, data.y, 10, 10);
+
+  canvas.getContext('2d').fillStyle = '#ffec5c';
+  canvas.getContext('2d').fillRect(0, data.y1, 20, 100);
+
+  canvas.getContext('2d').fillStyle = '#f47d4a';
+  canvas.getContext('2d').fillRect((1149-20), data.y2, 20, 100);
+
+});
+
+console.log(canvas);
+canvas.addEventListener("mousemove", event => { // Need event listener to listen for user mouse movement to update paddle view.
+  let scale = event.offsetY / event.target.getBoundingClientRect().height;
+
+  let newPosition = (canvas.height * scale - 50);
+if(newPosition > 0 && newPosition < canvas.height - 100){  // Prevent paddle from going out of view (off the canvas).
+  updatePaddle(newPosition, playerNumber);
+}
+});
+
+function updatePaddle(newPosition, playerNumber){ //This sends the new paddle position to the server and is called when them
+  console.log(playerNumber);                      //mousemove event listener is fired
+  socket.emit("mousemove", {"position": newPosition, "number": playerNumber,"theGame": myGame});
+}
+}
+
+
+
+// Display top 3 scores when ths game has ended.
+socket.on('gameEnded', function(data) {
+  var y = [];
+  console.log("users ---" + data.users.length);
+  for(var i = 0; i< data.users.length; i++){
+      console.log("NEXT");
+      y.push(data.users[i]);
+  }
+
+  y.sort(function(a,b) {
+    return a[1] -b[1];
+  });
+  console.log(y);
+  // sort scores from 1st to last client side...
+  y.reverse();
+
+  document.getElementById('pong').style.display = "none";
+  document.getElementById('final_stats').style.display = "table";
+
+var table = document.getElementById('final_stats'); // Fetch the table.
+
+for(var i = 0; i<y.length; i++) {
+  var row = table.insertRow(1);
+
+  var pos_cell = row.insertCell(0); // Fill in row position
+  pos_cell.innerHTML = (y.length - i);
+
+  var user_cell = row.insertCell(1);  // Fill in row username
+  user_cell.innerHTML = y[i].name;
+
+  var points_cell = row.insertCell(2);  // Fill in row score
+  points_cell.innerHTML = y[i].score;
+
+  var highscore_cell = row.insertCell(3); // Need to hold hghscore - in database?
+  highscore_cell.innerHTML = "FILL" // Temp value untill database set up
+}
+
+
+//   console.log("Game Over!");
+//
+//   document.getElementById('pong').style.display = "none";
+//   document.getElementById("leaderboard").style.display = "block";
+//
+//   // test for game winner display...
+//   if(y.length > 0){
+//   document.getElementById("1st_Name").innerHTML = y[0].name;
+//   document.getElementById("1st_Score").innerHTML = "Score: " + y[0].score;
+// }
+// else{
+//     document.getElementById('1st_Place').style.display = "none";
+// }
+//
+//   // test for game runner up display...
+//   if(y.length > 1){
+//   document.getElementById("2nd_Name").innerHTML = y[1].name;
+//   document.getElementById("2nd_Score").innerHTML = "Score: " + y[1].score;
+//   }
+//   else{
+//       document.getElementById('2nd_Place').style.display = "none";
+//   }
+//   // test for game third place display...
+//   if(y.length > 2){
+//   document.getElementById("3rd_Name").innerHTML = y[2].name;
+//   document.getElementById("3rd_Score").innerHTML = "Score: " + y[2].score;
+//   }
+//   else{
+//       document.getElementById('3rd_Place').style.display = "none";
+//   }
+//   //window.location.href = data;
+});
+
+
+socket.on('gameStarted', function(data) {
+  console.log("Game Started, loader should be removed.");
+  document.getElementById('loader').style.display = "none";
+  document.getElementById('pong').style.display = "block";
+
+// Test the playing of game music...
+  var x = document.createElement("AUDIO");
+  x.setAttribute("src",'Free-bluegrass-music.mp3');
+  document.body.appendChild(x);
+  x.id = "music";
+  x.play();
+
+  game(); // Set up game specific envrionment, ready to be view for game state...
+    });
+
+document.getElementById('volume_on').addEventListener("click",  // Toggle volume off.
+function(e){
+document.getElementById("music").muted = true;
+document.getElementById("volume_on").style.display = "none";
+document.getElementById("volume_off").style.display = "inline";
+})
+
+document.getElementById('volume_off').addEventListener("click",
+function(e){
+document.getElementById("music").muted = false;
+document.getElementById("volume_on").style.display = "inline";  // Toggle volume on.
+document.getElementById("volume_off").style.display = "none";
+})
+// Test the playing of game music
+
+</script>
+
+<script>
+//Script to sort leaderboard from lowest to highest.
+
+document.addEventListener('DOMContentLoaded', () => {
+  let elements = []
+  let container = document.querySelector('#score')
+  // Add each row to the array
+  container.querySelectorAll('.rowtest').forEach(el => elements.push(el));
+  // Clear the container
+  container.innerHTML = ''
+  // Sort the array from highest to lowest
+  elements.sort((a, b) => b.querySelector('.score').textContent - a.querySelector('.score').textContent);
+  // Put the elements back into the container
+  elements.forEach(e => container.appendChild(e))
+})
+
+function sortIt() {
+  let elements = []
+  let container = document.querySelector('#score')
+  // Add each row to the array
+  container.querySelectorAll('.rowtest').forEach(el => elements.push(el));
+  // Clear the container
+  container.innerHTML = ''
+  // Sort the array from highest to lowest
+  elements.sort((a, b) => b.querySelector('.score').textContent - a.querySelector('.score').textContent);
+  // Put the elements back into the container
+  elements.forEach(e => container.appendChild(e))
+}
+
+</script>
+
+
+
+
+
+</body>
+</html>
