@@ -112,7 +112,18 @@
     <div class="chat">
     </div>
     <div class="game">
+      <h2>Username for demo: </h2>
+      <br/>
+      <input placeholder="Username" id="input_name"/>
+      <br/>
+        <button class="button button2" onClick="test('pong','Random', 'Alan')" id="Pong" value="Pong">Pong Random Game</button>
 
+      <br/>
+      <h2>OR</h2>
+      <br/>
+        <input placeholder="Lobby to join" id="input_lobby"/>
+      <br/>
+        <button class="button button3" onClick="test('pong', 'Private', 'Alan')" id="Pong" value="Pong">Pong Private Game</button>
       <script>
       function test(game_ID, game_type, game_username) {
 
