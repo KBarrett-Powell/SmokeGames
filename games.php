@@ -1,5 +1,9 @@
 <?php
-    session_start(); 
+    if(!isset($_SESSION)) 
+    { 
+        session_start(); 
+    } 
+    include "config.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,8 +75,7 @@
                     
                             <?php
                                 try{
-                                    $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
-                                    $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                                    include "config.php";
 
                                      // This SQL query defines how the items are sorted and what they are filtered by
                                     if (isset($_POST['sortwhat']) && isset($_POST['filterby'])) {
