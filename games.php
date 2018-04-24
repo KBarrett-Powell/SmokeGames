@@ -7,7 +7,7 @@
 <head>
 
     <title>
-        Smoke Games - Homepage
+        Smoke Games - Games
     </title>
 
     <?php include "references.php"; ?>
@@ -28,62 +28,70 @@
                     <div class="container">
                         <div class="col-md-12">
                             <h2>All Games</h2>
+
+                            <div class="col-md-6">
+                                <!-- forms for the sort and filters for the games -->
+                                <form id="filterForm" method="POST" action="">
+                                    <div class="form-group">
+                                        
+                                        <label for="filterby">Filter:</label>
+                                        <select class="form-control" onchange="filterForm.submit();" name='filterby'>
+                                            <option value=''>All</option>
+                                            <option value='Action'>Action</option>
+                                            <option value='Arcade'>Arcade</option>
+                                            <option value='Multi-Player'>Multi-Player</option>
+                                            <option value='Puzzle'>Puzzle</option>
+                                            <option value='Shooter'>Shooter</option>
+                                            <option value='Sports'>Sports</option>
+                                        </select>
+
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- sort by several different options-->
+                            <form id="sortForm" method="POST" action="">
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        <label for="sortwhat">Sort By:</label>
+                                        <select class="form-control" onchange="sortForm.submit();" name='sortwhat'>
+                                            <option value='Gname'>Name</option>
+                                            <!-- <option value='Popularity'>Popularity</option>
+                                            <option value='Rating'>Rating</option> -->
+                                            <option value='Recommended'>Recommended</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="sorthow">Order:</label>
+                                        <select class="form-control" onchange="sortForm.submit();" name='sorthow'>
+                                                <option value='ASC'>Ascending</option>
+                                                <option value='DESC'>Descending</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                </div>
-
-                <!-- forms for the sort and filters for the games -->
-                <div class='forms'>
-
-                    <form id="filterForm" method="POST" action="<?php $_SERVER['PHP_SELF']?>">
-
-                        <!-- filter by type of game - NOT IMPLEMENTED YET-->
-                        <select name='filterby'>
-                            <option value=''>All</option>
-                            <option value='action'>Action</option>
-                            <option value='arcade'>Arcade</option>
-                            <option value='multi'>Multi-Player</option>
-                            <option value='puzzle'>Puzzle</option>
-                            <option value='shooter'>Shooter</option>
-                            <option value='sports'>Sports</option></select>
-                        <input type="submit" value="Filter">
-                    </form>
-
-                        <!-- sort by several different options - NOT FULLY INTEGRATED as we havent started storing other options in database-->
-                    <form id="sortForm" method="GET" action="<?php $_SERVER['PHP_SELF']?>">
-
-                        <select name='sortwhat'>
-                                <option value='Gname'>Name</option>
-                                <option value='Popularity'>Popularity</option>
-                                <option value='Rating'>Rating</option>
-                                <option value='Recommended'>Recommended</option></select><br>
-
-                        <select name='sorthow'>
-                                <option value='ASC'>Ascending</option>
-                                <option value='DESC'>Descending</option></select>
-                        <input type="submit" value="Sort">
-                    </form>
                 </div>
                 
                 <div id='hot'> 
                     <div class="container">
                         <div class="product-slider">
-                    
                             <?php
                                 try{
-                                    $gamesdb = new PDO("mysql:host=csmysql.cs.cf.ac.uk;dbname=group4_2017", "group4.2017", "WKPrte4YHjB34F");
-                                    $gamesdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                                    include "config.php";
 
                                      // This SQL query defines how the items are sorted and what they are filtered by
                                     if (isset($_POST['sortwhat']) && isset($_POST['filterby'])) {
-                                        $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE Category LIKE '%?%' ORDER BY ? ? ");
-                                        $retrieve->execute([$_POST['filterby'], $_POST['sortwhat'], $_GET['sorthow']]);
+                                        $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE Category LIKE ? ORDER BY ? ? ");
+                                        $retrieve->execute(['%'.$_POST['filterby'].'%', $_POST['sortwhat'], $_POST['sorthow']]);
                                     } else if (isset($_POST['sortwhat'])) {
                                         $retrieve = $gamesdb->prepare("SELECT * FROM Games ORDER BY ? ?");
                                         $retrieve->execute([$_POST['sortwhat'], $_POST['sorthow']]);
                                     } else if (isset($_POST['filterby'])) {
-                                        $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE Category LIKE '%?%' ORDER BY Gname ASC");
-                                        $retrieve->execute([$_POST['filterby']]);
+                                        $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE Category LIKE ? ORDER BY Gname ASC");
+                                        $retrieve->execute(['%'.$_POST['filterby'].'%']);
                                     } else {    
                                         $retrieve = $gamesdb->prepare("SELECT * FROM Games ORDER BY Gname ASC");
                                         $retrieve->execute();
@@ -94,7 +102,7 @@
                                             $id = $row["GameID"];
                                             $name = $row["Gname"];
                                             $img = $row["Gimg1"];
-                                            $flip = $row["Gimg2"];
+
                                             echo "<div class='item'><div class='product'><div class='flip-container'>";
                                             echo "<div class='flipper'><div class='front'>";
                                             echo "<a href='detail.php?id=$id'><img src='$img' alt='' class='img-responsive'></a></div>";
@@ -104,30 +112,19 @@
                                             echo "</div></div></div>";
                                         }
                                         echo "</div></div>";
-                                    } else { echo "No results";}
+                                    } else { echo "<h3 style='margin-left: 35%;'>--No results--</h3>";}
 
                                 }catch(PDOException $e) {
                                     echo "Connection failed: " . $e->getMessage();
                                 }
                                 $gamesdb = null;
                             ?>
-                    
-
-
-                            </div>
-     
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
-    <!-- footer -->
+    </div>
     <?php include "footer.php"; ?>
 </body>
-
 </html>

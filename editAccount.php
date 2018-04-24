@@ -148,6 +148,11 @@
                                 <li class="active">
                                     <a href="#"><i class="fa fa-user"></i> Edit Account</a>
                                 </li>
+                                <?php 
+                                    if (isset($_SESSION['admin']) && $_SESSION['admin'] == true) {
+                                        echo "<li><a href='admin.php'><i class='fa fa-user'></i> Admin</a></li>";
+                                    }
+                                ?>
                                 <li>
                                     <a href="logout.php"><i class="fa fa-sign-out"></i> Logout</a>
                                 </li>
@@ -226,6 +231,7 @@
                                 <div class="col-sm-12 text-center">
                                     <button type="submit" class="btn btn-primary" name="edit_acc"><i class="fa fa-save"></i> Save changes</button>
                                     <button type="cancel" class="btn btn-primary"><i class="fa fa-save"></i> Cancel</button>
+                                    <button type="submit" class="btn btn-primary" name="del_acc"><i class="fa fa-save"></i> Delete Account</button>
                                 </div>
                             </div>
                         </form>
@@ -263,8 +269,7 @@
                     $update = $gamesdb->prepare("UPDATE Users SET Phone = ? WHERE Uname = ?");
                     $update->execute([$nphone, $curuser]);
                 }   
-                echo "<script type='text/javascript'>alert('Successfully Updated Account')</script>";
-                echo "<script type='text/javascript'>location.href = 'editAccount.php';</script>";
+                echo "<script type='text/javascript'>alert('Successfully Updated Account'); location.href = 'editAccount.php';</script>";
 
             } 
             if(isset($_POST['edit_pass'])) {
@@ -274,11 +279,13 @@
                 $update = $gamesdb->prepare("UPDATE Users SET Pass = ? WHERE Uname = ?");
                 $update->execute([$npass, $curuser]);
 
-                echo "<script type='text/javascript'>alert('Successfully Updated Password')</script>";
-                echo "<script type='text/javascript'>location.href = 'editAccount.php';</script>";
+                echo "<script type='text/javascript'>alert('Successfully Updated Password'); location.href = 'editAccount.php';</script>";
+            }
+            if(isset($_POST['del_acc'])) {
+                // Checking if user is sure they want to delete account before doing so.
+                echo "<script type='text/javascript'>if(confirm('Are you sure you want to delete you account?')){location.href = 'deleteAcc.php'}</script>";
             }
         }
-
     } catch(PDOException $e) {
         echo "Connection failed: " . $e->getMessage();
     }

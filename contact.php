@@ -41,8 +41,11 @@
 
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li>
+                                <li class="active">
                                     <a href="#">Contact Information</a>
+                                </li>
+                                <li>
+                                    <a href="report.php">Report A User</a>
                                 </li>
                             </ul>
                         </div>

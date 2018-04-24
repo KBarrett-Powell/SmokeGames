@@ -77,102 +77,19 @@
                 <img src="images/Logos/long-logo-white.png" alt="Smoke Games logo" class="hidden-xs" height="50px" width="300">
                 <img src="images/Logos/logo-small.png" alt="Smoke Games logo" class="visible-xs"><span class="sr-only">Smoke Games homepage</span>
             </a>
-            <div class="navbar-buttons">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation">
-                    <span class="sr-only">Toggle navigation</span>
-                    <i class="fa fa-align-justify"></i>
-                </button>
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#search">
-                    <span class="sr-only">Toggle search</span>
-                    <i class="fa fa-search"></i>
-                </button>
-            </div>
+            
         </div>
-        <!--/.navbar-header -->
 
         <div class="navbar-collapse collapse" id="navigation">
 
             <ul class="nav navbar-nav navbar-left">
                 <li class="active"><a href="index.php">Home</a></li>
-                <li class="dropdown yamm-fw">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">All Games <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <div class="yamm-content">
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <h5>Trending</h5>
-                                        <ul>
-                                            <li><a href="#">Insert Game Name</a>
-                                            </li>
-                                            <li><a href="#">Insert Game Name</a>
-                                            </li>
-                                            <li><a href="#">Insert Game Name</a>
-                                            </li>
-                                            <li><a href="#">Insert Game Name</a>
-                                            </li>
-                                            <li><a href="#">Insert Game Name</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <h5>Recommended</h5>
-                                        <ul>
-                                            <li><a href="#">Insert Game Name</a>
-                                            </li>
-                                            <li><a href="#">Insert Game Name</a>
-                                            </li>
-                                            <li><a href="#">Insert Game Name</a>
-                                            </li>
-                                            <li><a href="#">Insert Game Name</a>
-                                            </li>
-                                            <li><a href="#">Insert Game Name</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <h5>Spotlight</h5>
-                                        <ul>
-                                            <li><a href="#">Insert Game Name</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <h5>Categories</h5>
-                                        <ul>
-                                            <li><a href="#">Action</a>
-                                            </li>
-                                            <li><a href="#">Adventure</a>
-                                            </li>
-                                            <li><a href="#">Arcade</a>
-                                            </li>
-                                            <li><a href="#">Driving</a>
-                                            </li>
-                                            <li><a href="#">Multiplayer</a>
-                                            </li>
-                                            <li><a href="#">Sports</a>
-                                            </li>
-                                            <li><a href="#">Strategy</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.yamm-content -->
-                        </li>
-                    </ul>
-                </li>
+                <li><a href="games.php">All Games</a></li>
             </ul>
 
         </div>
-        <!--/.nav-collapse -->
 
         <div class="navbar-buttons">
-
-            <!-- <div class="navbar-collapse collapse right" id="basket-overview">
-                <a href="#" class="btn btn-primary navbar-btn"><i class="fa fa-shopping-cart"></i><span class="hidden-sm">Donate!</span></a>
-            </div> -->
-            <!--/.nav-collapse -->
 
             <div class="navbar-collapse collapse right" id="search-not-mobile">
                 <button type="button" class="btn navbar-btn btn-primary" data-toggle="collapse" data-target="#search">

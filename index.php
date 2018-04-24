@@ -97,20 +97,8 @@
                             try{
                                 include "config.php";
 
-                                 // This SQL query defines how the items are sorted and what they are filtered by
-                                if (isset($_GET['sortwhat']) && isset($_GET['filterby'])) {
-                                    $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE Category LIKE '%?%' ORDER BY ? ? ");
-                                    $retrieve->execute([$_GET['filterby'], $_GET['sortwhat'], $_GET['sorthow']]);
-                                } else if (isset($_GET['sortwhat'])) {
-                                    $retrieve = $gamesdb->prepare("SELECT * FROM Games ORDER BY ? ?");
-                                    $retrieve->execute([$_GET['sortwhat'], $_GET['sorthow']]);
-                                } else if (isset($_GET['filterby'])) {
-                                    $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE Category LIKE '%?%' ORDER BY Gname ASC");
-                                    $retrieve->execute([$_GET['filterby']]);
-                                } else {    
-                                    $retrieve = $gamesdb->prepare("SELECT * FROM Games ORDER BY Gname ASC");
-                                    $retrieve->execute();
-                                }
+                                $retrieve = $gamesdb->prepare("SELECT * FROM Games ORDER BY Gname ASC");
+                                $retrieve->execute();
                                 
                                 if ($retrieve->rowCount() > 0) {
                                     foreach ($retrieve as $row) {

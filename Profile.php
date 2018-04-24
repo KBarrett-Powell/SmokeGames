@@ -29,15 +29,54 @@
                 $desc = $row['PDesc'];
                 $img = $row['ProPic'];
                 $banner = $row['Banner'];
+
+                $sent = false;
+                $recieve = false;
+                $friends = false;
+
+                $requestsent = $gamesdb->prepare("SELECT * FROM Friends WHERE Uname1 = ? AND Uname2 = ?");
+                $requestsent->execute([$_SESSION['username'], $uname]);
+    
+                if ($requestsent->rowCount() == 1) {
+                    $row = $requestsent->fetch(PDO::FETCH_ASSOC);
+                    $confirm = $row['Confirm'];
+                    if ($confirm){
+                        $friends = true;
+                    } else {
+                        $sent = true;
+                    }
+                }
+
+                $requestrecieved = $gamesdb->prepare("SELECT * FROM Friends WHERE Uname1 = ? AND Uname2 = ?");
+                $requestrecieved->execute([$uname, $_SESSION['username']]);
+
+                if ($requestrecieved->rowCount() == 1) {
+                    $row = $requestrecieved->fetch(PDO::FETCH_ASSOC);
+                    $confirm = $row['Confirm'];
+                    if ($confirm){
+                        $friends = true;
+                    } else {
+                        $recieve = true;
+                    }
+                }
             
             } else {
-                header("Location: 404.php");
-                exit;
+                echo "<script type='text/javascript'>location.href = '404.php';</script>";
             }
         
             // Code to add new friend and leave a comment
             if($_SERVER["REQUEST_METHOD"] == "POST") {
                 if(isset($_POST['addfriend'])) {
+                    $friendId = $uname;
+                    
+                    $uname1 = $_SESSION['username'];
+                    
+                    $addNew = $gamesdb->prepare("UPDATE Friends SET Confirm = 1 WHERE Uname1 = ? AND Uname2 = ?");
+                    $addNew->execute([$friendId, $uname1]);
+    
+                    echo "<script type='text/javascript'>alert('Friend Successfully added.'); window.location.href = window.location.href;</script>";
+
+                } else if(isset($_POST['sendreq'])) {
                     $friendId = $uname;
                     
                     // Create new friend id for the friendship
@@ -49,10 +88,10 @@
                     $uname1 = $_SESSION['username'];
                     $date = date('Y-m-d');
     
-                    $addNew = $gamesdb->prepare("INSERT INTO Friends(FID, Uname1, Uname2, DateAdd) VALUES (?, ?, ?, ?)");
-                    $addNew->execute([$fid, $uname1, $friendId, $date]);
+                    $addNew = $gamesdb->prepare("INSERT INTO Friends(FID, Uname1, Uname2, Fdate, Confirm) VALUES (?, ?, ?, ?)");
+                    $addNew->execute([$fid, $uname1, $friendId, $date, 0]);
     
-                    echo "<script type='text/javascript'>alert('Friend Successfully added.')</script>";
+                    echo "<script type='text/javascript'>alert('Friend Request Sent Successfully.'); window.location.href = window.location.href;</script>";
 
                 } else if(isset($_POST['leaveComment'])) {
                     $commentee = $uname;
@@ -67,14 +106,13 @@
                     $commenter = $_SESSION['username'];
                     $date = date('F j, Y, g:i a');
     
-                    $addNew = $gamesdb->prepare("INSERT INTO Comments(ComID, OnUname, FromUname, Comment, DateAdd) VALUES (?, ?, ?, ?, ?)");
+                    $addNew = $gamesdb->prepare("INSERT INTO Comments(ComID, OnUname, FromUname, Comment, Cdate) VALUES (?, ?, ?, ?, ?)");
                     $addNew->execute([$cid, $commentee, $commenter, $comment, $date]);
     
-                    echo "<script type='text/javascript'>alert('Commented Successfully.')</script>";
+                    echo "<script type='text/javascript'>alert('Commented Successfully.'); window.location.href = window.location.href;</script>";
                 }
             }
-
-        }catch(PDOException $e) {
+        } catch(PDOException $e) {
             echo "Connection failed: " . $e->getMessage();
         }
         $gamesdb = null;
@@ -100,22 +138,43 @@
                 
                 <div class="col-md-3">
                     <?php
+                        echo "<div class='panel panel-default sidebar-menu'>";
                         if ($uname == $_SESSION['username']){
                             // Links to log out and view account info
-                            echo "<div class='panel panel-default sidebar-menu'>";
                             echo "<div class='panel-heading'><h3 class='panel-title'>My Account</h3></div>";
                             echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li class='active'><a href='profile.php?id=$uname'><i class='fa fa-list'></i>My profile</a></li>";
                             echo "<li><a href='editProfile.php'><i class='fa fa-heart'></i> Edit Profile</a></li>";
                             echo "<li><a href='editAccount.php'><i class='fa fa-user'></i> Edit Account</a></li>";
+                            if (isset($_SESSION['admin']) && $_SESSION['admin'] == true) {
+                                echo "<li><a href='admin.php'><i class='fa fa-user'></i> Admin</a></li>";
+                            }
                             echo "<li><a href='logout.php'><i class='fa fa-sign-out'></i> Logout</a></li></ul></div></div>";
+
+                        } else if ($sent) {
+                            // Display that request for friendship sent
+                            echo "<div class='panel-heading'><h3 class='panel-title'>$uname</h3></div>";
+                            echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li>Friend Request Sent</li>";
+                            echo "<li><a href='report.php'>Report User</a></li></ul></div></div>";
+
+                        } else if ($recieve) {
+                            // Display that request for friendship recieved
+                            echo "<div class='panel-heading'><h3 class='panel-title'>$uname</h3></div>";
+                            echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li> Friend Request Recieved!</li><li><form method='post'>";
+                            echo "<button style='border:none; background-color: transparent;' type='submit' name='addfriend'>Add Friend</button>";
+                            echo "</form></li><li><a href='report.php'>Report User</a></li></ul></div></div>";
+
+                        } else if ($friends){
+                            // Display that user is friends with this user
+                            echo "<div class='panel-heading'><h3 class='panel-title'>$uname</h3></div>";
+                            echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li>You're Friends!</li>";
+                            echo "<li><a href='report.php'>Report User</a></li></ul></div></div>";
 
                         } else {
                             // Link to add friend
-                            echo "<div class='panel panel-default sidebar-menu'>";
-                            echo "<div class='panel-heading'><h3 class='panel-title'>Currently Online / Offline</h3></div>";
+                            echo "<div class='panel-heading'><h3 class='panel-title'>$uname</h3></div>";
                             echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li><form method='post'>";
-                            echo "<button style='border:none; background-color: transparent;' type='submit' name='addfriend'>Add Friend</button></form></li>";
-                            echo "<li><a href='#'>Message</a></li></ul></div></div>";
+                            echo "<button style='border:none; background-color: transparent;' type='submit' name='sendreq'>Send Friend Request</button></form></li>";
+                            echo "<li><a href='report.php'>Report User</a></li></ul></div></div>";
                         }
                     ?>       
                 </div>
@@ -206,7 +265,7 @@
                             <?php 
                                 try{
                                     include "config.php";
-                                    $retrieve = $gamesdb->prepare("SELECT c.Comment, c.DateAdd, p.ProName, p.ProPic FROM Comments c JOIN Profiles p ON c.FromUname = p.Uname WHERE c.OnUname = ?");
+                                    $retrieve = $gamesdb->prepare("SELECT c.Comment, c.Cdate, p.ProName, p.ProPic FROM Comments c JOIN Profiles p ON c.FromUname = p.Uname WHERE c.OnUname = ?");
                                     $retrieve->execute([$uname]);
                                     
                                     $count = $retrieve->rowCount();
@@ -215,7 +274,7 @@
 
                                         foreach ($retrieve as $row) {
                                             $comment = $row['Comment'];
-                                            $dateadd = $row['DateAdd'];
+                                            $dateadd = $row['Cdate'];
                                             $cname = $row['ProName'];
                                             $cpic = $row['ProPic'];
 

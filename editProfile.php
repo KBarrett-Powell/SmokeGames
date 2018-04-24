@@ -114,6 +114,11 @@
                                 <li>
                                     <a href="editAccount.php"><i class="fa fa-user"></i> Edit account</a>
                                 </li>
+                                <?php 
+                                    if (isset($_SESSION['admin']) && $_SESSION['admin'] == true) {
+                                        echo "<li><a href='admin.php'><i class='fa fa-user'></i> Admin</a></li>";
+                                    }
+                                ?>
                                 <li>
                                     <a href="logout.php"><i class="fa fa-sign-out"></i> Logout</a>
                                 </li>
