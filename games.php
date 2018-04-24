@@ -22,12 +22,8 @@
     <?php include "navigation.php"; ?>
 
     <div id="all">
-
         <div id="content">
-
-            <!-- Games listing -->
             <div id="allGames">
-
                 <div class="box">
                     <div class="container">
                         <div class="col-md-12">
@@ -60,9 +56,7 @@
                                         <label for="sortwhat">Sort By:</label>
                                         <select class="form-control" onchange="sortForm.submit();" name='sortwhat'>
                                             <option value='Gname'>Name</option>
-                                            <!-- <option value='Popularity'>Popularity</option>
-                                            <option value='Rating'>Rating</option> -->
-                                            <option value='Recommended'>Recommended</option>
+                                            <option value='AvgRating'>Rating</option>
                                         </select>
                                     </div>
 

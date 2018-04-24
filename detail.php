@@ -36,6 +36,7 @@
                 $age = $row['AgeRating'];
                 $credits = $row['Credits'];
                 $howto = $row['HowTo'];
+                $avgrate = round($row['AvgRating'], 1);
             
             // else if id in url not linked to a game, send user to error page
             } else {
@@ -56,7 +57,17 @@
                     // Inserting new information into the database
                     $addNew = $gamesdb->prepare("INSERT INTO Reviews(GameID, DateOf, Uname, Rating, Review) VALUES (?, ?, ?, ?, ?)");
                     $addNew->execute([$gameid, $date, $reviewer, $rating, $review]);
-    
+
+                    // Calculate the average rating for this game, round to 1 decimal place
+                    $avgRating = $gamesdb->prepare("SELECT ROUND(AVG(Rating), 1) AS avgRating FROM Reviews WHERE GameID = ?");
+                    $avgRating->execute([$_GET['id']]);
+                    $avgRow = $avgRating->fetch(PDO::FETCH_ASSOC);
+                    $newAvg = $avgRow['avgRating'];
+
+                    // Inserting new information into the database
+                    $update = $gamesdb->prepare("UPDATE Games SET AvgRating = ? WHERE GameID = ?");
+                    $update->execute([$newAvg, $id]);
+
                     echo "<script type='text/javascript'>alert('Reviewed Successfully.')</script>";
                 }
             }
@@ -130,30 +141,15 @@
 
                                 <li>
                                     <?php 
-                                        try{
-                                            include "config.php";
+                                        // If an average rating exists...
+                                        if ($avg != 0) {
+                                            // Display average rating
+                                            echo "<a href='#'>Average rating:  <span class='badge pull-right'>$avg</span></a>";
 
-                                            // Calculate the average rating for this game, round to 1 decimal place
-                                            $avgRating = $gamesdb->prepare("SELECT ROUND(AVG(Rating), 1) AS avgRating FROM Reviews WHERE GameID = ?");
-                                            $avgRating->execute([$_GET['id']]);
-
-                                            $avgRow = $avgRating->fetch(PDO::FETCH_ASSOC);
-                                            $avg = $avgRow['avgRating'];
-
-                                            // If an average rating exists...
-                                            if ($avg != NULL) {
-                                                // Display average rating
-                                                echo "<a href='#'>Average rating:  <span class='badge pull-right'>$avg</span></a>";
-
-                                            // If they're aren't any reviews for this game, tell the user that neatly
-                                            } else {
-                                                echo "<a href='#'>--No Rating Yet--</a>";
-                                            }
-                                        
-                                        }catch(PDOException $e) {
-                                            echo "Connection failed: " . $e->getMessage();
+                                        // If they're aren't any reviews for this game, tell the user that neatly
+                                        } else {
+                                            echo "<a href='#'>--No Rating Yet--</a>";
                                         }
-                                        $gamesdb = null;
                                     ?> 
                                 </li>
                             </ul>
@@ -181,7 +177,7 @@
                                 <p style='text-align: center'>Age: <?php echo $age; ?>+</p>
 
                                 <p class="text-center buttons">
-                                    <?php echo "<a href='play.php?GameID=".$_GET['id']."' class='btn btn-primary' style='font-size: 16pt'><i class='fa fa-shopping-cart'></i> PLAY GAME</a>";?>
+                                    <?php echo "<a href='play.php?id=".$_GET['id']."' class='btn btn-primary' style='font-size: 16pt'><i class='fa fa-shopping-cart'></i> PLAY GAME</a>";?>
                                 </p>
                             </div>
 

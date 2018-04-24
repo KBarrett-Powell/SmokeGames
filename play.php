@@ -11,276 +11,175 @@
     <title>
         Smoke Games
     </title>
-    <?php include "references.php"; ?>
-    <style>
-      div.navigation {
-        border-style: hidden;
-      }
 
-      div.gameContainer {
-        margin: auto;
-      }
+    <?php 
+      include "references.php";
+      include "require.php";
 
-      div.game {
-        width:1280px;
-        height:720px;
-        border-color: #555555;
-        border-width: 1px;
-        border-style: solid;
-        margin: auto;
-      }
+      $id = $_GET['id'];
+        try {
+          include 'config.php';
+          $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE GameID = ?");
+          $retrieve->execute([$id]);
 
-      div.gameDetails {
-        margin-bottom: 600px;
-        margin-left: auto;
-        margin-right: auto;
-        width:1280px;
-      }
+          if ($retrieve->rowCount() == 1) {
+            $row = $retrieve->fetch(PDO::FETCH_ASSOC);
 
-      div.gameInfo {
-        margin-top: 50px;
-        float: left;
-        width: 45%;
-        margin: auto;
-        width: 50%;
-      }
+            $gname = $row["Gname"];
+            $desc = $row["Description"];
+            $img = $row["Gimg1"];
+            $category = $row["Category"];
+            $age = $row["AgeRating"];
+            $credit = $row["Credits"];
+          } else {
+            echo "<script type='text/javascript'>location.href = '404.php';</script>";
+          }
 
-      h2.gameInfo {
-        font-size: 50pt;
-        text-align: center;
-      }
+        } catch(PDOException $e) {
+          echo "Connection failed: " . $e->getMessage();
+        }
+	?>
+	
+	<script>
+        function test(game_type) {
 
-      h3.gameInfo {
-        font-size: 36pt;
-        text-align: center;
-      }
+          var game_name = <?php echo $gname; ?>;
+          var game_username = <?php echo $_SESSION['username']; ?>;
+          var game_proname = <?php echo $_SESSION['proname']; ?>;
 
-      p.gameInfo {
-        color: white;
-        line-height: 20px;
-      }
+          // For now, allow user to pick username, will need to be provided from php code durinng integration...
 
-      div.gameReviews {
-        float: right;
-        width: 50%;
-        padding-left: 50px;
-      }
+          var form = document.createElement('form');
+          document.body.appendChild(form);
+          form.method = 'post';
+          form.action = 'https://'+ game_name + '.smoketestergames.co.uk' // Need lookup for game address, will be subdomain ie.'https://pong.smokegames.co.uk'
 
-      table.reviews {
-        color: white;
-      }
+          var input_name = document.createElement('input'); // Username.
+          input_name.type = 'hidden';
+          input_name.name = 'user[name]';
+          input_name.value = game_username;
+          form.appendChild(input_name);
 
-      tr.reviews {
-        margin-bottom: 15px;
-        border-bottom: 2pt solid #555555;
-      }
+          var input_type = document.createElement('input'); // Private or public lobby.
+          input_type.type = 'hidden';
+          input_type.name = 'lobby[type]';
+          input_type.value = game_type;
+          form.appendChild(input_type);
 
-      td.reviews {
-        padding: 10px;
-        vertical-align: top;
-      }
+          var input_type = document.createElement('input'); // If Private, then the name of the lobby to join.
 
-      p.reviews {
-        line-height: 20px;
-      }
-    </style>
+          let lobby_name = document.getElementById('input_lobby').value;
+
+          input_type.type = 'hidden';
+          input_type.name = 'lobby[name]';
+          input_type.value = lobby_name;
+          form.appendChild(input_type);
+
+          form.submit();
+        }
+    </script>
 </head>
 
 <body>
-    <div class="navigation"><?php include "navigation.php"; ?></div>
-    <div class="gameContainer" style="margin: auto; width: 100%;">
-    <?php
-      $gamesdb = mysqli_connect("csmysql.cs.cf.ac.uk", "group4.2017", "WKPrte4YHjB34F", "group4_2017");
-      if (!$gamesdb) { die("Failed to connect: " . mysqli_connect_error()); } 
-      $retrieve = "SELECT * FROM Games WHERE GameID = " . $_GET["GameID"] . ";";
-      $result = mysqli_query($gamesdb, $retrieve);
+  <?php include "navigation.php"; ?>
 
-      $gameInfo = mysqli_fetch_assoc($result);
+   <div id="all">
+        <div id="content">
+            <div class="container">
 
-      $GLOBALS['gameName'] = $gameInfo["Gname"];
-      $GLOBALS['gameDesc'] = $gameInfo["Description"];
-      $GLOBALS['gameImg1'] = $gameInfo["GImg1"];
-      $GLOBALS['gameImg2'] = $gameInfo["GImg2"];
-      $GLOBALS['gameCategory'] = $gameInfo["Category"];
-      $GLOBALS['gameAgeRating'] = $gameInfo["AgeRating"];
-      $GLOBALS['gameCredits'] = $gameInfo["Credits"];
-      $GLOBALS['gameTags'] = $gameInfo["Tags"];
-      echo "<h2 class='gameInfo' style=\"color: white;\">$gameName</h2>";
-
-      mysqli_close($gamesdb);
-    ?>
-        
-    <div class="game">   
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label for="firstname">Username for Demo: </label>
-                    <input placeholder="Username" type="text" class="form-control" id="input_name">
-                    <button class="button button2" onClick="test('pong','Random', 'Alan')" id="Pong" value="Pong">Pong Random Game</button>
+                <!-- Links back to home page -->
+                <div class="col-md-12">
+                    <ul class="breadcrumb">
+                        <li><a href="index.php">Home</a></li>
+                        <li><a href="games.php">Games</a></li>
+                        <li><?php echo "Play $gname"; ?></li>
+                    </ul>
                 </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label for="lastname">Lobby to join: </label>
-                    <input placeholder="Lobby to join"  type="text" class="form-control" id="input_lobby">
-                    <button class="button button3" onClick="test('pong', 'Private', 'Alan')" id="Pong" value="Pong">Pong Private Game</button>
-                </div>
-            </div>
-        </div>
 
-        
-      <script>
-      function test(game_ID, game_type, game_username) {
+				<div class="col-md-9">
+					<div class="row" id="productMain">
 
-        // For now, allow user to pick username, will need to be provided from php code durinng integration...
+						<div class="col-sm-6">
+							<div id="mainImage">
+								<img src="<?php echo $img; ?>" alt="" class="img-responsive">
+							</div>
+						</div>
 
-        game_username = document.getElementById('input_name').value;
+						<div class="col-sm-6">
 
-        var form = document.createElement('form');
-        document.body.appendChild(form);
-        form.method = 'post';
-        form.action = 'https://pong.smoketestergames.co.uk' // Need lookup for game address, will be subdomain ie.'https://pong.smokegames.co.uk'
+							<div class="box">
+								<h1 class="text-center"><?php echo $gname; ?></h1>
+								<hr>
 
-        var input_name = document.createElement('input'); // Username.
-        input_name.type = 'hidden';
-        input_name.name = 'user[name]';
-        input_name.value = game_username;
-        form.appendChild(input_name);
+								<div class="form-group">
+									<h4>Play random game:</h4>
+									<button class="btn btn-primary" style="float: right; margin-bottom: 5%" onClick="test('Random')" id="Pong" value="Pong">Random Game</button>
+								</div>
+								<br>
+								<div class="form-group">
+									<label for="lastname"><h4>Create private game: </h4></label>
+									<input placeholder="Enter name"  type="text" class="form-control" id="input_lobby">
+									<button class="btn btn-primary" style="float: right; margin-top: 2%" onClick="test('Private')" id="Pong" value="Pong">Private Game</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 
-        var input_type = document.createElement('input'); // Private or public lobby.
-        input_type.type = 'hidden';
-        input_type.name = 'lobby[type]';
-        input_type.value = game_type;
-        form.appendChild(input_type);
+                <div class="col-md-3">
+                    <div class="panel panel-default sidebar-menu">
 
-        var input_type = document.createElement('input'); // If Private, then the name of the lobby to join.
+                        <!-- Display high scores for this game --> 
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Leaderboards</h3>
+                        </div>
 
-        let lobby_name = document.getElementById('input_lobby').value;
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked category-menu">
+                                <li>
+                                    <?php
+                                        try {
+                                            include "config.php";
+                                            
+                                            // Retrieve top 10 scores from the Scores table
+                                            $retrieve = $gamesdb->prepare("SELECT Uname, Score FROM Scores WHERE GameID = ? ORDER BY Score DESC LIMIT 10");
+                                            $retrieve->execute([$_GET['id']]);
 
-        input_type.type = 'hidden';
-        input_type.name = 'lobby[name]';
-        input_type.value = lobby_name;
-        form.appendChild(input_type);
+                                            if ($retrieve->rowCount() > 0) {
+                                                echo "<a href='#'>High Scores: <span class='badge pull-right'></span></a><ul>";
+                                                foreach ($retrieve as $row) {
+                                                    // For each score retrieved, display the name of the user, and their score
+                                                    $uname = $row['Uname'];
+                                                    $score = $row['Score'];
 
-        form.submit();
+                                                    $findpro = $gamesdb->prepare("SELECT ProName FROM Profiles WHERE Uname = ?");
+                                                    $findpro->execute([$uname]);
 
-      }
-    </script>
-      <?php
-        //include "Games/MathsMania/page.html";
-        //$sock = socket_create(AF_INET, SOCK_STREAM, 0); // create a streaming socket, of type TCP/IP
-        //socket_bind($sock, 0, 8081); // "bind" the socket to the address to "localhost", on port $port
-        //socket_listen($sock); // start listen for connections
+                                                    $prow = $findpro->fetch(PDO::FETCH_ASSOC);
+                                                    $pname = $prow['ProName'];
 
-        //exec('/usr/local/bin/node Games/MathsMania/start.js > /dev/null &');
-        // so change the directory to where node is installed on the server. Also Games/'.str_replace(" ","",$GLOBALS['gameName']).'/start.js
-        //exec("kill " . $processid);
-        //socket_close($sock); // close the listening socket
-        ?>
-    </div>
-  </div>
+                                                    echo "<li style='margin-left:10%; margin-bottom:3%;'>$pname: $score</li>";
+                                                }
+                                                echo "</ul>";
 
-  <div class="gameDetails">
-    <div class="gameInfo">
-      <?php
-        echo "<h3 class='gameInfo'>".$GLOBALS['gameName']." Game Details</h2><br>
-        <p class='gameInfo' style='font-size: 14pt;'>".$GLOBALS['gameDesc']."</p><br><p class='gameInfo'>
-        Category: ".$GLOBALS['gameCategory']."<br>
-        Age Rating: ".$GLOBALS['gameAgeRating'] . "+<br>
-        Credits: ".$GLOBALS['gameCredits']."<br>
-        Tags: ".$GLOBALS['gameTags']."</p>";
-      ?>
-    </div>
-    <div class="topScores">
-    </div>
-    <div class="gameReviews">
-      <?php
-      echo "<h3 class=\"gameReviews\" style=\"text-align: center;\">".$GLOBALS['gameName']." Reviews</h2><br><table class=\"reviews\">";
+                                            } else {
+                                                // If no scores are found, display message informing user of this instead of leaving blank space
+                                                echo "<a href='#'>--No Scores Found--</a>";
+                                            }
 
-      //if (isset($_SESSION['loggedin']) && $_SESSION['loggedin']) {
-      echo '<form id="reviewForm">
-        <input type="text" id="review" placeholder="Be sure to leave a rating and a review to help us improve the Smoke gaming experience." style="width: 75%; height: 100px; color: black; padding-top: 0px"><br><br>
-        <img src="images/logo.png" onclick="setRating(1)" width=75px>
-        <img src="images/logo.png" onclick="setRating(2)" width=75px>
-        <img src="images/logo.png" onclick="setRating(3)" width=75px>
-        <img src="images/logo.png" onclick="setRating(4)" width=75px>
-        <img src="images/logo.png" onclick="setRating(5)" width=75px>
-        <input type="hidden" id="rating" value="">
-        <p id="currentRating" style="display:inline;"></p>
-        <input type="submit" name=submitReview value="Submit Review" alt="Submit review" onsubmit="validateReview()" style="color: black;">
-      </form><br><br>';
-      //} else { echo '<p>Log in to leave your own review.</p>'; }
-      ?>
-      <script>
-        function setRating(num) {
-          document.getElementById("rating").value = num.toString();
-          document.getElementById("currentRating").innerHTML = "Your rating: " + num + "   ";
-        }
-
-        function validateReview() {
-          var text = "";
-          try {
-            if (document.getElementById("newReview").value.length <= 10) {
-              text += "Leave a brief review, please.\n"
-            } if (rating == 0) {
-              text += "Leave a 1-5 rating by clicking one of the Smoke icons."
-            }
-          } catch(err) {
-            text = err.message + "\n\n";
-          }
-          if (text !== "") {
-            window.alert(text);
-          } else {
-            submitForm();
-            reviewForm.innerHTML = "Thanks for your review!";
-          }
-        }
-
-        function submitForm() {
-          var http = new XMLHttpRequest();
-          http.open("POST", "./cgi-bin/ReviewAction.php", true);
-          http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-          var params = "review=" + document.getElementById("review").value + "&rating=" + document.getElementById("rating").value;
-          http.send(params);
-        }
-      </script>
-      <noscript>Javascript is not enabled!</noscript>
-      
-
-
-      <?php
-      $gamesdb = mysqli_connect("csmysql.cs.cf.ac.uk", "group4.2017", "WKPrte4YHjB34F", "group4_2017");
-      if (!$gamesdb) { die("Failed to connect: " . mysqli_connect_error()); } 
-      $retrieve = "SELECT * FROM Reviews WHERE GameID = " . $_GET["GameID"] . ";";
-      $result = mysqli_query($gamesdb, $retrieve);
-
-      if (mysqli_num_rows($result) <= 0) echo "<p style=\"text-align: center;\">No reviews for this game</p>";
-      else {
-        while ($row = mysqli_fetch_assoc($result)) {
-          $date = $row['Date'];
-          $uname = $row['Uname'];
-          $rating = $row['Rating'];
-          $review = $row['Review'];
-          $retrieveProfilePic = "SELECT ProPic FROM Profiles WHERE Uname='".$uname."';";
-          $resultProfilePic = mysqli_query($gamesdb, $retrieveProfilePic);
-          $profilepic = mysqli_fetch_assoc($resultProfilePic);
-          $profilepicfilename = $profilepic["ProPic"];
-          echo "<tr class=\"reviews\"><td><img src=\"images/profilepictures/$profilepicfilename\" style=\"width: 75px;\"></td><td class=\"reviews\"><p class=\"reviews\"><b>$uname</b> posted on $date  <br>";
-
-          for ($i = 1; $i <= $rating; $i++) {
-            echo "<img src=\"images/logo.png\" width=\"25px;\">";
-          }
-
-          echo "<br>$review</p></tr>";
-        }
-        echo "</table>";
-      }
-      mysqli_close($gamesdb);
-      ?>
-
-    </div>
-  </div>
-  <div class="footer"><?php include "footer.php"; ?></div>
-
+                                        } catch(PDOException $e) {
+                                            echo "Connection failed: " . $e->getMessage();
+                                        }
+                                        $gamesdb = null;
+                                    ?>
+                                </li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php include "footer.php"; ?>
 </body>
 </html>
