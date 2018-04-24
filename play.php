@@ -109,9 +109,63 @@
 
       mysqli_close($gamesdb);
     ?>
-    <div class="chat">
-    </div>
-    <div class="game">
+        
+    <div class="game">   
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="firstname">Username for Demo: </label>
+                    <input placeholder="Username" type="text" class="form-control" id="input_name">
+                    <button class="button button2" onClick="test('pong','Random', 'Alan')" id="Pong" value="Pong">Pong Random Game</button>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="lastname">Lobby to join: </label>
+                    <input placeholder="Lobby to join"  type="text" class="form-control" id="input_lobby">
+                    <button class="button button3" onClick="test('pong', 'Private', 'Alan')" id="Pong" value="Pong">Pong Private Game</button>
+                </div>
+            </div>
+        </div>
+
+        
+      <script>
+      function test(game_ID, game_type, game_username) {
+
+        // For now, allow user to pick username, will need to be provided from php code durinng integration...
+
+        game_username = document.getElementById('input_name').value;
+
+        var form = document.createElement('form');
+        document.body.appendChild(form);
+        form.method = 'post';
+        form.action = 'https://pong.smoketestergames.co.uk' // Need lookup for game address, will be subdomain ie.'https://pong.smokegames.co.uk'
+
+        var input_name = document.createElement('input'); // Username.
+        input_name.type = 'hidden';
+        input_name.name = 'user[name]';
+        input_name.value = game_username;
+        form.appendChild(input_name);
+
+        var input_type = document.createElement('input'); // Private or public lobby.
+        input_type.type = 'hidden';
+        input_type.name = 'lobby[type]';
+        input_type.value = game_type;
+        form.appendChild(input_type);
+
+        var input_type = document.createElement('input'); // If Private, then the name of the lobby to join.
+
+        let lobby_name = document.getElementById('input_lobby').value;
+
+        input_type.type = 'hidden';
+        input_type.name = 'lobby[name]';
+        input_type.value = lobby_name;
+        form.appendChild(input_type);
+
+        form.submit();
+
+      }
+    </script>
       <?php
         //include "Games/MathsMania/page.html";
         //$sock = socket_create(AF_INET, SOCK_STREAM, 0); // create a streaming socket, of type TCP/IP
