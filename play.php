@@ -109,21 +109,26 @@
 
       mysqli_close($gamesdb);
     ?>
-    <div class="chat">
-    </div>
-    <div class="game">
-      <h2>Username for demo: </h2>
-      <br/>
-      <input placeholder="Username" id="input_name"/>
-      <br/>
-        <button class="button button2" onClick="test('pong','Random', 'Alan')" id="Pong" value="Pong">Pong Random Game</button>
+        
+    <div class="game">   
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="firstname">Username for Demo: </label>
+                    <input placeholder="Username" type="text" class="form-control" id="input_name">
+                    <button class="button button2" onClick="test('pong','Random', 'Alan')" id="Pong" value="Pong">Pong Random Game</button>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="lastname">Lobby to join: </label>
+                    <input placeholder="Lobby to join"  type="text" class="form-control" id="input_lobby">
+                    <button class="button button3" onClick="test('pong', 'Private', 'Alan')" id="Pong" value="Pong">Pong Private Game</button>
+                </div>
+            </div>
+        </div>
 
-      <br/>
-      <h2>OR</h2>
-      <br/>
-        <input placeholder="Lobby to join" id="input_lobby"/>
-      <br/>
-        <button class="button button3" onClick="test('pong', 'Private', 'Alan')" id="Pong" value="Pong">Pong Private Game</button>
+        
       <script>
       function test(game_ID, game_type, game_username) {
 
