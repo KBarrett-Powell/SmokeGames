@@ -25,16 +25,16 @@
                 <div class="col-md-12">
                     <div id="main-slider">
                         <div class="item">
-                            <img src="images/BannerImages/Ghost.jpg" alt="" class="img-responsive">
+                            <img class="img-responsive" src="images/BannerImages/Ghost.jpg" alt="">
                         </div>
                         <div class="item">
-                            <img class="img-responsive" src="images/BannerImages/mathopoly.jpg" alt="">
+                            <img class="img-responsive" src="images/BannerImages/pong.jpg" alt="">
                         </div>
                         <div class="item">
                             <img class="img-responsive" src="images/BannerImages/Bounce.jpg" alt="">
                         </div>
                         <div class="item">
-                            <img class="img-responsive" src="images/BannerImages/DragRacer.jpg" alt="">
+                            <img class="img-responsive" src="images/BannerImages/mathopoly.jpg" alt="">
                         </div>
                     </div>
                     <!-- /#main-slider -->
