@@ -177,7 +177,7 @@
                                 <p style='text-align: center'>Age: <?php echo $age; ?>+</p>
 
                                 <p class="text-center buttons">
-                                    <?php echo "<a href='play.php?id=".$_GET['id']."' class='btn btn-primary' style='font-size: 16pt'><i class='fa fa-shopping-cart'></i> PLAY GAME</a>";?>
+                                    <?php echo "<a href='playSP.php?id=".$_GET['id']."' class='btn btn-primary' style='font-size: 16pt'><i class='fa fa-shopping-cart'></i> PLAY GAME</a>";?>
                                 </p>
                             </div>
 
