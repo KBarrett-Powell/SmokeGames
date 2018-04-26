@@ -142,7 +142,7 @@
                                 <li>
                                     <?php 
                                         // If an average rating exists...
-                                        if ($avg != 0) {
+                                        if ($avgrate != 0) {
                                             // Display average rating
                                             echo "<a href='#'>Average rating:  <span class='badge pull-right'>$avg</span></a>";
 
@@ -172,7 +172,7 @@
                             <div class="box">
                                 <h1 class="text-center"><?php echo $name; ?></h1>
 
-                                <?php if ($credits != "") {echo "<p style='text-align: center'>By: ".$credits."</p>";}?>
+                                <?php if ($credits != "") {echo "<p style='text-align: center'>By: $credits</p>";}?>
 
                                 <p style='text-align: center'>Age: <?php echo $age; ?>+</p>
 
@@ -213,7 +213,7 @@
 
                             <p><?php echo $desc; ?></p>
 
-                            <?php if ($howto != "") {echo "<h4>How to play:</h4> <p>".$howto."</p>";}?>
+                            <?php if ($howto != "") {echo "<h4>How to play:</h4> <p>$howto</p>";}?>
                         </p>
                     </div>
 
@@ -229,7 +229,7 @@
                                 $count = $retrieve->rowCount();
                                 if ($count > 0) {
                                     // Display number of reviews
-                                    echo "<h3>".$count." Reviews</h3>";
+                                    echo "<h3>$count Reviews</h3>";
 
                                     // For each review display the profile name of the user, their rating, and review, and the date the review was made
                                     foreach ($retrieve as $row) {
@@ -238,7 +238,7 @@
                                         $daterev = $row['DateOf'];
                                         $rname = $row['ProName'];
 
-                                        echo "<p><h5><span style='font-size:16pt'>$rname</span>  : $rating Smokes</h5><h5>$daterev</h5>$review</p>\r\n";
+                                        echo "<p><h5><span style='font-size:16pt'>$rname</span>  : $rating / 5</h5><h5>$daterev</h5>$review</p>\r\n";
                                     }
                                 } else {
                                     // If they're aren't any reviews for this game, tell the user that neatly
@@ -253,7 +253,7 @@
                         
                         <hr>
 
-                        <!-- Form for users to leve reviews of the game -->
+                        <!-- Form for users to leave reviews of the game -->
                         <div id="comment-form" data-animate="fadeInUp">
 
                             <h4>Leave a review</h4>
@@ -278,8 +278,6 @@
                         </div>
                     </div>
 
-                    <!-- CODE FOR THE RECOMMENDED GAMES! -->
-                    
                     <div class="row" id="productMain">
                         <div class="col-xs-3">
                             <div class="box same-height">
@@ -327,10 +325,10 @@
                                             echo "</div>";
                                         echo "</div>";
                                     }
+                                    echo "</div>";
                                 } else {
-                                    echo "No results";
+                                    echo "<p>--No results</p>";
                                 }
-                                echo "</div>";
 
                             }catch(PDOException $e) {
                                 echo "Connection failed: " . $e->getMessage();
