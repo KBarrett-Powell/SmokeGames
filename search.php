@@ -56,7 +56,6 @@
                                         $id = $row["GameID"];
                                         $name = $row["Gname"];
                                         $img = $row["Gimg1"];
-                                        $flip = $row["Gimg2"];
                                         echo "<div class='item'><div class='product'><div class='flip-container'>";
                                         echo "<div class='flipper'><div class='front'>";
                                         echo "<a href='detail.php?id=$id'><img src='$img' alt='' class='img-responsive'></a></div>";
@@ -98,13 +97,13 @@
                                         $pname = $row["ProName"];
                                         $img = $row["ProPic"];
                                         
-                                        echo "<div class='item' style='float:left'><div class='product'><div class='flip-container'>";
+                                        echo "<div class='item'><div class='product'><div class='flip-container'>";
                                         echo "<div class='flipper'><div class='front'>";
                                         echo "<a href='profile?id=$uname'><img src='images/userProfiles/$img' class='img-responsive'></a></div>";
                                         echo "<div class='back'><a href='profile?id=$uname'><img src='images/userProfiles/$img' alt='' class='img-responsive'></a></div></div></div>";
                                         echo "<a href='profile?id=$uname' class='invisible'><img src='images/userProfiles/$img' class='img-responsive'></a>";
                                         echo "<div class='text'><h3><a href='profile?id=$uname''>$pname</a></h3>";
-                                        echo "</div></div></div></div></div>";
+                                        echo "</div></div></div>";
                                     }
                                 } else { echo "No results";}
 

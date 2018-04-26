@@ -76,11 +76,9 @@
 </head>
 
 <body>
-
-    <?php include "navigation.php"; ?>
+<?php include "navigation.php"; ?>
     
     <div id="all">
-
         <div id="content">
             <div class="container">
 
@@ -88,14 +86,13 @@
 
                     <ul class="breadcrumb">
                         <li><a href="index.php">Home</a></li>
-                        <?php echo "<li><a href='profile.php?id=".$_SESSION['username'].">Profile</a></li>"?>
+                        <?php echo "<li><a href='profile.php?id=".$_SESSION['username']."'>Profile</a></li>"; ?>
                         <li>Edit Profile</li>
                     </ul>
 
                 </div>
 
                 <div class="col-md-3">
-                    <!-- CUSTOMER MENU -->
                     <div class="panel panel-default sidebar-menu">
 
                         <div class="panel-heading">
@@ -124,11 +121,7 @@
                                 </li>
                             </ul>
                         </div>
-
                     </div>
-                    <!-- /.col-md-3 -->
-
-                    <!-- CUSTOMER MENU END -->
                 </div>
 
                 <div class="col-md-9">
@@ -214,8 +207,8 @@
                 $nfirst = $_POST['newfirst'];
                 $nlast = $_POST['newlast'];
                 $npname = $_POST['newpname'];
-                $npic = $_POST['newpic'];
-                $nban = $_POST['banpic'];
+                $npic = $_FILES['newpic'];
+                $nban = $_FILES['banpic'];
                 $ndesc = $_POST['newdesc'];
                 
                 if ($nfirst != "") {
@@ -235,14 +228,60 @@
                     $update->execute([$ndesc, $curuser]);
                 } 
                 if ($npic != "") {
-                    // uploading images stuff here !!
-                    $update = $gamesdb->prepare("UPDATE Profiles SET ProPic = ? WHERE Uname = ?");
-                    $update->execute([$npic, $curuser]);
+                    $uploadOk = false;
+                    $fileTypePlain = exif_imagetype($npic);
+                    $fileType = $fileTypePlain == 1 ? "gif" : ($fileTypePlain == 2 ? "jpeg" : ( $fileTypePlain == 3 ? "png" : "" ));
+                    $nfilename = uniqid() . $fileType;
+
+                    $check = getimagesize($npic["tmp_name"]);
+                    if($check !== false) {
+                        $uploadOk = true;
+                    } 
+
+                    if($fileType == "") {
+                        $uploadOk = false;
+                    }
+
+                    if($uploadOk) {
+                        $target_file = "images/UserProfiles". $nfilename;
+
+                        if (move_uploaded_file($npic["tmp_name"], $target_file)) {
+                            $update = $gamesdb->prepare("UPDATE Profiles SET ProPic = ? WHERE Uname = ?");
+                            $update->execute([$nfilename, $curuser]);
+                        } else {
+                            echo "<script type='text/javascript'>alert('Error uploading new profile pic.')</script>";
+                        }
+                    } else {
+                        echo "<script type='text/javascript'>alert('Please only upload a JPG, JPEG, PNG, or a GIF file.')</script>";
+                    }
                 } 
                 if ($nban != "") {
-                    // uploading images stuff here !!
-                    $update = $gamesdb->prepare("UPDATE Profiles SET Banner = ? WHERE Uname = ?");
-                    $update->execute([$nban, $curuser]);
+                    $uploadOk = false;
+                    $fileTypePlain = exif_imagetype($nban);
+                    $fileType = $fileTypePlain == 1 ? "gif" : ($fileTypePlain == 2 ? "jpeg" : ( $fileTypePlain == 3 ? "png" : "" ));
+                    $nfilename = uniqid() . $fileType;
+
+                    $check = getimagesize($nban["tmp_name"]);
+                    if($check !== false) {
+                        $uploadOk = true;
+                    } 
+
+                    if($fileType == "") {
+                        $uploadOk = false;
+                    }
+
+                    if($uploadOk) {
+                        $target_file = "images/UserBanners". $nfilename;
+
+                        if (move_uploaded_file($npic["tmp_name"], $target_file)) {
+                            $update = $gamesdb->prepare("UPDATE Profiles SET Banner = ? WHERE Uname = ?");
+                            $update->execute([$nfilename, $curuser]);
+                        } else {
+                            echo "<script type='text/javascript'>alert('Error uploading new banner.')</script>";
+                        }
+                    } else {
+                        echo "<script type='text/javascript'>alert('Please only upload a JPG, JPEG, PNG, or a GIF file.')</script>";
+                    }
                 } 
 
                 echo "<script type='text/javascript'>alert('Successfully Updated Profile')</script>";

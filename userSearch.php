@@ -57,7 +57,7 @@
                                         echo "<div class='back'><a href='profile?id=$uname'><img src='images/userProfiles/$img' alt='' class='img-responsive'></a></div></div></div>";
                                         echo "<a href='profile?id=$uname' class='invisible'><img src='images/userProfiles/$img' class='img-responsive'></a>";
                                         echo "<div class='text'><h3><a href='profile?id=$uname''>$pname</a></h3>";
-                                        echo "</div></div></div></div></div>";
+                                        echo "</div></div></div>";
                                     }
                                 } else { echo "No results";}
 

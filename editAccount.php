@@ -16,6 +16,7 @@
         if(!isset($_SESSION['verified']) || $_SESSION['verified'] == false){
             echo "<script type='text/javascript'>location.href = 'verification.php';</script>";
         }
+
         try{
             include "config.php";
             $retrieve = $gamesdb->prepare("SELECT * FROM Users WHERE Uname = ?");
@@ -106,7 +107,6 @@
             }
         }
     ?>   
-
 </head>
 
 <body>
@@ -114,7 +114,6 @@
     <?php include "navigation.php"; ?>
     
     <div id="all">
-
         <div id="content">
             <div class="container">
 
@@ -122,7 +121,7 @@
 
                     <ul class="breadcrumb">
                         <li><a href="index.php">Home</a></li>
-                        <?php echo "<li><a href='profile.php?id=".$_SESSION['username'].">Profile</a></li>"?>
+                        <?php echo "<li><a href='profile.php?id=".$_SESSION['username']."'>Profile</a></li>"?>
                         <li>View Account</li>
                     </ul>
 

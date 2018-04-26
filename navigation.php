@@ -65,10 +65,6 @@
 
 </div>
 
-<!-- TOP BAR END -->
-
-<!-- NAVBAR -->
-
 <div class="navbar navbar-default yamm" role="navigation" id="navbar">
     <div class="container">
         <div class="navbar-header">

@@ -50,7 +50,6 @@
                                         $id = $row["GameID"];
                                         $name = $row["Gname"];
                                         $img = $row["Gimg1"];
-                                        $flip = $row["Gimg2"];
                                         echo "<div class='item'><div class='product'><div class='flip-container'>";
                                         echo "<div class='flipper'><div class='front'>";
                                         echo "<a href='detail.php?id=$id'><img src='$img' alt='' class='img-responsive'></a></div>";

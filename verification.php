@@ -27,7 +27,7 @@
 
                     <ul class="breadcrumb">
                         <li><a href="index.php">Home</a></li>
-                        <?php echo "<li><a href='profile.php?id=".$_SESSION['username'].">Profile</a></li>"?>
+                        <?php echo "<li><a href='profile.php?id=".$_SESSION['username']."'>Profile</a></li>"?>
                         <li>Verify User</li>
                     </ul>
 

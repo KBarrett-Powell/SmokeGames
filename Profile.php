@@ -130,10 +130,10 @@
                 <div class="col-sm-12">
 
                     <ul class="breadcrumb">
-
                         <li><a href="index.php">Home</a></li>
                         <?php echo "<li>".$_SESSION['proname']."</li>"; ?>
                     </ul>
+                    
                 </div>
                 
                 <div class="col-md-3">
@@ -153,7 +153,7 @@
                         } else if ($sent) {
                             // Display that request for friendship sent
                             echo "<div class='panel-heading'><h3 class='panel-title'>$uname</h3></div>";
-                            echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li>Friend Request Sent</li>";
+                            echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li> Friend Request Sent</li>";
                             echo "<li><a href='report.php'>Report User</a></li></ul></div></div>";
 
                         } else if ($recieve) {
@@ -166,14 +166,14 @@
                         } else if ($friends){
                             // Display that user is friends with this user
                             echo "<div class='panel-heading'><h3 class='panel-title'>$uname</h3></div>";
-                            echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li>You're Friends!</li>";
+                            echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li> You're Friends!</li>";
                             echo "<li><a href='report.php'>Report User</a></li></ul></div></div>";
 
                         } else {
                             // Link to add friend
                             echo "<div class='panel-heading'><h3 class='panel-title'>$uname</h3></div>";
                             echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li><form method='post'>";
-                            echo "<button style='border:none; background-color: transparent;' type='submit' name='sendreq'>Send Friend Request</button></form></li>";
+                            echo "<button style='border:none; background-color: transparent;' type='submit' name='sendreq'> Send Friend Request</button></form></li>";
                             echo "<li><a href='report.php'>Report User</a></li></ul></div></div>";
                         }
                     ?>       
