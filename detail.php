@@ -34,14 +34,14 @@
                 $img = $row['Gimg1'];
                 $squareImg = $row['GimgSquare'];
                 $age = $row['AgeRating'];
+                $category = $row['Category'];
                 $credits = $row['Credits'];
                 $howto = $row['HowTo'];
                 $avgrate = round($row['AvgRating'], 1);
             
             // else if id in url not linked to a game, send user to error page
             } else {
-                header("Location: 404.html");
-                exit;
+                echo "<script type='text/javascript'>location.href = '404.php';</script>";
             }
 
             // Sending a new review to the database
@@ -177,7 +177,13 @@
                                 <p style='text-align: center'>Age: <?php echo $age; ?>+</p>
 
                                 <p class="text-center buttons">
-                                    <?php echo "<a href='play.php?id=".$_GET['id']."' class='btn btn-primary' style='font-size: 16pt'><i class='fa fa-shopping-cart'></i> PLAY GAME</a>";?>
+                                    <?php 
+                                        if (strpos($category, 'Multi-Player') !== false) {
+                                            echo "<a href='play.php?id=".$_GET['id']."' class='btn btn-primary' style='font-size: 16pt'><i class='fa fa-shopping-cart'></i> PLAY GAME</a>";
+                                        } else {
+                                            echo "<a href='playSP.php?id=".$_GET['id']."' class='btn btn-primary' style='font-size: 16pt'><i class='fa fa-shopping-cart'></i> PLAY GAME</a>";
+                                        }
+                                    ?>
                                 </p>
                             </div>
 

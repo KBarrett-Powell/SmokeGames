@@ -15,16 +15,14 @@
                     }
 
                     if (isset($_SESSION['username'])){
-                    // display a different page in nav bar depending on if user is logged in and what type of user they are
+                    // display profile and logout pages if user logged in, and admin page if user is admin
                          if (isset($_SESSION['admin']) && $_SESSION['admin'] == true){
-                              echo "<li><a href='Admin.php'>Admin</a></li>";
-                         } 
-                        else {                        
-                            echo "<li><a href='profile.php?id=".$_SESSION['username']."'>".$_SESSION['proname']."</a></li>";
-                            echo "<li><a href='logout.php'>Logout</a></li>";
-                        }
-                    } 
-                    else {
+                              echo "<li><a href='admin.php'>Admin</a></li>";
+                         }                      
+                        echo "<li><a href='profile.php?id=".$_SESSION['username']."'>".$_SESSION['proname']."</a></li>";
+                        echo "<li><a href='logout.php'>Logout</a></li>";
+
+                    } else {
                         echo "<li><a href='#'data-toggle='modal' data-target='#login-modal'>Login</a></li>";
                         echo "<li><a href='register.php'>Register</a></li>";
                     }

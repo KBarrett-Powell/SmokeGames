@@ -30,6 +30,15 @@
                 $img = $row['ProPic'];
                 $banner = $row['Banner'];
 
+                $adminret = $gamesdb->prepare("SELECT * FROM Admins WHERE Uname = ?");
+                $adminret->execute([$uname]);
+
+                if ($adminret->rowCount() == 1) {
+                    $isadmin = true;
+                } else {
+                    $isadmin = false;
+                }
+
                 $sent = false;
                 $recieve = false;
                 $friends = false;
@@ -64,8 +73,9 @@
                 echo "<script type='text/javascript'>location.href = '404.php';</script>";
             }
         
-            // Code to add new friend and leave a comment
+            // Code for buttons in page
             if($_SERVER["REQUEST_METHOD"] == "POST") {
+                // If respond to friend request selected :
                 if(isset($_POST['addfriend'])) {
                     $friendId = $uname;
                     
@@ -76,6 +86,7 @@
     
                     echo "<script type='text/javascript'>alert('Friend Successfully added.'); window.location.href = window.location.href;</script>";
 
+                // If send a friend request selected : 
                 } else if(isset($_POST['sendreq'])) {
                     $friendId = $uname;
                     
@@ -93,6 +104,26 @@
     
                     echo "<script type='text/javascript'>alert('Friend Request Sent Successfully.'); window.location.href = window.location.href;</script>";
 
+                // If report user selected :
+                } else if(isset($_POST['reportUser'])) {
+                    // Send to report.php
+                    echo "<script type='text/javascript'>location.href = 'report.php';</script>";
+                
+                // If make user admin selected :
+                } else if(isset($_POST['adminUser'])) {
+                    // Create new admin id
+                    $retrieve = $gamesdb->prepare("SELECT max(AdminID) FROM Admins");
+                    $retrieve->execute();
+                    $row = $retrieve->fetch(PDO::FETCH_ASSOC);
+                    $adminid = $row["max(AdminID)"] + 1;
+
+                    // Inserting new admin details into admin table
+                    $makeAdmin = $gamesdb->prepare("INSERT INTO Admins(AdminID, Uname) VALUES (?, ?)");
+                    $makeAdmin->execute([$adminid, $uname]);
+
+                    echo "<script type='text/javascript'>alert('Successfully made user admin.'); window.location.href = window.location.href;</script>";
+
+                // If comment form submitted :
                 } else if(isset($_POST['leaveComment'])) {
                     $commentee = $uname;
                     $comment = $_POST['comment'];
@@ -133,16 +164,16 @@
                         <li><a href="index.php">Home</a></li>
                         <?php echo "<li>".$_SESSION['proname']."</li>"; ?>
                     </ul>
-                    
+
                 </div>
                 
                 <div class="col-md-3">
+                    <div class='panel panel-default sidebar-menu'>
                     <?php
-                        echo "<div class='panel panel-default sidebar-menu'>";
                         if ($uname == $_SESSION['username']){
                             // Links to log out and view account info
                             echo "<div class='panel-heading'><h3 class='panel-title'>My Account</h3></div>";
-                            echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li class='active'><a href='profile.php?id=$uname'><i class='fa fa-list'></i>My profile</a></li>";
+                            echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li class='active'><a href='#'><i class='fa fa-list'></i>My profile</a></li>";
                             echo "<li><a href='editProfile.php'><i class='fa fa-heart'></i> Edit Profile</a></li>";
                             echo "<li><a href='editAccount.php'><i class='fa fa-user'></i> Edit Account</a></li>";
                             if (isset($_SESSION['admin']) && $_SESSION['admin'] == true) {
@@ -150,31 +181,39 @@
                             }
                             echo "<li><a href='logout.php'><i class='fa fa-sign-out'></i> Logout</a></li></ul></div></div>";
 
-                        } else if ($sent) {
+                        } else {
+                            if ($sent) {
                             // Display that request for friendship sent
                             echo "<div class='panel-heading'><h3 class='panel-title'>$uname</h3></div>";
                             echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li> Friend Request Sent</li>";
-                            echo "<li><a href='report.php'>Report User</a></li></ul></div></div>";
 
-                        } else if ($recieve) {
+                            } else if ($recieve) {
                             // Display that request for friendship recieved
                             echo "<div class='panel-heading'><h3 class='panel-title'>$uname</h3></div>";
                             echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li> Friend Request Recieved!</li><li><form method='post'>";
                             echo "<button style='border:none; background-color: transparent;' type='submit' name='addfriend'>Add Friend</button>";
-                            echo "</form></li><li><a href='report.php'>Report User</a></li></ul></div></div>";
+                            echo "</form></li>";
 
-                        } else if ($friends){
+                            } else if ($friends){
                             // Display that user is friends with this user
                             echo "<div class='panel-heading'><h3 class='panel-title'>$uname</h3></div>";
                             echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li> You're Friends!</li>";
-                            echo "<li><a href='report.php'>Report User</a></li></ul></div></div>";
 
-                        } else {
+                            } else {
                             // Link to add friend
                             echo "<div class='panel-heading'><h3 class='panel-title'>$uname</h3></div>";
-                            echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li><form method='post'>";
+                            echo "<div class='panel-body'><ul class='nav nav-pills nav-stacked'><li>";
                             echo "<button style='border:none; background-color: transparent;' type='submit' name='sendreq'> Send Friend Request</button></form></li>";
-                            echo "<li><a href='report.php'>Report User</a></li></ul></div></div>";
+                            }
+
+                            echo "<li><form method='post'><button style='border:none; background-color: transparent;' type='submit' name='reportUser'> Report User";
+                            echo "</button><form></li></ul></div></div>";
+
+                            if (isset($_SESSION['admin']) && $_SESSION['admin'] == true && $isadmin == false) {
+                                echo "<li><form method='post' onSubmit='return confirm('Make this user an admin?')' name='adminUser'>";
+                                echo "<button style='border:none; background-color: transparent;' type='submit' name='adminUser'> Make User Admin";
+                                echo "</button><form></li></ul></div></div>";
+                            }
                         }
                     ?>       
                 </div>

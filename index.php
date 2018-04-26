@@ -37,13 +37,10 @@
                             <img class="img-responsive" src="images/BannerImages/DragRacer.jpg" alt="">
                         </div>
                     </div>
-                    <!-- /#main-slider -->
                 </div>
             </div>
 
-            <!-- HOMEPAGE -->
             <div id="advantages">
-
                 <div class="container">
                     <div class="same-height-row">
                         <div class="col-sm-4">
@@ -79,7 +76,6 @@
                 </div>
             </div>
             
-            <!-- HOT PRODUCT SLIDESHOW -->
             <div id="hot">
 
                 <div class="box">
