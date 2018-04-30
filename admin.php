@@ -54,10 +54,26 @@ session_start();
                     <div class="col-md-9">
                         <div class="box">
                             <h3>Rules and Responsibilities</h3>
+                            <h4>What it means to be an admin></h4>
+                            <p>You are here to help keep the peace, to make sure all our users are having the best expereince they can. By keeping
+                                an eye on bad attitudes, and rude behaviour, and banning users, if that's necessary. Also, uploading new games,
+                                to keep the site interesting and up-to-date!
+                                By agreeing to being an admin, you agree to not abuse this power, to be responsible, not to attempt to damage our site 
+                                in any way, if you break our trust, you would lose your admin privileges, and could face a permanant ban.</p>
 
                             <h4>Making other users admins</h4>
                             <p>You are allowed to upgrade other users to admin status, however, you cannot update just anyone.
-                            By being an admin you agree to only upgrade users you know will uphold our community principles of respect and trust</p>
+                                By being an admin you agree to only upgrade users you know will uphold our community principles of respect and trust,
+                                who won't abuse this power. We keep a track of who upgrades each user, if an issue occurs with someone you gave admin 
+                                permissions to, you may be downgraded to a regular user. 
+                                It is also your responsibily to warn us of any strange activities, surrounding new admins, and reports on particular users.</p>
+
+                            <h4>Reports</h4>
+                            <p>Users of the site will submit reports on users they feel have been abusing the site or other users, it's your responsibility to 
+                                follow these up, with either a ban or dismisal. And decide when a ban on a user should be lifted.</p>
+
+                            <h4>Games</h4>
+                            <p>You are responsible for adding new games to the site. And updating information on other games as you see fit. </p>
                         </div>
                     </div>
                 </div>

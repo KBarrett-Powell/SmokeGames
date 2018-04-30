@@ -12,6 +12,48 @@
     <?php 
         include "references.php"; 
         include "require.php";
+        $rUser = $_GET['id'];
+
+        try{
+            include "config.php";
+
+            // Collecting info on current user
+            $retrieve = $gamesdb->prepare("SELECT * FROM Users WHERE Uname = ?");
+            $retrieve->execute([$rUser]);
+    
+            if ($retrieve->rowCount() == 1 && isset($_SESSION['username']) && $_SESSION['username'] != $rUser) {
+                $retrieve = $gamesdb->prepare("SELECT * FROM Profiles WHERE Uname = ?");
+                $retrieve->execute([$rUser]);
+
+                $row = $retrieve->fetch(PDO::FETCH_ASSOC);
+                $pname = $row['ProName'];
+            } else {
+                echo "<script type='text/javascript'>location.href = '404.php';</script>";
+            }
+
+        } catch(PDOException $e) {
+            echo "Connection failed: " . $e->getMessage();
+        }
+        $gamesdb = null;
+
+        // Checking description of report alright for database
+        function verifyReport() {
+            $desc = $_POST['desc'];
+            $errors = array();
+
+            // Checking description doesn't include any tags
+            if ($desc != strip_tags($desc)) {
+                array_push($errors, ' Please don\'t use tags in your description');
+            }
+
+            if(empty($errors)) {
+                return true;
+            } else {
+                $js_errors = json_encode($errors);
+                echo "<script type='text/javascript'>alert(". $js_errors .");</script>";
+                return false;
+            }
+        }
     ?>
 </head>
 
@@ -27,7 +69,8 @@
 
                     <ul class="breadcrumb">
                         <li><a href="index.php">Home</a></li>
-                        <li>Report A User</li>
+                        <?php echo "<li><a href='profile.php?id=$rUser'>$pname</a></li>"; ?>
+                        <li>Reports</li>
                     </ul>
 
                 </div>
@@ -36,16 +79,16 @@
                     <div class="panel panel-default sidebar-menu">
 
                         <div class="panel-heading">
-                            <h3 class="panel-title">Menu</h3>
+                            <?php echo "<h3 class='panel-title'>$pname</h3>"; ?>
                         </div>
 
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li class="active">
-                                    <a href="#">Contact Information</a>
-                                </li>
                                 <li>
-                                    <a href="report.php">Report A User</a>
+                                    <?php echo "<a href='profile.php?id=$rUser'>Profile </a>"; ?>
+                                </li>
+                                <li class="active">
+                                    <a href="#">Report User</a>
                                 </li>
                             </ul>     
                         </div>
@@ -54,31 +97,35 @@
 
                 <div class="col-md-9">
                     <div class="box">
-                        <h1>Report User</h1>
+                        <?php echo "<h1>Reporting $pname</h1>"; ?>
 
-                        <p class="lead">Please select the user's name, and enter the reason for report</p>
+                        <p class="lead">Please enter the reason for report, and a description of the specific activity that lead you to report this user.</p>
 
                         <hr>
 
-                        <form action="" name="login" method="post">
+                        <form action="return verifyReport()" method="post">
                             <div class="form-group">
-                                <label for="user">Username</label>
-                                <input class="form-control" type="text" id="user" name="user" required="required" placeholder="Username">
+                                <label for="reason">Report <span class="required">*</span></label>
+                                <select class="form-control" name='reason'>
+                                    <option value="Aggressive Language">Aggressive Language</option>
+                                    <option value="Threatening Another User">Threats</option>
+                                    <option value="Suspicious Activity">Suspicious Activity</option>
+                                    <option value="Harrassment">Harrassment</option>
+                                    <option value="Other">Other (please explain below)</option>
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label for="pass">Password</label>
-                                <input class="form-control" type="password" id="pass" name="pass" required="required" placeholder="Password">
+                                <label for="desc">Description</label>
+                                <textarea class="form-control" id="desc" name="desc" rows="4"></textarea>
                             </div>
                             <div class="text-center">
-                                <button class="btn btn-primary" type="submit" value="Login" name="submit_login"><i class="fa fa-sign-in"></i> Log in</button>
+                                <button class="btn btn-primary" type="submit" value="Report" name="report_user"><i class="fa fa-sign-in"></i> Send Report</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <!-- /.container -->
         </div>
-        <!-- /#content -->
 
 <?php 
     try{
@@ -87,32 +134,22 @@
         if($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // If login form has been filled out:
-            if(isset($_POST['submit_login'])) {
+            if(isset($_POST['report_user'])) {
 
-                $username = $_POST['user'];
-                $password = $_POST['pass'];
+                $report = $_POST['reason'];
+                $desc = $_POST['desc'];
 
-                // Try to find user account with details entered
-                $retrieve = $gamesdb->prepare("SELECT u.Pass, u.Verified, p.ProName FROM Users u, Profiles p WHERE u.Uname = ? AND u.Uname = p.Uname");
-                $retrieve->execute([$username]);
+                // Create new report id for the report
+                $retrieve = $gamesdb->prepare("SELECT max(ReportNum) FROM Reports");
+                $retrieve->execute();
+                $row = $retrieve->fetch(PDO::FETCH_ASSOC);
+                $rid = $row["max(FID)"] + 1;
 
-                if ($retrieve->rowCount() == 1) {
-                    $row = $retrieve->fetch(PDO::FETCH_ASSOC);
-                    $hash = $row['Pass'];
-                    $pname = $row['ProName'];
+                // Insert new report into database
+                $retrieve = $gamesdb->prepare("INSERT INTO Reports(ReportNum, Uname1, Report, RDesc, Uname2) VALUES (?, ?, ?, ?, ?)");
+                $retrieve->execute([$rid, $rUser, $report, $desc, $_SESSION['username']]);
 
-                    // Compare passwords
-                    //if (password_verify($password, $hash)) {
-                    if ($password == $hash) {
-
-                        $_SESSION['verified'] = true;
-
-                        // Take user to account page
-                        echo "<script type='text/javascript'>location.href = 'editAccount.php';</script>";
-                            
-                    } else {echo "<script type='text/javascript'>alert('Password Incorrect. ' . (5 - $attempts) . 'Please Try Again.')</script>";}
-
-                } else {echo "<script type='text/javascript'>alert('Username Incorrect. Please Try Again.')</script>";}
+                echo "<script type='text/javascript'>alert('Report successfully filed.'); location.href = 'index.php';</script>";
             }  
         }
     }catch(PDOException $e) {

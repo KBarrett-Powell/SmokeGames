@@ -9,8 +9,35 @@
         Smoke Games - Contact
     </title>
 
-    <?php include "references.php"; ?>
+    <?php 
+        include "references.php"; 
+        include "requireMail.php";
+        
+        function verifyContact() {
+            $username = $_POST['uname'];
+            $subject = $_POST['subject'];
+            $message = $_POST['message'];
+            $errors = array();
 
+            if ($uname != strip_tags($uname)) {
+                array_push($errors, ' Please don\'t use tags in your username');
+            }
+            if ($subject != strip_tags($subject)) {
+                array_push($errors, ' Please don\'t use tags in your email subject');
+            }
+            if ($message != strip_tags($message)) {
+                array_push($errors, ' Please don\'t use tags in your message');
+            }
+
+            if(empty($errors)) {
+                return true;
+            } else {
+                $js_errors = json_encode($errors);
+                echo "<script type='text/javascript'>alert(". $js_errors .");</script>";
+                return false;
+            }
+        }
+    ?>
 </head>
 
 <body>
@@ -108,42 +135,35 @@
                         <h2>Contact form</h2>
                         <!-- Still needs implementing to send an email. -->
 
-                        <form>
+                        <form onsubmit="return verifyContact()" method="post">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="firstname">Firstname</label>
-                                        <input type="text" class="form-control" id="firstname">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="lastname">Lastname</label>
-                                        <input type="text" class="form-control" id="lastname">
+                                        <label for="uname">Username</label>
+                                        <input type="text" class="form-control" id="uname" name="uname">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="email">Email</label>
-                                        <input type="text" class="form-control" id="email">
+                                        <input type="email" class="form-control" required="required" id="email" name="email">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="subject">Subject</label>
-                                        <input type="text" class="form-control" id="subject">
+                                        <input type="text" class="form-control" required="required" id="subject" name="subject">
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <label for="message">Message</label>
-                                        <textarea id="message" class="form-control"></textarea>
+                                        <textarea id="message" name="message" class="form-control" required="required"></textarea>
                                     </div>
                                 </div>
 
                                 <div class="col-sm-12 text-center">
-                                    <button type="submit" class="btn btn-primary"><i class="fa fa-envelope-o"></i> Send message</button>
-
+                                    <button type="submit" class="btn btn-primary" id="mesSend" name="mesSend"><i class="fa fa-envelope-o"></i> Send message</button>
                                 </div>
                             </div>
                         </form>
@@ -152,7 +172,53 @@
             </div>
         </div>
     </div>
-<?php include "footer.php"; ?>
+<?php 
+    include "footer.php"; 
+
+    try {
+        include "config.php";
+
+        if(isset($_POST['mesSend'])) {
+            $username = $_POST['uname'];
+            $email = $_POST['email'];
+            $subject = $_POST['subject'];
+            $message = $_POST['message'];
+
+            try {
+                // Adding variables to the email
+                // Check if user is logged in, to give admin idea who the email is from
+                if (isset($_SESSION['username'])) {
+                    $mail->SetFrom($email, $_SESSION['username']);
+                }else if($username != null) {
+                    $mail->SetFrom($email, $username);
+                } else {
+                    $mail->SetFrom($email, 'Unknown User');
+                }
+                
+                // Sending to admin email
+                $mail->AddAddress('smokegames2018@gmail.com');
+                $mail->Subject = $subject;
+
+                // Filling email body with message entered
+                $mail->Body = $message;
+                
+                // Sending Email
+                $mail->Send();
+                    
+                // Send user success message, and take them to main page
+                echo "<script type='text/javascript'>alert('Successfully Sent Email. You should get a response in a few days.')</script>";
+            
+            } catch (phpmailerException $e) {
+                echo "<script type='text/javascript'>alert('Email could not be sent. Please check details and try again later.')</script>";
+                echo $e->errorMessage(); 
+            }
+        }
+
+    }catch(PDOException $e) {
+        echo "Connection failed: " . $e->getMessage();
+    }
+    $gamesdb = null;
+?>
 
 </body>
 </html>

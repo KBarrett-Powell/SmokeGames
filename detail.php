@@ -38,10 +38,47 @@
                 $credits = $row['Credits'];
                 $howto = $row['HowTo'];
                 $avgrate = round($row['AvgRating'], 1);
+
+                $loggedIn = false;
+                $oldEnough = true;
+                if (isset($SESSION['username'])) {
+                    // Retrieving age of user
+                    $ageRetrieve = $gamesdb->prepare("SELECT Age FROM Users WHERE Uname = ?");
+                    $ageRetrieve->execute([$_SESSION['username']]);
+
+                    if ($ageRetrieve->rowCount() == 1){
+                        $row = $ageRetrieve->fetch(PDO::FETCH_ASSOC);
+                        $userAge = $row['Age'];
+                        $loggedIn = true;
+
+                        if ($userAge < $age) {
+                            $oldEnough = false;
+                        }
+                    }
+                }
             
             // else if id in url not linked to a game, send user to error page
             } else {
                 echo "<script type='text/javascript'>location.href = '404.php';</script>";
+            }
+
+            // Checking details entered in review field alright for database
+            function verifyReview() {
+                $review = $_POST['review'];
+                $errors = array();
+
+                // Checking review doesn't include any tags
+                if ($review != strip_tags($review)) {
+                    array_push($errors, ' Please don\'t use tags in your review');
+                }
+
+                if(empty($errors)) {
+                    return true;
+                } else {
+                    $js_errors = json_encode($errors);
+                    echo "<script type='text/javascript'>alert(". $js_errors .");</script>";
+                    return false;
+                }
             }
 
             // Sending a new review to the database
@@ -144,7 +181,7 @@
                                         // If an average rating exists...
                                         if ($avgrate != 0) {
                                             // Display average rating
-                                            echo "<a href='#'>Average rating:  <span class='badge pull-right'>$avg</span></a>";
+                                            echo "<a href='#'>Average rating:  <span class='badge pull-right'>$avgrate</span></a>";
 
                                         // If they're aren't any reviews for this game, tell the user that neatly
                                         } else {
@@ -178,10 +215,18 @@
 
                                 <p class="text-center buttons">
                                     <?php 
-                                        if (strpos($category, 'Multi-Player') !== false) {
-                                            echo "<a href='play.php?id=".$_GET['id']."' class='btn btn-primary' style='font-size: 16pt'><i class='fa fa-shopping-cart'></i> PLAY GAME</a>";
+                                        if (!$loggedIn){
+                                            echo "-- You must be logged in to play this game --";
                                         } else {
-                                            echo "<a href='playSP.php?id=".$_GET['id']."' class='btn btn-primary' style='font-size: 16pt'><i class='fa fa-shopping-cart'></i> PLAY GAME</a>";
+                                            if (!$oldEnough) {
+                                                echo "-- Sorry, you aren't old enough to play this game --";
+                                            } else {
+                                                if (strpos($category, 'Multi-Player') !== false) {
+                                                    echo "<a href='play.php?id=".$_GET['id']."' class='btn btn-primary' style='font-size: 16pt'><i class='fa fa-play'></i> PLAY GAME</a>";
+                                                } else {
+                                                    echo "<a href='playSP.php?id=".$_GET['id']."' class='btn btn-primary' style='font-size: 16pt'><i class='fa fa-play'></i> PLAY GAME</a>";
+                                                }
+                                            }
                                         }
                                     ?>
                                 </p>
@@ -252,31 +297,33 @@
                         ?>   
                         
                         <hr>
+                        
+                        <?php 
+                            if (isset($_SESSION['username'])) {
+                                //Form for users to leave reviews of the game
+                                echo "<div id='comment-form' data-animate='fadeInUp'>";
 
-                        <!-- Form for users to leave reviews of the game -->
-                        <div id="comment-form" data-animate="fadeInUp">
+                                echo "<h4>Leave a review</h4>";
 
-                            <h4>Leave a review</h4>
-
-                            <form method="post">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label for="rating">Rating out of 5 <span class="required">*</span></label>
-                                            <input class="form-control" type="number" id="rating" name="rating" required="required" min="1" max="5" placeholder="5">
-                                            <label for="review">Review <span class="required">*</span></label>
-                                            <textarea class="form-control" id="review" name="review" rows="4"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12 text-right">
-                                        <button class="btn btn-primary" type="submit" name="leaveReview"><i class="fa fa-comment-o"></i> Post review</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                                echo "<form onsubmit='return verifyReview()' method='post'>";
+                                echo "<div class='row'>";
+                                echo "<div class='col-sm-12'>";
+                                echo "<div class='form-group'>";
+                                echo "<label for='rating'>Rating out of 5 <span class='required'>*</span></label>";
+                                echo "<input class='form-control' type='number' id='rating' name='rating' required='required' min='1' max='5' placeholder='5'>";
+                                echo "<label for='review'>Review <span class='required'>*</span></label>";
+                                echo "<textarea class='form-control' id='review' name='review' rows='4' required='required'></textarea>";
+                                echo "</div></div></div>";
+                                echo "<div class='row'>";
+                                echo "<div class='col-sm-12 text-right'>";
+                                echo "<button class='btn btn-primary' type='submit' name='leaveReview'><i class='fa fa-comment-o'></i> Post review</button>";
+                                echo "</div></div></form></div>";
+                        
+                            } else {
+                                echo "<p>--You must be logged in to leave a review--</p>";
+                            }
+                        ?>
+                    </div>  
 
                     <div class="row" id="productMain">
                         <div class="col-xs-3">
@@ -289,7 +336,7 @@
                             try{
                                 include "config.php";
                             
-                                $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE Recommended = 1 ORDER BY Gname ASC");
+                                $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE Recommended = 1 ORDER BY Gname ASC LIMIT 3");
                                 $retrieve->execute();
 
                                 if($retrieve->rowCount() > 0) {
@@ -299,31 +346,13 @@
                                         $recimg = $row["Gimg1"];
 
                                         echo "<div class='row same-height-row'>";
-                                        echo "<div class='col-xs-3'>";
-                                            echo "<div class='product same-height'>";
-                                                echo "<div class='flip-container'>";
-                                                    echo "<div class='flipper'>";
-                                                        echo "<div class='front'>";
-                                                            echo "<a href='#'>";
-                                                                echo "<img src='$recimg' alt='' class='img-responsive'>";
-                                                            echo "</a>";
-                                                        echo "</div>";
-                                                        echo "<div class='back'>";
-                                                            echo "<a href='#'";
-                                                                echo "<img src='$recimg' alt='' class='img-responsive'>";
-                                                            echo "</a>";
-                                                        echo "</div>";
-                                                    echo "</div>";
-                                                echo "</div>";
-                                                echo "<a href='#' class='invisible'>";
-                                                    echo "<img src='$recimg' alt='' class='img-responsive'>";
-                                                echo "</a>";
-                                                echo "<div class='text'>";
-                                                    echo "<h3>$recname</h3>";
-                                                    echo "<p class='price'>PLAY NOW!</p>";
-                                                echo "</div>";
-                                            echo "</div>";
-                                        echo "</div>";
+                                        echo "<div class='col-xs-3'><div class='product same-height'>";
+                                        echo "<div class='flip-container'><div class='flipper'><div class='front'>";
+                                        echo "<a href='detail.php?id=$recid'><img src='$recimg' alt='' class='img-responsive'></a>";
+                                        echo "</div><div class='back'><a href='detail.php?id=$recid'>";
+                                        echo "<img src='$recimg' alt='' class='img-responsive'></a></div></div></div>";
+                                        echo "<a href='detail.php?id=$recid' class='invisible'><img src='$recimg' alt='' class='img-responsive'>";
+                                        echo "</a><div class='text'><h3>$recname</h3></div></div></div>";
                                     }
                                     echo "</div>";
                                 } else {

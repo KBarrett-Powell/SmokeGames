@@ -3,7 +3,6 @@
     { 
         session_start(); 
     } 
-    include "config.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,13 +28,12 @@
                         <div class="col-md-12">
                             <h2>All Games</h2>
 
-                            <div class="col-md-6">
-                                <!-- forms for the sort and filters for the games -->
-                                <form id="filterForm" method="POST" action="">
-                                    <div class="form-group">
-                                        
+                            <!-- forms for the sort and filters for the games -->
+                            <form id="filterForm" method="POST" action="<?php $_SERVER['PHP_SELF']?>">
+                                <div class="form-group">
+                                    <div class="col-md-5">
                                         <label for="filterby">Filter:</label>
-                                        <select class="form-control" onchange="filterForm.submit();" name='filterby'>
+                                        <select class="form-control" name='filterby'>
                                             <option value=''>All</option>
                                             <option value='Action'>Action</option>
                                             <option value='Arcade'>Arcade</option>
@@ -44,28 +42,37 @@
                                             <option value='Shooter'>Shooter</option>
                                             <option value='Sports'>Sports</option>
                                         </select>
-
                                     </div>
-                                </form>
-                            </div>
+
+                                    <div class="col-md-1">
+                                        <h3 class='invisible'></h3>
+                                        <button style='border:none; margin-top:15%; background-color: transparent;' type="submit" value="Filter">Filter</button>
+                                    </div>
+                                </div>
+                            </form>
 
                             <!-- sort by several different options-->
-                            <form id="sortForm" method="POST" action="">
+                            <form id="sortForm" method="POST" action="<?php $_SERVER['PHP_SELF']?>">
                                 <div class="form-group">
                                     <div class="col-md-3">
                                         <label for="sortwhat">Sort By:</label>
-                                        <select class="form-control" onchange="sortForm.submit();" name='sortwhat'>
+                                        <select class="form-control" name='sortwhat'>
                                             <option value='Gname'>Name</option>
                                             <option value='AvgRating'>Rating</option>
                                         </select>
                                     </div>
 
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <label for="sorthow">Order:</label>
-                                        <select class="form-control" onchange="sortForm.submit();" name='sorthow'>
+                                        <select class="form-control" name='sorthow'>
                                                 <option value='ASC'>Ascending</option>
                                                 <option value='DESC'>Descending</option>
                                         </select>
+                                    </div>
+
+                                    <div class="col-md-1">
+                                        <h3 class='invisible'></h3>
+                                        <button style='border:none; margin-top:15%; background-color: transparent;' type="submit" value="Sort">Sort</button>
                                     </div>
                                 </div>
                             </form>

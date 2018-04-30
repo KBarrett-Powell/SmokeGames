@@ -28,7 +28,7 @@
             if (preg_match('/^[a-zA-Z\-]{1,30}$/', $fname) == 0) {
                 array_push($errors, ' First name should only be 1 to 30 letters');
             }
-            if (preg_match('/^[a-zA-Z\-]{1,40}$/', $fname) == 0) {
+            if (preg_match('/^[a-zA-Z\-]{1,40}$/', $lname) == 0) {
                 array_push($errors, ' Last name should only be 1 to 40 letters');
             }
             if ($uname != strip_tags($uname)) {
@@ -158,12 +158,8 @@
                         </form>
                     </div>
                 </div>
-
-
             </div>
-            <!-- /.container -->
         </div>
-        <!-- /#content -->
 
 <?php 
     //$attempts = 0;
@@ -178,62 +174,68 @@
                 $username = $_POST['user'];
                 $password = $_POST['pass'];
 
-                // Try to find user account with details entered
-                $retrieve = $gamesdb->prepare("SELECT u.Pass, u.Verified, u.Temp, p.ProName FROM Users u, Profiles p WHERE u.Uname = ? AND u.Uname = p.Uname");
+                $banCheck = $gamesdb->prepare("SELECT * FROM Reports WHERE Uname1 = ? AND Banned = 1");
                 $retrieve->execute([$username]);
+                if ($retrieve->rowCount() == 0) {
 
-                if ($retrieve->rowCount() == 1) {
-                    $row = $retrieve->fetch(PDO::FETCH_ASSOC);
-                    $hash = $row['Pass'];
-                    $verf = $row['Verified'];
-                    $tempPass = $row['Temp'];
-                    $pname = $row['ProName'];
-                    
-                    // Check if account verified
-                    if ($verf == 1){
+                    // Try to find user account with details entered
+                    $retrieve = $gamesdb->prepare("SELECT u.Pass, u.Verified, u.Temp, p.ProName FROM Users u, Profiles p WHERE u.Uname = ? AND u.Uname = p.Uname");
+                    $retrieve->execute([$username]);
 
-                        // Compare passwords
-                        //if (password_verify($password, $hash)) {
-                        if ($password == $hash) {
+                    if ($retrieve->rowCount() == 1) {
+                        $row = $retrieve->fetch(PDO::FETCH_ASSOC);
+                        $hash = $row['Pass'];
+                        $verf = $row['Verified'];
+                        $tempPass = $row['Temp'];
+                        $pname = $row['ProName'];
+                        
+                        // Check if account verified
+                        if ($verf == 1){
 
-                            // Set session variables
-                            $_SESSION['username'] = $username;
-                            $_SESSION['proname'] = $pname;
+                            // Compare passwords
+                            //if (password_verify($password, $hash)) {
+                            if ($password == $hash) {
 
-                            // Check if user is an admin
-                            $retrieve = $gamesdb->prepare("SELECT * FROM Admins WHERE Uname = ?");
-                            $retrieve->execute([$username]);
+                                // Set session variables
+                                $_SESSION['username'] = $username;
+                                $_SESSION['proname'] = $pname;
+
+                                // Check if user is an admin
+                                $retrieve = $gamesdb->prepare("SELECT * FROM Admins WHERE Uname = ?");
+                                $retrieve->execute([$username]);
+                                
+                                if ($retrieve->rowCount() == 1) { 
+                                    $_SESSION['admin'] = true; 
+                                }
+
+                                // Take user to main page
+                                echo "<script type='text/javascript'>alert('Successfully Logged In.'); location.href = 'index.php';</script>";
                             
-                            if ($retrieve->rowCount() == 1) { 
-                                $_SESSION['admin'] = true; 
-                            }
+                            } else if ($password == $tempPass){
+                                
+                                // Set session variables
+                                $_SESSION['username'] = $username;
+                                $_SESSION['proname'] = $pname;
+                                $_SESSION['temp_used'] = true;
+    
+                                // Check if user is an admin
+                                $retrieve = $gamesdb->prepare("SELECT * FROM Admins WHERE Uname = ?");
+                                $retrieve->execute([$username]);
+                                
+                                if ($retrieve->rowCount() == 1) { 
+                                    $_SESSION['admin'] = true; 
+                                }
+    
+                                // Take user to main page
+                                echo "<script type='text/javascript'>alert('Successfully Logged In With Temporary Password.'); location.href = 'forceChange.php';</script>";
+                            
+                            } else {echo "<script type='text/javascript'>alert('Password Incorrect. Please Try Again.')</script>";}
 
-                            // Take user to main page
-                            echo "<script type='text/javascript'>alert('Successfully Logged In.'); location.href = 'index.php';</script>";
-                        
-                        } else if ($password == $tempPass){
-                             
-                            // Set session variables
-                             $_SESSION['username'] = $username;
-                             $_SESSION['proname'] = $pname;
-                             $_SESSION['temp_used'] = true;
- 
-                             // Check if user is an admin
-                             $retrieve = $gamesdb->prepare("SELECT * FROM Admins WHERE Uname = ?");
-                             $retrieve->execute([$username]);
-                             
-                             if ($retrieve->rowCount() == 1) { 
-                                 $_SESSION['admin'] = true; 
-                             }
- 
-                             // Take user to main page
-                             echo "<script type='text/javascript'>alert('Successfully Logged In With Temporary Password.'); location.href = 'forceChange.php';</script>";
-                        
-                        } else {echo "<script type='text/javascript'>alert('Password Incorrect. Please Try Again.')</script>";}
+                        } else {echo "<script type='text/javascript'>alert('Please Verify Account Before Trying To Log In')</script>";}
 
-                    } else {echo "<script type='text/javascript'>alert('Please Verify Account Before Trying To Log In')</script>";}
+                    } else {echo "<script type='text/javascript'>alert('Username Incorrect. Please Try Again.')</script>";}
 
-                } else {echo "<script type='text/javascript'>alert('Username Incorrect. Please Try Again.')</script>";}
+                } else {echo "<script type='text/javascript'>alert('You've been baned from our site. Please try again later, or contact us, if you feel there's been a mistake.)</script>";}
 
                 // if($attempts > 5){
                 //     {echo "<script type='text/javascript'>alert('Attempted to login too many times, please try again later.')</script>";}
