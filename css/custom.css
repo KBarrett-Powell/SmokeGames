@@ -1,0 +1,141 @@
+/** Your theme modifications here **/
+body {
+    /*background-color: #26213b;*/
+    background: radial-gradient(#212c3b, #212c3b, #1e4258);
+}
+
+.navbar-default {
+    background-color: #1d2026;
+}
+/* Literally the top of the page */
+#top {
+    background-color: #1d2026;
+}
+#top ul.menu > li a {
+  color: #b7b5b3;
+}
+#top ul.menu > li a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Menu navigation bar */
+.navbar ul.nav > li > a {
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #cccccc !important;
+}
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+  color: #fff !important;
+  background-color: #1d2026 !important;
+}
+.navbar-default .navbar-nav > li > .active:hover,
+.navbar-default .navbar-nav > li > .active:focus {
+  color: white;
+  background-color: #1d2026;
+}
+.navbar-default .navbar-nav > li > .active:hover {
+  color: #fff;
+  background-color: #fff;
+}
+.navbar-default .navbar-nav > .active > a:hover {
+  color: #fff !important;
+  background-color: #1d2026 !important;
+}
+.navbar-default .navbar-nav > .disabled > a,
+.navbar-default .navbar-nav > .disabled > a:hover,
+.navbar-default .navbar-nav > .disabled > a:focus {
+  color: #fff;
+  background-color: transparent;
+}
+.navbar-default .navbar-toggle {
+  border-color: #1d1e1a;
+}
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+  background-color: #1d2026;
+}
+
+/* Search button */
+
+.btn-primary {
+    background-color: #1d2026;
+    border-color: #1d2026;
+}
+/*I don't like adding !important tags to override but the bootstrap stylesheet is messed up 
+  and has stuff that overrides the CSS otherwise*/
+.navbar-default .navbar-nav > li > a {
+  background-color: #1d2026 !important;
+  color: #fff !important;
+}
+.navbar-default .navbar-nav > li > a:active {
+  color: #fff;
+  background-color: #1d2026 !important;
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+  color: #fff !important;
+  background-color: #1d2026 !important;
+}
+.navbar-default .navbar-nav > li > .active:hover,
+.navbar-default .navbar-nav > li > .active:focus {
+  color: white;
+  background-color: #1d2026;
+}
+.navbar-default .navbar-nav > li > .active:hover {
+  color: #fff;
+  background-color: #1d2026;
+}
+.navbar-default .navbar-nav > .active > a:hover {
+  color: #fff !important;
+  background-color: #1d2026 !important;
+}
+
+/* breadcrumb link */
+.breadcrumb {
+    background-color: transparent;
+}
+
+/* under banner */
+.box {
+    background-color: #257aa1;
+}
+a {
+    color: #fff;
+}
+a:hover{
+  color: #fff;
+  text-decoration: underline;
+}
+
+#advantages .box .icon {
+    color: #1d2026;
+}
+
+/* Trending */
+
+#hot .product-slider .item {
+    background-color: #257aa1;
+}
+#content .product {
+    background: #257aa1;
+    border: solid 1px #257aa1;
+}
+
+#content .product .text h3 a {
+  color: #212c3b;
+}
+
+#content .product .text h3 a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+#footer {
+    background-color: transparent;
+}
+#copyright {
+    background-color: #1d2026;
+}
