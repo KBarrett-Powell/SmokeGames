@@ -7,6 +7,8 @@
                     <hr>
                     <ul>
                         <li><a href="contact.php">Contact us</a></li>
+                        <li><a href="faq.php">Terms & Conditions</a></li>
+                        <li><a href="priv.php">Privacy Policy</a></li>
                     </ul>
                 </div>
 
@@ -47,11 +49,11 @@
                     <h4>Stay in touch</h4>
                     <hr>
                     <p class="social">
-                        <a href="#" class="facebook external"><i class="fa fa-facebook"></i></a>
-                        <a href="#" class="twitter external"><i class="fa fa-twitter"></i></a>
-                        <a href="#" class="instagram external"><i class="fa fa-instagram"></i></a>
-                        <a href="#" class="gplus external"><i class="fa fa-google-plus"></i></a>
-                        <a href="#" class="email external"><i class="fa fa-envelope"></i></a>
+                        <a href="https://www.facebook.com/Smoke-Games-140035796723565/" class="facebook external"><i class="fa fa-facebook"></i></a>
+                        <a href="https://twitter.com/SmokeGames2018" class="twitter external"><i class="fa fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/smokegames2018/" class="instagram external"><i class="fa fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/channel/UC6twljO7Xeu9vH0uB8PLT4w" class="gplus external"><i class="fa fa-google-plus"></i></a>
+                        <a href="mailto:smokegames2018@gmail.com" class="email external"><i class="fa fa-envelope"></i></a>
                     </p>
 
                 </div>
@@ -63,7 +65,7 @@
     <div id="copyright">
         <div class="container">
             <div class="col-md-6">
-                <p class="pull-left">© 2018 Group 4</p>
+                <p class="pull-left">© 2018 Smoke Games - Group 4</p>
 
             </div>
             <div class="col-md-6">

@@ -37,10 +37,13 @@
                             <img class="img-responsive" src="images/BannerImages/mathopoly.jpg" alt="">
                         </div>
                     </div>
+                    <!-- /#main-slider -->
                 </div>
             </div>
 
+            <!-- HOMEPAGE -->
             <div id="advantages">
+
                 <div class="container">
                     <div class="same-height-row">
                         <div class="col-sm-4">
@@ -68,14 +71,15 @@
                                 <div class="icon"><i class="fa fa-thumbs-up"></i>
                                 </div>
 
-                                <h3><a href="contact.php">Contact us!</a></h3>
-                                <p>We pride ourselves on our fast response to any problems our users are having!</p>
+                                <h3><a href="#">Follow us on Social media!</a></h3>
+                                <p>All of our social medias are linked down below!</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             
+            <!-- HOT PRODUCT SLIDESHOW -->
             <div id="hot">
 
                 <div class="box">
@@ -106,7 +110,7 @@
                                         echo "<a href='detail.php?id=$id'><img src='$img' alt='' class='img-responsive'></a></div>";
                                         echo "<div class='back'><a href='detail.php?id=$id'><img src='$img' alt='' class='img-responsive'></a></div></div></div>";
                                         echo "<a href='detail.php?id=$id' class='invisible'><img src='$img' alt='' class='img-responsive'></a>";
-                                        echo "<div class='text'><h3><a href='detail.php?id=$id'>$name</a></h3><p class='price'><a href='detail.php?id=$id'>View Info</a></p>";
+                                        echo "<div class='text'><h3><a href='detail.php?id=$id'>$name</a></h3><p class='price'><a href='detail.php?id=$id' class='btn btn-primary'>PLAY!</a></p>";
                                         echo "</div></div></div>";
                                     }
                                     echo "</div></div>";

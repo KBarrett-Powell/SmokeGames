@@ -95,8 +95,9 @@
                                     foreach($fileName as $row) {
                                         $fName = $row['fileName'];
                                         echo $fName;
+                                        echo "<script type='text/javascript'>location.replace('scriptGames/".$fName."/index.php')</script>";
                                         
-                                        include "scriptGames/" . $fName . "/index.php";
+                                        //include "scriptGames/" . $fName . "/index.php";
                                     }
                                 }
                                 
