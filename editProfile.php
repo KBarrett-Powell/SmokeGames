@@ -136,7 +136,7 @@
                                 <div class="col-sm-8">
                                     <div class="form-group">
                                         <label for="newpname">Profile Name </label>
-                                        <?php echo "<input type='text' class='form-control' id='newpname' placeholder='$pname'>"; ?>
+                                        <?php echo "<input type='text' class='form-control' id='newpname' name='newpname' placeholder='$pname'>"; ?>
                                     </div>
                                 </div>
                             </div>
@@ -145,13 +145,13 @@
                                 <div class="col-sm-5">
                                     <div class="form-group">
                                         <label for="newfirst">First Name</label>
-                                        <?php echo "<input type='text' class='form-control' id='newfirst' placeholder='$fname'>"; ?>
+                                        <?php echo "<input type='text' class='form-control' id='newfirst' name='newfirst' placeholder='$fname'>"; ?>
                                     </div>
                                 </div>
                                 <div class="col-sm-5">
                                     <div class="form-group">
                                         <label for="newlast">Last Name</label>
-                                        <?php echo "<input type='text' class='form-control' id='newlast' placeholder='$lname'>"; ?>
+                                        <?php echo "<input type='text' class='form-control' id='newlast' name='newlast' placeholder='$lname'>"; ?>
                                     </div>
                                 </div>
                             </div>
@@ -161,14 +161,14 @@
                                     <div class="form-group">
                                         <label for="newpic">Profile Image</label>
                                         <?php echo "<img src='$img' style='width:30%; vertical-align:top;'>"; ?>
-                                        <input type="file" class="form-control" id="newpic">
+                                        <input type="file" class="form-control" id="newpic" name="newpic">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="banpic">Banner Image</label>
                                         <?php echo "<img src='$banner' style='width:30%; vertical-align:top;'>"; ?>
-                                        <input type="file" class="form-control" id="banpic">
+                                        <input type="file" class="form-control" id="banpic" name="banpic">
                                     </div>
                                 </div>
                             </div>
@@ -177,7 +177,7 @@
                                 <div class="col-sm-8">
                                     <div class="form-group">
                                         <label for="newdesc">Description</label>
-                                        <?php echo "<input type='text' class='form-control' id='newdesc' placeholder='$desc'>"; ?>
+                                        <?php echo "<input type='text' class='form-control' id='newdesc' name='newdesc' placeholder='$desc'>"; ?>
                                     </div>
                                 </div>
                             </div>
@@ -207,9 +207,11 @@
                 $nfirst = $_POST['newfirst'];
                 $nlast = $_POST['newlast'];
                 $npname = $_POST['newpname'];
-                $npic = $_FILES['newpic'];
-                $nban = $_FILES['banpic'];
+                $npic = $_POST['newpic'];
+                $nban = $_POST['banpic'];
                 $ndesc = $_POST['newdesc'];
+
+                $error = false;
                 
                 if ($nfirst != "") {
                     $update = $gamesdb->prepare("UPDATE Users SET FName = ? WHERE Uname = ?");
@@ -222,6 +224,7 @@
                 if ($npname != "") {
                     $update = $gamesdb->prepare("UPDATE Profiles SET ProName = ? WHERE Uname = ?");
                     $update->execute([$npname, $curuser]);
+                    $_SESSION['proname'] = $npname;
                 } 
                 if ($ndesc != "") {
                     $update = $gamesdb->prepare("UPDATE Profiles SET PDesc = ? WHERE Uname = ?");
@@ -249,9 +252,11 @@
                             $update = $gamesdb->prepare("UPDATE Profiles SET ProPic = ? WHERE Uname = ?");
                             $update->execute([$nfilename, $curuser]);
                         } else {
+                            $error = true;
                             echo "<script type='text/javascript'>alert('Error uploading new profile pic.')</script>";
                         }
                     } else {
+                        $error = true;
                         echo "<script type='text/javascript'>alert('Please only upload a JPG, JPEG, PNG, or a GIF file.')</script>";
                     }
                 } 
@@ -277,15 +282,17 @@
                             $update = $gamesdb->prepare("UPDATE Profiles SET Banner = ? WHERE Uname = ?");
                             $update->execute([$nfilename, $curuser]);
                         } else {
+                            $error = true;
                             echo "<script type='text/javascript'>alert('Error uploading new banner.')</script>";
                         }
                     } else {
+                        $error = true;
                         echo "<script type='text/javascript'>alert('Please only upload a JPG, JPEG, PNG, or a GIF file.')</script>";
                     }
                 } 
-
-                echo "<script type='text/javascript'>alert('Successfully Updated Profile')</script>";
-                echo "<script type='text/javascript'>location.href = 'editProfile.php';</script>";
+                if (!$error) {
+                    echo "<script type='text/javascript'>alert('Successfully Updated Profile'); window.location.href = window.location.href;</script>";
+                }
             }
         }
     } catch(PDOException $e) {

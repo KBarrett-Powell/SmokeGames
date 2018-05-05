@@ -41,7 +41,7 @@
 
                 $loggedIn = false;
                 $oldEnough = true;
-                if (isset($SESSION['username'])) {
+                if (isset($_SESSION['username'])) {
                     // Retrieving age of user
                     $ageRetrieve = $gamesdb->prepare("SELECT Age FROM Users WHERE Uname = ?");
                     $ageRetrieve->execute([$_SESSION['username']]);

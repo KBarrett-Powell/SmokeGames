@@ -71,9 +71,6 @@
                                 <li class="active">
                                     <a href="#">Contact Information</a>
                                 </li>
-                                <li>
-                                    <a href="report.php">Report A User</a>
-                                </li>
                             </ul>
                         </div>
                     </div>            

@@ -48,7 +48,7 @@
                                 <div class="icon"><i class="fa fa-heart"></i>
                                 </div>
 
-                                <h3><a href="#">We love our players!</a></h3>
+                                <h3><a href="register.php">We love our players!</a></h3>
                                 <p>We offer exclusive access to brand new games for our users! Sign up now!</p>
                             </div>
                         </div>
@@ -58,7 +58,7 @@
                                 <div class="icon"><i class="fa fa-tags"></i>
                                 </div>
 
-                                <h3><a href="#">Exclusive games!</a></h3>
+                                <h3><a href="games.php">Exclusive games!</a></h3>
                                 <p>Explore our amazing game library now!</p>
                             </div>
                         </div>
@@ -68,8 +68,8 @@
                                 <div class="icon"><i class="fa fa-thumbs-up"></i>
                                 </div>
 
-                                <h3><a href="#">Follow us on Social media!</a></h3>
-                                <p>Facebook.com/SmokeGames</p>
+                                <h3><a href="contact.php">Contact us!</a></h3>
+                                <p>We pride ourselves on our fast response to any problems our users are having!</p>
                             </div>
                         </div>
                     </div>
@@ -106,7 +106,7 @@
                                         echo "<a href='detail.php?id=$id'><img src='$img' alt='' class='img-responsive'></a></div>";
                                         echo "<div class='back'><a href='detail.php?id=$id'><img src='$img' alt='' class='img-responsive'></a></div></div></div>";
                                         echo "<a href='detail.php?id=$id' class='invisible'><img src='$img' alt='' class='img-responsive'></a>";
-                                        echo "<div class='text'><h3><a href='detail.php?id=$id'>$name</a></h3><p class='price'>PLAY!</p>";
+                                        echo "<div class='text'><h3><a href='detail.php?id=$id'>$name</a></h3><p class='price'><a href='detail.php?id=$id'>View Info</a></p>";
                                         echo "</div></div></div>";
                                     }
                                     echo "</div></div>";

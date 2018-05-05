@@ -75,7 +75,10 @@ session_start();
                                     <a href="adminReports.php"><i class="fa fa-user"></i>Manage User Reports</a>
                                 </li>
                                 <li>
-                                    <a href="adminGames.php"><i class="fa fa-play"></i>Manage Games</a>
+                                    <a href="adminGames.php"><i class="fa fa-play"></i>Upload New Game</a>
+                                </li>
+                                <li>
+                                    <a href="adminUpdates.php"><i class="fa fa-heart"></i>Update Games</a>
                                 </li>
                             </ul>
                         </div>

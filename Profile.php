@@ -192,8 +192,7 @@
                             // Displaying profile name and report user option
                             echo "<div class='panel-heading'><h3 class='panel-title'>$pname</h3></div><div class='panel-body'>";
                             echo "<ul class='nav nav-pills nav-stacked'>";
-                            echo "<li><form method='post'><button style='border:none; background-color: transparent;' type='submit' name='reportUser'><i class='fa fa-user'></i> Report User";
-                            echo "</button><form></li></ul></div></div>";
+                            echo "<li>--You need to be logged into befriend and report users--</li></ul></div></div>";
 
                         } else if ($uname == $_SESSION['username']){
                             // Links to log out and view account info

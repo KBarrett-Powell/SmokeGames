@@ -1075,7 +1075,7 @@ h1 {
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
-  color: #ccc;
+  color: #2b1970;
   background-color: #f0f0f0;
   border: 1px solid #dddddd;
 }
@@ -1086,7 +1086,7 @@ h1 {
 .nav-pills > li.active > a,
 .nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {
-  color: #ffffff;
+  color: #2b1970;
   background-color: #cccccc;
 }
 .nav-tabs-justified > li > a {
@@ -1311,7 +1311,7 @@ h1 {
   color: #fff !important;
 }
 .navbar-default .navbar-nav > li > a:active {
-  color: #ccc;
+  color: #2b1970;
   background-color: #1e1444 !important;
 }
 .navbar-default .navbar-nav > li > a:hover,
@@ -1329,7 +1329,7 @@ h1 {
   background-color: #cccccc;
 }
 .navbar-default .navbar-nav > .active > a:hover {
-  color: #555555 !important;
+  color: #2b1970 !important;
   background-color: #cccccc !important;
 }
 .navbar-default .navbar-nav > .disabled > a,

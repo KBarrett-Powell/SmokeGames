@@ -35,7 +35,6 @@
                 </div>
 
                 <div class="container">
-                    <div class="product-slider">
 
                         <?php
                             try{
@@ -46,6 +45,8 @@
                                 $retrieve->execute(['%'.$search.'%']);
                                 
                                 if ($retrieve->rowCount() > 0) {
+                                    echo "<div class='product-slider'>";
+
                                     foreach ($retrieve as $row) {
                                         $id = $row["GameID"];
                                         $name = $row["Gname"];
@@ -58,14 +59,15 @@
                                         echo "<div class='text'><h3><a href='detail.php?id=$id'>$name</a></h3>";
                                         echo "</div></div></div>";
                                     }
-                                } else { echo "-- No results --";}
+
+                                    echo "</div>";
+                                } else { echo "<h2>-- No results --</h2>";}
 
                             }catch(PDOException $e) {
                                 echo "Connection failed: " . $e->getMessage();
                             }
                             $gamesdb = null;
                         ?>
-                    </div>
                 </div>
             </div>
         </div>

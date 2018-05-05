@@ -44,16 +44,6 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-md-1">
-                                        <h3 class='invisible'></h3>
-                                        <button style='border:none; margin-top:15%; background-color: transparent;' type="submit" value="Filter">Filter</button>
-                                    </div>
-                                </div>
-                            </form>
-
-                            <!-- sort by several different options-->
-                            <form id="sortForm" method="POST" action="<?php $_SERVER['PHP_SELF']?>">
-                                <div class="form-group">
                                     <div class="col-md-3">
                                         <label for="sortwhat">Sort By:</label>
                                         <select class="form-control" name='sortwhat'>
@@ -65,14 +55,14 @@
                                     <div class="col-md-2">
                                         <label for="sorthow">Order:</label>
                                         <select class="form-control" name='sorthow'>
-                                                <option value='ASC'>Ascending</option>
-                                                <option value='DESC'>Descending</option>
+                                            <option value='DESC'>Descending</option>
+                                            <option value='ASC'>Ascending</option>
                                         </select>
                                     </div>
 
-                                    <div class="col-md-1">
+                                    <div class="col-md-2">
                                         <h3 class='invisible'></h3>
-                                        <button style='border:none; margin-top:15%; background-color: transparent;' type="submit" value="Sort">Sort</button>
+                                        <button style='border:none; margin-top:7%; background-color: transparent;' type="submit" value="Sort">Filter & Sort</button>
                                     </div>
                                 </div>
                             </form>
@@ -86,21 +76,10 @@
                             <?php
                                 try{
                                     include "config.php";
-
-                                     // This SQL query defines how the items are sorted and what they are filtered by
-                                    if (isset($_POST['sortwhat']) && isset($_POST['filterby'])) {
-                                        $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE Category LIKE ? ORDER BY ? ? ");
-                                        $retrieve->execute(['%'.$_POST['filterby'].'%', $_POST['sortwhat'], $_POST['sorthow']]);
-                                    } else if (isset($_POST['sortwhat'])) {
-                                        $retrieve = $gamesdb->prepare("SELECT * FROM Games ORDER BY ? ?");
-                                        $retrieve->execute([$_POST['sortwhat'], $_POST['sorthow']]);
-                                    } else if (isset($_POST['filterby'])) {
-                                        $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE Category LIKE ? ORDER BY Gname ASC");
-                                        $retrieve->execute(['%'.$_POST['filterby'].'%']);
-                                    } else {    
-                                        $retrieve = $gamesdb->prepare("SELECT * FROM Games ORDER BY Gname ASC");
-                                        $retrieve->execute();
-                                    }
+                                    
+                                    // This SQL query defines how the items are sorted and what they are filtered by
+                                    $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE Category LIKE ? ORDER BY ".$_POST['sortwhat']." ".$_POST['sorthow']."");
+                                    $retrieve->execute(['%'.$_POST['filterby'].'%']);
                                     
                                     if ($retrieve->rowCount() > 0) {
                                         foreach ($retrieve as $row) {
@@ -113,7 +92,7 @@
                                             echo "<a href='detail.php?id=$id'><img src='$img' alt='' class='img-responsive'></a></div>";
                                             echo "<div class='back'><a href='detail.php?id=$id'><img src='$img' alt='' class='img-responsive'></a></div></div></div>";
                                             echo "<a href='detail.php?id=$id' class='invisible'><img src='$img' alt='' class='img-responsive'></a>";
-                                            echo "<div class='text'><h3><a href='detail.php?id=$id'>$name</a></h3><p class='price'>PLAY!</p>";
+                                            echo "<div class='text'><h3><a href='detail.php?id=$id'>$name</a></h3><p class='price'><a href='detail.php?id=$id'>View Info</a></p>";
                                             echo "</div></div></div>";
                                         }
                                         echo "</div></div>";

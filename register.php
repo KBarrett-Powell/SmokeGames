@@ -162,7 +162,6 @@
         </div>
 
 <?php 
-    //$attempts = 0;
     try{
         include "config.php";
         
@@ -170,13 +169,13 @@
 
             // If login form has been filled out:
             if(isset($_POST['submit_login'])) {
-                //$attempts += 1;
                 $username = $_POST['user'];
                 $password = $_POST['pass'];
 
                 $banCheck = $gamesdb->prepare("SELECT * FROM Reports WHERE Uname1 = ? AND Banned = 1");
-                $retrieve->execute([$username]);
-                if ($retrieve->rowCount() == 0) {
+                $banCheck->execute([$username]);
+                
+                if ($banCheck->rowCount() == 0) {
 
                     // Try to find user account with details entered
                     $retrieve = $gamesdb->prepare("SELECT u.Pass, u.Verified, u.Temp, p.ProName FROM Users u, Profiles p WHERE u.Uname = ? AND u.Uname = p.Uname");
@@ -195,7 +194,7 @@
                             // Compare passwords
                             //if (password_verify($password, $hash)) {
                             if ($password == $hash) {
-
+                                echo "here";
                                 // Set session variables
                                 $_SESSION['username'] = $username;
                                 $_SESSION['proname'] = $pname;
@@ -235,11 +234,7 @@
 
                     } else {echo "<script type='text/javascript'>alert('Username Incorrect. Please Try Again.')</script>";}
 
-                } else {echo "<script type='text/javascript'>alert('You've been baned from our site. Please try again later, or contact us, if you feel there's been a mistake.)</script>";}
-
-                // if($attempts > 5){
-                //     {echo "<script type='text/javascript'>alert('Attempted to login too many times, please try again later.')</script>";}
-                // }
+                } else {echo "<script type='text/javascript'>alert('You've been banned from our site. Please try again later, or contact us, if you feel there's been a mistake.)</script>";}
                 
             // If sign up form has been filled out:
             } elseif(isset($_POST['submit_create'])) {

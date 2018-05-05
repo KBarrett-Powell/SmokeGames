@@ -2,7 +2,7 @@
 session_start();
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>
         Smoke Games - Admin Game Upload
@@ -46,7 +46,10 @@ session_start();
                                     <a href="adminReports.php"><i class="fa fa-user"></i>Manage User Reports</a>
                                 </li>
                                 <li class="active">
-                                    <a href="adminGames.php"><i class="fa fa-heart"></i>Upload New Game</a>
+                                    <a href="adminGames.php"><i class="fa fa-play"></i>Upload New Game</a>
+                                </li>
+                                <li>
+                                    <a href="adminUpdates.php"><i class="fa fa-heart"></i>Update Games</a>
                                 </li>
                             </ul>
                         </div>
@@ -92,7 +95,7 @@ session_start();
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="img1">Rectangle Image <span class="required">*</span></label>
+                                        <label for="img1">Normal Image <span class="required">*</span></label>
                                         <input type="file" class="form-control" id="img1">
                                     </div>
                                 </div>
@@ -132,7 +135,7 @@ session_start();
                             <div class="row">
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                        <label for="age">Age <span class="required">*</span></label>
+                                        <label for="age">Age Rating <span class="required">*</span></label>
                                         <input type='number' class='form-control' id='age'>
                                     </div>
                                 </div>
@@ -146,7 +149,7 @@ session_start();
 
                             <div class="row">
                                 <div class="col-sm-12 text-center">
-                                    <button type="submit" class="btn btn-primary" name="edit_pro"><i class="fa fa-save"></i> Save changes</button>
+                                    <button type="submit" class="btn btn-primary" name="upload_game"><i class="fa fa-save"></i> Upload Game</button>
                                     <button type="cancel" class="btn btn-primary"><i class="fa fa-save"></i> Cancel</button>
                                 </div>
                             </div>
@@ -156,6 +159,88 @@ session_start();
             </div>
         </div>
     </div>
-<?php include "footer.php"; ?>
+<?php 
+    include "footer.php"; 
+    try{
+        include "config.php";
+        // Code for buttons in page
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            // If respond to friend request selected :
+            if(isset($_POST['upload_game'])) {
+                $gfile = $_FILES['gfile'];
+                $gname = $_POST['gname'];
+                $desc = $_POST['desc'];
+                $img = $_FILES['img1'];
+                $sqimg = $_FILES['sqImg'];
+                $howto = $_POST['howto'];
+                $category = $_POST['category'];
+                $age = $_POST['age'];
+                $credit = $_POST['credit'];
+                
+                // Create new game id for the game being uploaded
+                $retrieve = $gamesdb->prepare("SELECT max(GameID) FROM Games");
+                $retrieve->execute();
+                $row = $retrieve->fetch(PDO::FETCH_ASSOC);
+                $gid = $row["max(GameID)"] + 1;
+
+                $uploadOk = false;
+
+                // Getting file types of images
+                $fileTypePlain = exif_imagetype($img);
+                $fileTypeImg = $fileTypePlain == 1 ? "gif" : ($fileTypePlain == 2 ? "jpeg" : ( $fileTypePlain == 3 ? "png" : "" ));
+                $fileTypePlain = exif_imagetype($sqimg);
+                $fileTypeSqu = $fileTypePlain == 1 ? "gif" : ($fileTypePlain == 2 ? "jpeg" : ( $fileTypePlain == 3 ? "png" : "" ));
+                $filenameGame = $_FILES['gfile']['name'];
+                $fileTypeGame = pathinfo($path, PATHINFO_EXTENSION);
+
+                $imgfilename = $gname . uniqid() . $fileTypeImg;
+                $Sqfilename = $gname . uniqid() . $fileTypeSqu;
+                $gfilename = $gname . $fileTypeGame;
+
+                $checkImg = getimagesize($img["tmp_name"]);
+                $checkSq = getimagesize($sqimg["tmp_name"]);
+                if($checkImg !== false && $checkSq !== false) {
+                    $uploadOk = true;
+                } 
+
+                if($fileTypeImg == "" || $fileTypeSqu == "") {
+                    $uploadOk = false;
+                }
+
+                if($uploadOk) {
+                    $target_file_img = "images/HomeTrending/". $imgfilename;
+
+                    if (move_uploaded_file($img["tmp_name"], $target_file_img)) {
+
+                        $target_file_sq = "images/HomeTrending/". $Sqfilename;
+
+                        if (move_uploaded_file($sqimg["tmp_name"], $target_file_sq)) {
+                            $target_file_game = "Games/". $gname . "/" . $gfilename;
+
+                            if (move_uploaded_file($gfile["tmp_name"], $target_file_game)) {
+                                $newGame = $gamesdb->prepare("INSERT INTO Games(GameID, Gname, Description, Gimg1, GimgSquare, Category, AgeRating, Credits, HowTo, GameFile) VALUES (?,?,?,?,?,?,?,?,?,?)");
+                                $newGame->execute([$gid, $gname, $desc, $target_file_img, $target_file_sq, $category, $age, $credit, $howto, $target_file_game]);
+
+                                echo "<script type='text/javascript'>alert('Game uploaded successfuly.'); window.location.href = window.location.href;</script>";
+
+                            } else {
+                                echo "<script type='text/javascript'>alert('Error uploading game file.')</script>";
+                            }
+                        } else {
+                            echo "<script type='text/javascript'>alert('Error uploading square image.')</script>";
+                        }
+                    } else {
+                        echo "<script type='text/javascript'>alert('Error uploading normal image.')</script>";
+                    }      
+                } else {
+                    echo "<script type='text/javascript'>alert('Please only upload a JPG, JPEG, PNG, or a GIF file for the images.')</script>";
+                }
+            }
+        }
+    } catch(PDOException $e) {
+        echo "Connection failed: " . $e->getMessage();
+    }
+    $gamesdb = null;
+?>
     
 </body></html>

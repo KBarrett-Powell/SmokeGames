@@ -195,7 +195,7 @@
                                 <div class="col-sm-8">
                                     <div class="form-group">
                                         <label for="newuser">Username </label>
-                                        <?php echo "<input type='text' class='form-control' id='newuser' placeholder='$uname'>"; ?>
+                                        <?php echo "<input type='text' class='form-control' id='newuser' name='newuser' placeholder='$uname'>"; ?>
                                     </div>
                                 </div>
                             </div>
@@ -204,7 +204,7 @@
                                 <div class="col-sm-8">
                                     <div class="form-group">
                                         <label for="newemail">Email </label>
-                                        <?php echo "<input type='text' class='form-control' id='newemail' placeholder='$email'>"; ?>
+                                        <?php echo "<input type='text' class='form-control' id='newemail' name='newemail' placeholder='$email'>"; ?>
                                     </div>
                                 </div>
                             </div>
@@ -213,18 +213,17 @@
                                 <div class="col-sm-5">
                                     <div class="form-group">
                                         <label for="newage">Age </label>
-                                        <?php echo "<input type='text' class='form-control' id='newage' placeholder='$age'>"; ?>
+                                        <?php echo "<input type='text' class='form-control' id='newage' name='newage' placeholder='$age'>"; ?>
                                     </div>
                                 </div>
                                 <div class="col-sm-5">
                                     <div class="form-group">
                                         <label for="newphone">Phone Number </label>
-                                        <?php echo "<input type='text' class='form-control' id='newphone' placeholder='$phone'>"; ?>
+                                        <?php echo "<input type='text' class='form-control' id='newphone' name='newphone' placeholder='$phone'>"; ?>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- On submit require password to be entered -->
                             <div class="row">
                                 <div class="col-sm-12 text-center">
                                     <button type="submit" class="btn btn-primary" name="edit_acc"><i class="fa fa-save"></i> Save changes</button>
@@ -254,6 +253,7 @@
                 if ($nuser != "") {
                     $update = $gamesdb->prepare("UPDATE Users SET Uname = ? WHERE Uname = ?");
                     $update->execute([$nuser, $curuser]);
+                    $_SESSION['username'] = $nuser;
                 }
                 if ($nemail != "") {
                     $update = $gamesdb->prepare("UPDATE Users SET Email = ? WHERE Uname = ?");
@@ -267,7 +267,7 @@
                     $update = $gamesdb->prepare("UPDATE Users SET Phone = ? WHERE Uname = ?");
                     $update->execute([$nphone, $curuser]);
                 }   
-                echo "<script type='text/javascript'>alert('Successfully Updated Account'); location.href = 'editAccount.php';</script>";
+                echo "<script type='text/javascript'>alert('Successfully Updated Account'); window.location.href = window.location.href;</script>";
 
             } 
             if(isset($_POST['edit_pass'])) {
@@ -277,7 +277,7 @@
                 $update = $gamesdb->prepare("UPDATE Users SET Pass = ? WHERE Uname = ?");
                 $update->execute([$npass, $curuser]);
 
-                echo "<script type='text/javascript'>alert('Successfully Updated Password'); location.href = 'editAccount.php';</script>";
+                echo "<script type='text/javascript'>alert('Successfully Updated Password'); window.location.href = window.location.href;</script>";
             }
             if(isset($_POST['del_acc'])) {
                 // Checking if user is sure they want to delete account before doing so.

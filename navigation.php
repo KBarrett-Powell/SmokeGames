@@ -1,10 +1,13 @@
 <div id="top">
     <div class="container">
-        <div class="col-md-6 offer" data-animate="fadeInDown">
-            <a href="#" id="SignUpNow">Sign up now to play exclusive games for free!</a>
-        </div>
-        <div class="col-md-6" data-animate="fadeInDown">
-            <ul class="menu">
+        <?php 
+            if (!isset($_SESSION['username'])) {
+                echo "<div class='col-md-6 offer' data-animate='fadeInDown'>";
+                echo "<a href='register.php' id='SignUpNow'>Sign up now to play exclusive games for free!</a></div>";
+            }
+        ?>
+        <div class="col-md-12" data-animate="fadeInDown">
+            <ul class="menu" style='float:right;'>
                 <?php 
                     if (isset($_SESSION['verified']) && $_SESSION['verified'] == true && basename(__FILE__) != 'editAccount.php') {
                         $_SESSION['verified'] = false;
