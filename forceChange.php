@@ -84,17 +84,17 @@
 
                 $newpass = $_POST['pass1'];
                 $compass = $_POST['pass2'];
-                $user = $_SESSION['username'];
+                $user = $_SESSION['id'];
 
                 if ($newpass == $compass){
                     //$pass = password_hash($newpass, PASSWORD_DEFAULT);
 
                     // Update password for this user
-                    $update = $gamesdb->prepare("UPDATE Users SET Pass = ? WHERE Uname = ?");
+                    $update = $gamesdb->prepare("UPDATE Users SET Pass = ? WHERE UID = ?");
                     $update->execute([$newpass, $user]);
 
                     // Remove temporary password from database
-                    $update = $gamesdb->prepare("UPDATE Users SET TempPass = NULL WHERE Uname = ?");
+                    $update = $gamesdb->prepare("UPDATE Users SET TempPass = NULL WHERE UID = ?");
                     $update->execute([$user]);
 
                     $_SESSION['temp_used'] = false;

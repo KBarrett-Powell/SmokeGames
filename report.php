@@ -6,7 +6,7 @@
 
 <head>
     <title>
-        Smoke Games - Reports
+        Smoke Games - Report User
     </title>
 
     <?php 
@@ -18,11 +18,11 @@
             include "config.php";
 
             // Collecting info on current user
-            $retrieve = $gamesdb->prepare("SELECT * FROM Users WHERE Uname = ?");
+            $retrieve = $gamesdb->prepare("SELECT * FROM Users WHERE UID = ?");
             $retrieve->execute([$rUser]);
     
-            if ($retrieve->rowCount() == 1 && isset($_SESSION['username']) && $_SESSION['username'] != $rUser) {
-                $retrieve = $gamesdb->prepare("SELECT * FROM Profiles WHERE Uname = ?");
+            if ($retrieve->rowCount() == 1 && isset($_SESSION['id']) && $_SESSION['id'] != $rUser) {
+                $retrieve = $gamesdb->prepare("SELECT * FROM Profiles WHERE UID = ?");
                 $retrieve->execute([$rUser]);
 
                 $row = $retrieve->fetch(PDO::FETCH_ASSOC);
@@ -103,7 +103,7 @@
 
                         <hr>
 
-                        <form action="return verifyReport()" method="post">
+                        <?php echo "<form action='report.php?id=$rUser' method='post'>"; ?>
                             <div class="form-group">
                                 <label for="reason">Report <span class="required">*</span></label>
                                 <select class="form-control" name='reason'>
@@ -135,21 +135,22 @@
 
             // If login form has been filled out:
             if(isset($_POST['report_user'])) {
+                if (verifyReport()) {
+                    $report = $_POST['reason'];
+                    $desc = $_POST['desc'];
 
-                $report = $_POST['reason'];
-                $desc = $_POST['desc'];
+                    // Create new report id for the report
+                    $retrieve = $gamesdb->prepare("SELECT max(ReportNum) FROM Reports");
+                    $retrieve->execute();
+                    $row = $retrieve->fetch(PDO::FETCH_ASSOC);
+                    $rid = $row["max(FID)"] + 1;
 
-                // Create new report id for the report
-                $retrieve = $gamesdb->prepare("SELECT max(ReportNum) FROM Reports");
-                $retrieve->execute();
-                $row = $retrieve->fetch(PDO::FETCH_ASSOC);
-                $rid = $row["max(FID)"] + 1;
+                    // Insert new report into database
+                    $retrieve = $gamesdb->prepare("INSERT INTO Reports(ReportNum, UID1, Report, RDesc, UID2) VALUES (?, ?, ?, ?, ?)");
+                    $retrieve->execute([$rid, $rUser, $report, $desc, $_SESSION['id']]);
 
-                // Insert new report into database
-                $retrieve = $gamesdb->prepare("INSERT INTO Reports(ReportNum, Uname1, Report, RDesc, Uname2) VALUES (?, ?, ?, ?, ?)");
-                $retrieve->execute([$rid, $rUser, $report, $desc, $_SESSION['username']]);
-
-                echo "<script type='text/javascript'>alert('Report successfully filed.'); location.href = 'index.php';</script>";
+                    echo "<script type='text/javascript'>alert('Report successfully filed.'); location.href = 'index.php';</script>";
+                }
             }  
         }
     }catch(PDOException $e) {

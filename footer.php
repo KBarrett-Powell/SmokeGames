@@ -1,4 +1,3 @@
-    <!-- FOOTER -->
     <div id="footer" data-animate="fadeInUp">
         <div class="container">
             <div class="row">
@@ -78,7 +77,6 @@
     <!-- COPYRIGHT END -->
 
 </div>
-<!-- /#all -->
 
 <!-- SCRIPTS TO INCLUDE -->
 <script src="js/jquery-1.11.0.min.js"></script>

@@ -142,21 +142,15 @@
                                             include "config.php";
                                             
                                             // Retrieve top 10 scores from the Scores table
-                                            $retrieve = $gamesdb->prepare("SELECT Uname, Score FROM Scores WHERE GameID = ? ORDER BY Score DESC LIMIT 10");
+                                            $retrieve = $gamesdb->prepare("SELECT s.Score, p.ProName FROM Scores s, Profiles p WHERE s.GameID = ? AND s.UID = p.UID ORDER BY s.Score DESC LIMIT 10");
                                             $retrieve->execute([$_GET['id']]);
 
                                             if ($retrieve->rowCount() > 0) {
                                                 echo "<a href='#'>High Scores: <span class='badge pull-right'></span></a><ul>";
                                                 foreach ($retrieve as $row) {
                                                     // For each score retrieved, display the name of the user, and their score
-                                                    $uname = $row['Uname'];
                                                     $score = $row['Score'];
-
-                                                    $findpro = $gamesdb->prepare("SELECT ProName FROM Profiles WHERE Uname = ?");
-                                                    $findpro->execute([$uname]);
-
-                                                    $prow = $findpro->fetch(PDO::FETCH_ASSOC);
-                                                    $pname = $prow['ProName'];
+                                                    $pname = $row['ProName'];
 
                                                     echo "<li style='margin-left:10%; margin-bottom:3%;'>$pname: $score</li>";
                                                 }

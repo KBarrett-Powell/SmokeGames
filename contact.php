@@ -20,22 +20,16 @@
             $errors = array();
 
             if ($uname != strip_tags($uname)) {
-                array_push($errors, ' Please don\'t use tags in your username');
+                array_push($errors, "Please don\'t use tags in your username\n");
             }
             if ($subject != strip_tags($subject)) {
-                array_push($errors, ' Please don\'t use tags in your email subject');
+                array_push($errors, "Please don\'t use tags in your email subject\n");
             }
             if ($message != strip_tags($message)) {
-                array_push($errors, ' Please don\'t use tags in your message');
+                array_push($errors, "Please don\'t use tags in your message\n");
             }
 
-            if(empty($errors)) {
-                return true;
-            } else {
-                $js_errors = json_encode($errors);
-                echo "<script type='text/javascript'>alert(". $js_errors .");</script>";
-                return false;
-            }
+            return $errors;
         }
     ?>
 </head>
@@ -130,9 +124,8 @@
                         <hr>
 
                         <h2>Contact form</h2>
-                        <!-- Still needs implementing to send an email. -->
 
-                        <form onsubmit="return verifyContact()" method="post">
+                        <form action="contact.php" method="post">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -176,38 +169,43 @@
         include "config.php";
 
         if(isset($_POST['mesSend'])) {
-            $username = $_POST['uname'];
-            $email = $_POST['email'];
-            $subject = $_POST['subject'];
-            $message = $_POST['message'];
+            $cErrors = verifyContact();
+            if (empty($cErrors)) {
+                $username = $_POST['uname'];
+                $email = $_POST['email'];
+                $subject = $_POST['subject'];
+                $message = $_POST['message'];
 
-            try {
-                // Adding variables to the email
-                // Check if user is logged in, to give admin idea who the email is from
-                if (isset($_SESSION['username'])) {
-                    $mail->SetFrom($email, $_SESSION['username']);
-                }else if($username != null) {
-                    $mail->SetFrom($email, $username);
-                } else {
-                    $mail->SetFrom($email, 'Unknown User');
-                }
-                
-                // Sending to admin email
-                $mail->AddAddress('smokegames2018@gmail.com');
-                $mail->Subject = $subject;
-
-                // Filling email body with message entered
-                $mail->Body = $message;
-                
-                // Sending Email
-                $mail->Send();
+                try {
+                    // Adding variables to the email
+                    // Check if user is logged in, to give admin idea who the email is from
+                    if (isset($_SESSION['username'])) {
+                        $mail->SetFrom($email, $_SESSION['username']);
+                    }else if($username != null) {
+                        $mail->SetFrom($email, $username);
+                    } else {
+                        $mail->SetFrom($email, 'Unknown User');
+                    }
                     
-                // Send user success message, and take them to main page
-                echo "<script type='text/javascript'>alert('Successfully Sent Email. You should get a response in a few days.')</script>";
-            
-            } catch (phpmailerException $e) {
-                echo "<script type='text/javascript'>alert('Email could not be sent. Please check details and try again later.')</script>";
-                echo $e->errorMessage(); 
+                    // Sending to admin email
+                    $mail->AddAddress('smokegames2018@gmail.com');
+                    $mail->Subject = $subject;
+
+                    // Filling email body with message entered
+                    $mail->Body = $message;
+                    
+                    // Sending Email
+                    $mail->Send();
+                        
+                    // Send user success message, and take them to main page
+                    echo "<script type='text/javascript'>alert('Successfully Sent Email. You should get a response in a few days.')</script>";
+                
+                } catch (phpmailerException $e) {
+                    echo "<script type='text/javascript'>alert('Email could not be sent. Please check details and try again later.')</script>";
+                    echo $e->errorMessage(); 
+                }
+            } else {
+                echo "<script type='text/javascript'>alert(". json_encode($cErrors) .");</script>";
             }
         }
 

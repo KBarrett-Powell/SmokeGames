@@ -57,13 +57,7 @@
             }
             $gamesdb = null;
 
-            if(empty($errors)) {
-                return true;
-            } else {
-                $js_errors = json_encode($errors);
-                echo "<script type='text/javascript'>alert(". $js_errors .");</script>";
-                return false;
-            }
+            return $errors;
         }
     ?>
 </head>
@@ -94,7 +88,7 @@
 
                         <hr>
 
-                        <form onsubmit="return verifyCreate()" method="post">
+                        <form action="return verifyCreate()" method="post">
                             <div class="form-group">
                                 <label for="name">First Name</label>
                                 <input class="form-control" type="text" id="fname" name="fname" required="required" placeholder="First Name">
@@ -172,73 +166,82 @@
                 $username = $_POST['user'];
                 $password = $_POST['pass'];
 
-                $banCheck = $gamesdb->prepare("SELECT * FROM Reports WHERE Uname1 = ? AND Banned = 1");
-                $banCheck->execute([$username]);
-                
-                if ($banCheck->rowCount() == 0) {
+                $findID = $gamesdb->prepare("SELECT UID FROM Users WHERE Uname = ?");
+                $findID->execute([$username]);
 
-                    // Try to find user account with details entered
-                    $retrieve = $gamesdb->prepare("SELECT u.Pass, u.Verified, u.Temp, p.ProName FROM Users u, Profiles p WHERE u.Uname = ? AND u.Uname = p.Uname");
-                    $retrieve->execute([$username]);
+                if ($findID->rowCount() == 1) {
+                    $row = $findID->fetch(PDO::FETCH_ASSOC);
+                    $uid = $row['UID'];
 
-                    if ($retrieve->rowCount() == 1) {
+                    $banCheck = $gamesdb->prepare("SELECT * FROM Reports WHERE UID1 = ? AND Banned = 1");
+                    $banCheck->execute([$uid]);
+
+                    if ($banCheck->rowCount() == 0) {
+
+                        // Try to find user account with details entered
+                        $retrieve = $gamesdb->prepare("SELECT u.Pass, u.Verified, u.Temp, p.ProName FROM Users u, Profiles p WHERE u.UID = ? AND u.UID = p.UID");
+                        $retrieve->execute([$uid]);
+
                         $row = $retrieve->fetch(PDO::FETCH_ASSOC);
                         $hash = $row['Pass'];
                         $verf = $row['Verified'];
                         $tempPass = $row['Temp'];
                         $pname = $row['ProName'];
-                        
+                            
                         // Check if account verified
                         if ($verf == 1){
 
                             // Compare passwords
                             //if (password_verify($password, $hash)) {
                             if ($password == $hash) {
-                                echo "here";
+                                    
                                 // Set session variables
+                                $_SESSION['id'] = $uid;
                                 $_SESSION['username'] = $username;
                                 $_SESSION['proname'] = $pname;
 
                                 // Check if user is an admin
-                                $retrieve = $gamesdb->prepare("SELECT * FROM Admins WHERE Uname = ?");
-                                $retrieve->execute([$username]);
-                                
+                                $retrieve = $gamesdb->prepare("SELECT * FROM Admins WHERE UID = ?");
+                                $retrieve->execute([$uid]);
+                                    
                                 if ($retrieve->rowCount() == 1) { 
                                     $_SESSION['admin'] = true; 
                                 }
 
                                 // Take user to main page
                                 echo "<script type='text/javascript'>alert('Successfully Logged In.'); location.href = 'index.php';</script>";
-                            
-                            } else if ($password == $tempPass){
                                 
+                            } else if ($password == $tempPass){
+                                    
                                 // Set session variables
+                                $_SESSION['id'] = $uid;
                                 $_SESSION['username'] = $username;
                                 $_SESSION['proname'] = $pname;
                                 $_SESSION['temp_used'] = true;
-    
+        
                                 // Check if user is an admin
-                                $retrieve = $gamesdb->prepare("SELECT * FROM Admins WHERE Uname = ?");
-                                $retrieve->execute([$username]);
-                                
+                                $retrieve = $gamesdb->prepare("SELECT * FROM Admins WHERE UID = ?");
+                                $retrieve->execute([$uid]);
+                                    
                                 if ($retrieve->rowCount() == 1) { 
                                     $_SESSION['admin'] = true; 
                                 }
-    
+        
                                 // Take user to main page
                                 echo "<script type='text/javascript'>alert('Successfully Logged In With Temporary Password.'); location.href = 'forceChange.php';</script>";
-                            
+                                
                             } else {echo "<script type='text/javascript'>alert('Password Incorrect. Please Try Again.')</script>";}
 
                         } else {echo "<script type='text/javascript'>alert('Please Verify Account Before Trying To Log In')</script>";}
 
-                    } else {echo "<script type='text/javascript'>alert('Username Incorrect. Please Try Again.')</script>";}
+                    } else {echo "<script type='text/javascript'>alert('You have an active ban from our site. Please try again later, or contact us if you feel this is a mistake.')</script>";}
 
-                } else {echo "<script type='text/javascript'>alert('You've been banned from our site. Please try again later, or contact us, if you feel there's been a mistake.)</script>";}
+                } else {echo "<script type='text/javascript'>alert('Username Incorrect. Please Try Again.')</script>";}
                 
             // If sign up form has been filled out:
             } elseif(isset($_POST['submit_create'])) {
-                if(verifyCreate()){
+                $Cerrors = verifyCreate();
+                if(empty($Cerrors)){
                     $user = $_POST['newuser'];
                     $fname = $_POST['fname'];
                     $lname = $_POST['lname'];
@@ -253,12 +256,18 @@
                     //$plainPass = $_POST['pass1'];
                     //$pass = password_hash($plainPass, PASSWORD_DEFAULT);
 
-                    // Inserting new user details into the Users and Profiles tables
-                    $retrieve = $gamesdb->prepare("INSERT INTO Users (Uname, Fname, Lname, Pass, Email, Age, Phone, ActiveBan, Hashid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                    $retrieve->execute([$user, $fname, $lname, $pass, $email, $age, $phone, 0, $hash]);
+                    // Create new user id
+                    $retrieve = $gamesdb->prepare("SELECT max(UID) FROM Users");
+                    $retrieve->execute();
+                    $row = $retrieve->fetch(PDO::FETCH_ASSOC);
+                    $uid = $row["max(UID)"] + 1;
 
-                    $retrievepro = $gamesdb->prepare("INSERT INTO Profiles (Uname, ProName, ProPic, PDesc, Banner) VALUES (?, ?, ?, ?, ?)");
-                    $retrievepro->execute([$user, $user, 'autopic.png', 'New User', 'autoBan.png']);
+                    // Inserting new user details into the Users and Profiles tables
+                    $retrieve = $gamesdb->prepare("INSERT INTO Users (UID, Uname, Fname, Lname, Pass, Email, Age, Phone, ActiveBan, Hashid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    $retrieve->execute([$uid, $user, $fname, $lname, $pass, $email, $age, $phone, 0, $hash]);
+
+                    $retrievepro = $gamesdb->prepare("INSERT INTO Profiles (UID, ProName, ProPic, PDesc, Banner) VALUES (?, ?, ?, ?, ?)");
+                    $retrievepro->execute([$uid, $user, 'autopic.png', 'New User', 'autoBan.png']);
 
                     try {
                         // Add header and subject variables to the email
@@ -271,12 +280,13 @@
                         Thanks for signing up to Smoke Games!
 
                         Your account has been created, please verify by clicking the link below:
-                        https://www.group.cs.cf.ac.uk/group4/verify.php?user=".$user."&hash=".$hash."";
+                        https://www.group.cs.cf.ac.uk/group4/verify.php?id=".$uid."&hash=".$hash."";
                         
                         // Sending Email
                         $mail->Send();
 
                         // Set session variables
+                        $_SESSION['id'] = $uid;
                         $_SESSION['username'] = $user;
                         $_SESSION['proname'] = $user;
                             
@@ -288,6 +298,8 @@
                         echo "<script type='text/javascript'>alert('Email could not be sent. Please check details and try again later.')</script>";
                         echo $e->errorMessage(); 
                     }
+                } else {
+                    echo "<script type='text/javascript'>alert(". json_encode($Cerrors) .");</script>";
                 }
 
             } elseif(isset($_POST['forgot_pass'])) { 

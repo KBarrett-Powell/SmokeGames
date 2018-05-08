@@ -59,11 +59,11 @@ body {
 }
 
 /* Search button */
-
 .btn-primary {
     background-color: #1d2026;
     border-color: #1d2026;
 }
+
 /*I don't like adding !important tags to override but the bootstrap stylesheet is messed up 
   and has stuff that overrides the CSS otherwise*/
 .navbar-default .navbar-nav > li > a {
@@ -101,6 +101,8 @@ body {
 /* under banner */
 .box {
     background-color: #257aa1;
+    border: solid 1px #257aa1;
+    border-radius: 3px;
 }
 a {
     color: #fff;
@@ -118,10 +120,13 @@ a:hover{
 
 #hot .product-slider .item {
     background-color: #257aa1;
+    border: solid 1px #257aa1;
+    border-radius: 3px;
 }
 #content .product {
     background: #257aa1;
     border: solid 1px #257aa1;
+    border-radius: 3px;
 }
 
 #content .product .text h3 a {
@@ -138,4 +143,12 @@ a:hover{
 }
 #copyright {
     background-color: #1d2026;
+}
+.img-user {
+  display: block;
+  max-width:240px;
+  max-height:240px;
+  margin: auto;
+  width: auto;
+  height: auto;
 }

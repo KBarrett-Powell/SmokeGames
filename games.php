@@ -78,8 +78,13 @@
                                     include "config.php";
                                     
                                     // This SQL query defines how the items are sorted and what they are filtered by
-                                    $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE Category LIKE ? ORDER BY ".$_POST['sortwhat']." ".$_POST['sorthow']."");
-                                    $retrieve->execute(['%'.$_POST['filterby'].'%']);
+                                    if($_SERVER["REQUEST_METHOD"] == "POST") {
+                                        $retrieve = $gamesdb->prepare("SELECT * FROM Games WHERE Category LIKE ? ORDER BY ".$_POST['sortwhat']." ".$_POST['sorthow']."");
+                                        $retrieve->execute(['%'.$_POST['filterby'].'%']);
+                                    } else {
+                                        $retrieve = $gamesdb->prepare("SELECT * FROM Games ORDER BY Gname DESC");
+                                        $retrieve->execute();
+                                    }
                                     
                                     if ($retrieve->rowCount() > 0) {
                                         foreach ($retrieve as $row) {

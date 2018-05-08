@@ -9,20 +9,22 @@
         <div class="col-md-12" data-animate="fadeInDown">
             <ul class="menu" style='float:right;'>
                 <?php 
-                    if (isset($_SESSION['verified']) && $_SESSION['verified'] == true && basename(__FILE__) != 'editAccount.php') {
+                    if (isset($_SESSION['verified']) && $_SESSION['verified'] == true && basename(__FILE__) != 'editAccount.php' && $_SESSION['justFrom'] != 'editAccount.php') {
                         $_SESSION['verified'] = false;
                     }
-
+                    if (isset($_SESSION['justFrom']) && $_SESSION['justFrom'] > 0) {
+                        $_SESSION['justFrom'] = $_SESSION['justFrom'] - 1;
+                    }
                     if (isset($_SESSION['temp_used']) && $_SESSION['temp_used'] == true && basename(__FILE__) != 'forceChange.php') {
                         echo "<script type='text/javascript'>location.href = 'forceChange.php';</script>";
                     }
 
-                    if (isset($_SESSION['username'])){
+                    if (isset($_SESSION['id'])){
                     // display profile and logout pages if user logged in, and admin page if user is admin
                          if (isset($_SESSION['admin']) && $_SESSION['admin'] == true){
                               echo "<li><a href='admin.php'>Admin</a></li>";
                          }                      
-                        echo "<li><a href='profile.php?id=".$_SESSION['username']."'>".$_SESSION['proname']."</a></li>";
+                        echo "<li><a href='profile.php?id=".$_SESSION['id']."'>".$_SESSION['proname']."</a></li>";
                         echo "<li><a href='logout.php'>Logout</a></li>";
 
                     } else {
@@ -34,8 +36,6 @@
                 
                 <li><a href="contact.php">Contact Us</a>
                 </li>
-                <!-- <li><a href="#">Report</a>
-                </li> -->
             </ul>
         </div>
     </div>
@@ -122,11 +122,12 @@
                 $password = $_POST['pass'];
 
                 // Try to find user account with details entered
-                $retrieve = $gamesdb->prepare("SELECT u.Pass, u.Verified, p.ProName FROM Users u, Profiles p WHERE u.Uname = ? AND u.Uname = p.Uname");
+                $retrieve = $gamesdb->prepare("SELECT u.UID, u.Pass, u.Verified, p.ProName FROM Users u, Profiles p WHERE u.Uname = ? AND u.UID = p.UID");
                 $retrieve->execute([$username]);
 
                 if ($retrieve->rowCount() == 1) {
                     $row = $retrieve->fetch(PDO::FETCH_ASSOC);
+                    $uid = $row['UID'];
                     $hash = $row['Pass'];
                     $verf = $row['Verified'];
                     $pname = $row['ProName'];
@@ -139,12 +140,13 @@
                         if ($password == $hash) {
 
                             // Set session variables
+                            $_SESSION['id'] = $uid;
                             $_SESSION['username'] = $username;
                             $_SESSION['proname'] = $pname;
 
                             // Check if user is an admin
-                            $retrieve = $gamesdb->prepare("SELECT * FROM Admins WHERE Uname = ?");
-                            $retrieve->execute([$username]);
+                            $retrieve = $gamesdb->prepare("SELECT * FROM Admins WHERE UID = ?");
+                            $retrieve->execute([$uid]);
                             
                             if ($retrieve->rowCount() == 1) { 
                                 $_SESSION['admin'] = true; 
@@ -154,7 +156,7 @@
                             echo "<script type='text/javascript'>alert('Successfully Logged In.')</script>";
                             echo "<script type='text/javascript'>location.href = 'index.php';</script>";
                             
-                        } else {echo "<script type='text/javascript'>alert('Password Incorrect. ' . (5 - $attempts) . 'Please Try Again.')</script>";}
+                        } else {echo "<script type='text/javascript'>alert('Password Incorrect. 'Please Try Again.')</script>";}
 
                     } else {echo "<script type='text/javascript'>alert('Please Verify Account Before Trying To Log In')</script>";}
 

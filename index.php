@@ -37,17 +37,15 @@
                             <img class="img-responsive" src="images/BannerImages/mathopoly.jpg" alt="">
                         </div>
                     </div>
-                    <!-- /#main-slider -->
                 </div>
             </div>
 
-            <!-- HOMEPAGE -->
             <div id="advantages">
 
                 <div class="container">
                     <div class="same-height-row">
                         <div class="col-sm-4">
-                            <div class="box same-height clickable">
+                            <div class="box same-height clickable" style='border-radius: 3px;'>
                                 <div class="icon"><i class="fa fa-heart"></i>
                                 </div>
 
@@ -57,7 +55,7 @@
                         </div>
 
                         <div class="col-sm-4">
-                            <div class="box same-height clickable">
+                            <div class="box same-height clickable" style='border-radius: 3px;'>
                                 <div class="icon"><i class="fa fa-tags"></i>
                                 </div>
 
@@ -67,7 +65,7 @@
                         </div>
 
                         <div class="col-sm-4">
-                            <div class="box same-height clickable">
+                            <div class="box same-height clickable" style='border-radius: 3px;'>
                                 <div class="icon"><i class="fa fa-thumbs-up"></i>
                                 </div>
 
@@ -79,7 +77,6 @@
                 </div>
             </div>
             
-            <!-- HOT PRODUCT SLIDESHOW -->
             <div id="hot">
 
                 <div class="box">

@@ -13,17 +13,18 @@
         include "references.php"; 
         include "require.php";
 
-        if(!isset($_SESSION['verified']) || $_SESSION['verified'] == false){
+        if(!isset($_SESSION['verified']) || ($_SESSION['verified'] == false && $_SESSION['justFrom'] == 0)){
             echo "<script type='text/javascript'>location.href = 'verification.php';</script>";
         }
 
         try{
             include "config.php";
-            $retrieve = $gamesdb->prepare("SELECT * FROM Users WHERE Uname = ?");
-            $retrieve->execute([$_SESSION['username']]);
+            $retrieve = $gamesdb->prepare("SELECT * FROM Users WHERE UID = ?");
+            $retrieve->execute([$_SESSION['id']]);
         
             if ($retrieve->rowCount() == 1) {
                 $row = $retrieve->fetch(PDO::FETCH_ASSOC);
+                $uid = $row['UID'];
                 $uname = $row['Uname'];
                 $email = $row['Email'];
                 $age = $row['Age'];
@@ -48,42 +49,47 @@
             $nphone = $_POST['newphone'];
             $errors = array();
 
-            if (preg_match('/^[4-9]|[1-9][0-9]$/', $nage) == 0) {
-                array_push($errors, ' Please enter an age between 4 and 99');
+            if ($nage != "") {
+                if (preg_match('/^[4-9]|[1-9][0-9]$/', $nage) == 0) {
+                    array_push($errors, "Please enter an age between 4 and 99\n");
+                }
             }
-            if (preg_match('/^[0-9]{11}$/', $nphone) == 0) {
-                array_push($errors, ' Please enter an 11 digit phone number, with no special characters');
+            if ($nphone != "") {
+                if (preg_match('/^[0-9]{11}$/', $nphone) == 0) {
+                    array_push($errors, "Please enter an 11 digit phone number, with no special characters\n");
+                }
             }
-            if ($nuser != strip_tags($nuser)) {
-                array_push($errors, ' Please don\'t use tags in your username');
+            if ($nuser != "") {
+                if ($nuser != strip_tags($nuser)) {
+                    array_push($errors, "Please don't use tags in your username\n");
+                }
             }
-            if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-                array_push($errors, ' Please enter a valid email');
+            if ($nemail != "") {
+                if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+                    array_push($errors, "Please enter a valid email\n");
+                }
             }
 
             try{
                 include "config.php";
+                if ($nuser != "") {
+                    $find = $gamesdb->prepare("SELECT * FROM Users WHERE Uname = ?");
+                    $find->execute([$nuser]);
+                    if($find->rowCount()>0){array_push($errors, "Username taken\n");}
+                }
 
-                $find = $gamesdb->prepare("SELECT * FROM Users WHERE Uname = ?");
-                $find->execute([$nuser]);
-                if($find->rowCount()>0){array_push($errors, ' Username taken');}
-
-                $find = $gamesdb->prepare("SELECT * FROM Users WHERE Email = ?");
-                $find->execute([$nemail]);
-                if($find->rowCount()>0){array_push($errors, ' An account is already linked to this email');}
+                if ($nemail != "") {
+                    $find = $gamesdb->prepare("SELECT * FROM Users WHERE Email = ?");
+                    $find->execute([$nemail]);
+                    if($find->rowCount()>0){array_push($errors, "An account is already linked to this email\n");}
+                }
 
             }catch(PDOException $e) {
                 echo "Connection failed: " . $e->getMessage();
             }
             $gamesdb = null;
 
-            if(empty($errors)) {
-                return true;
-            } else {
-                $js_errors = json_encode($errors);
-                echo "<script type='text/javascript'>alert(". $js_errors .";</script>";
-                return false;
-            }
+            return $errors;
         }
 
         function verifyPass() {
@@ -92,19 +98,13 @@
             $errors = array();
 
             if ($pass !== $repass) {
-                array_push($errors, ' Passwords don\'t match');
+                array_push($errors, "Passwords don't match\n");
             } 
             if (preg_match('~(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])^[a-zA-Z0-9$£\\\'"@-_]{8,40}$~', $pass) == 0) {
-                array_push($errors, ' Passwords must contain at least one number, one uppercase, and one lowercase letter, and must be between 8-40 characters');
+                array_push($errors, "Passwords must contain at least one number, one uppercase, and one lowercase letter, and must be between 8-40 characters\n");
             }
 
-            if(empty($errors)) {
-                return true;
-            } else {
-                $js_errors = json_encode($errors);
-                echo "<script type='text/javascript'>alert(". $js_errors .";</script>";
-                return false;
-            }
+            return $errors;
         }
     ?>   
 </head>
@@ -121,7 +121,7 @@
 
                     <ul class="breadcrumb">
                         <li><a href="index.php">Home</a></li>
-                        <?php echo "<li><a href='profile.php?id=".$_SESSION['username']."'>Profile</a></li>"?>
+                        <?php echo "<li><a href='profile.php?id=".$_SESSION['id']."'>Profile</a></li>"?>
                         <li>View Account</li>
                     </ul>
 
@@ -138,7 +138,7 @@
 
                             <ul class="nav nav-pills nav-stacked">
                                 <li>
-                                    <?php echo "<a href='profile.php?id=$uname'><i class='fa fa-list'></i>My profile</a>"; ?>
+                                    <?php echo "<a href='profile.php?id=".$_SESSION['id']."'><i class='fa fa-list'></i>My profile</a>"; ?>
                                 </li>
                                 <li>
                                     <a href="editProfile.php"><i class="fa fa-heart"></i> Edit Profile</a>
@@ -163,12 +163,12 @@
                     <div class="box">
                         <h1>My account</h1>
                         <p class="lead">View your personal details here.</p>
-                        
+
                         <hr>
 
                         <h3>Change password</h3>
 
-                        <form onSubmit='return verifyPass()' method='post' name='editPass'>
+                        <form action='editAccount.php' method='post' name='editPass'>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -189,8 +189,7 @@
                             </div>
                         </form>
 
-                        <!-- FORM FOR EDIT DETAILS. -->
-                        <form action="return verifyAccEdit()" method="post" name="edit_form">
+                        <form action="editAccount.php" method="post" name="edit_form">
                             <div class="row">
                                 <div class="col-sm-8">
                                     <div class="form-group">
@@ -244,40 +243,53 @@
 
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST['edit_acc'])) {
-                $curuser = $_SESSION['username'];
-                $nuser = $_POST['newuser'];
-                $nemail = $_POST['newemail'];
-                $nage = $_POST['newage'];
-                $nphone = $_POST['newphone'];
-                
-                if ($nuser != "") {
-                    $update = $gamesdb->prepare("UPDATE Users SET Uname = ? WHERE Uname = ?");
-                    $update->execute([$nuser, $curuser]);
-                    $_SESSION['username'] = $nuser;
-                }
-                if ($nemail != "") {
-                    $update = $gamesdb->prepare("UPDATE Users SET Email = ? WHERE Uname = ?");
-                    $update->execute([$nemail, $curuser]);
-                } 
-                if ($nage != "") {
-                    $update = $gamesdb->prepare("UPDATE Users SET Age = ? WHERE Uname = ?");
-                    $update->execute([$nage, $curuser]);
-                } 
-                if ($nphone != "") {
-                    $update = $gamesdb->prepare("UPDATE Users SET Phone = ? WHERE Uname = ?");
-                    $update->execute([$nphone, $curuser]);
-                }   
-                echo "<script type='text/javascript'>alert('Successfully Updated Account'); window.location.href = window.location.href;</script>";
+                $Aerrors = verifyAccEdit();
 
+                if(empty($Aerrors)) {
+                    $curuser = $_SESSION['id'];
+                    $nuser = $_POST['newuser'];
+                    $nemail = $_POST['newemail'];
+                    $nage = $_POST['newage'];
+                    $nphone = $_POST['newphone'];
+                    
+                    if ($nuser != "") {
+                        $update = $gamesdb->prepare("UPDATE Users SET Uname = ? WHERE UID = ?");
+                        $update->execute([$nuser, $curuser]);
+                        $_SESSION['username'] = $nuser;
+                    }
+                    if ($nemail != "") {
+                        $update = $gamesdb->prepare("UPDATE Users SET Email = ? WHERE UID = ?");
+                        $update->execute([$nemail, $curuser]);
+                    } 
+                    if ($nage != "") {
+                        $update = $gamesdb->prepare("UPDATE Users SET Age = ? WHERE UID = ?");
+                        $update->execute([$nage, $curuser]);
+                    } 
+                    if ($nphone != "") {
+                        $update = $gamesdb->prepare("UPDATE Users SET Phone = ? WHERE UID = ?");
+                        $update->execute([$nphone, $curuser]);
+                    }   
+                    echo "<script type='text/javascript'>alert('Successfully Updated Account'); window.location.href = window.location.href;</script>";
+
+                } else {
+                    echo "<script type='text/javascript'>alert(". json_encode($Aerrors) .");</script>";
+                }
             } 
             if(isset($_POST['edit_pass'])) {
-                $curuser = $_SESSION['username'];
-                $npass = $_POST['Pass1'];
+                $Perrors = verifyPass();
 
-                $update = $gamesdb->prepare("UPDATE Users SET Pass = ? WHERE Uname = ?");
-                $update->execute([$npass, $curuser]);
+                if(empty($Perrors)) {
+                    $curuser = $_SESSION['id'];
+                    $npass = $_POST['Pass1'];
 
-                echo "<script type='text/javascript'>alert('Successfully Updated Password'); window.location.href = window.location.href;</script>";
+                    $update = $gamesdb->prepare("UPDATE Users SET Pass = ? WHERE UID = ?");
+                    $update->execute([$npass, $curuser]);
+
+                    echo "<script type='text/javascript'>alert('Successfully Updated Password'); window.location.href = window.location.href;</script>";
+
+                } else {
+                    echo "<script type='text/javascript'>alert(". json_encode($Perrors) .");</script>";
+                }
             }
             if(isset($_POST['del_acc'])) {
                 // Checking if user is sure they want to delete account before doing so.

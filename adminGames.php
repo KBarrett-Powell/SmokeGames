@@ -9,7 +9,7 @@ session_start();
     </title>
 
     <?php 
-        if (!isset($_SESSION['username']) || !isset($_SESSION['admin']) || $_SESSION['admin'] == false) {
+        if (!isset($_SESSION['id']) || !isset($_SESSION['admin']) || $_SESSION['admin'] == false) {
             echo "<script type='text/javascript'>location.href = '404.php';</script>";
         }
         include "references.php"; 
@@ -40,17 +40,17 @@ session_start();
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
                                 <li>
-                                    <a href="#"><i class="fa fa-list"></i>Admin Rules</a>
+                                    <a href="admin.php"><i class="fa fa-list"></i>Admin Rules</a>
                                 </li>
                                 <li>
                                     <a href="adminReports.php"><i class="fa fa-user"></i>Manage User Reports</a>
                                 </li>
                                 <li class="active">
-                                    <a href="adminGames.php"><i class="fa fa-play"></i>Upload New Game</a>
+                                    <a href="#"><i class="fa fa-play"></i>Upload New Game</a>
                                 </li>
-                                <li>
+                                <!-- <li>
                                     <a href="adminUpdates.php"><i class="fa fa-heart"></i>Update Games</a>
-                                </li>
+                                </li> -->
                             </ul>
                         </div>
                     </div>
@@ -63,7 +63,7 @@ session_start();
 
                         <hr>
 
-                        <form onsubmit="return verifyEdit()" method='post' name='newGame'>
+                        <form action="adminGames.php" method='post' name='newGame'>
 
                             <div class="row">
                                 <div class="col-sm-8">
@@ -186,26 +186,20 @@ session_start();
                 $uploadOk = false;
 
                 // Getting file types of images
-                $fileTypePlain = exif_imagetype($img);
-                $fileTypeImg = $fileTypePlain == 1 ? "gif" : ($fileTypePlain == 2 ? "jpeg" : ( $fileTypePlain == 3 ? "png" : "" ));
-                $fileTypePlain = exif_imagetype($sqimg);
-                $fileTypeSqu = $fileTypePlain == 1 ? "gif" : ($fileTypePlain == 2 ? "jpeg" : ( $fileTypePlain == 3 ? "png" : "" ));
-                $filenameGame = $_FILES['gfile']['name'];
-                $fileTypeGame = pathinfo($path, PATHINFO_EXTENSION);
+                $imgExt = strtolower(pathinfo($img["name"], PATHINFO_EXTENSION));
+                $sqExt = strtolower(pathinfo($sqimg["name"], PATHINFO_EXTENSION));
+                $gameExt = strtolower(pathinfo($gfile["name"], PATHINFO_EXTENSION));
 
-                $imgfilename = $gname . uniqid() . $fileTypeImg;
-                $Sqfilename = $gname . uniqid() . $fileTypeSqu;
-                $gfilename = $gname . $fileTypeGame;
+                $imgfilename = $gname . uniqid() . "." . $imgExt;
+                $Sqfilename = $gname . uniqid() . "." . $sqExt;
+                $gfilename = $gname . "." . $fgameExt;
 
                 $checkImg = getimagesize($img["tmp_name"]);
                 $checkSq = getimagesize($sqimg["tmp_name"]);
-                if($checkImg !== false && $checkSq !== false) {
+
+                if($checkImg !== false && $checkSq !== false && ($imgExt == "jpg" || $imgExt == "png" || $imgExt == "jpeg" || $imgExt == "gif") && ($sqExt == "jpg" || $sqExt == "png" || $sqExt == "jpeg" || $sqExt == "gif")) {
                     $uploadOk = true;
                 } 
-
-                if($fileTypeImg == "" || $fileTypeSqu == "") {
-                    $uploadOk = false;
-                }
 
                 if($uploadOk) {
                     $target_file_img = "images/HomeTrending/". $imgfilename;

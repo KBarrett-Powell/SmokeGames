@@ -32,7 +32,7 @@
                 </div>
                 
                 <div class="col-md-3">
-                    <!-- CUSTOMER MENU -->
+
                     <div class="panel panel-default sidebar-menu">
 
                         <div class="panel-heading">
@@ -72,9 +72,7 @@
                     </div>
                 </div>
             </div>
-            <!-- /.container -->
         </div>
-        <!-- /#content -->
 
 <?php 
     try{

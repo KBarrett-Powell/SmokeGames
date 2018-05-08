@@ -7,7 +7,7 @@
 <head>
   
     <title>
-        Smoke Games
+        Smoke Games - Game Info
     </title>
 
     <?php include "references.php"; ?>
@@ -36,16 +36,19 @@
                 $credits = $row['Credits'];
                 $howto = $row['HowTo'];
                 $avgrate = round($row['AvgRating'], 1);
+
                 $loggedIn = false;
                 $oldEnough = true;
-                if (isset($_SESSION['username'])) {
+
+                if (isset($_SESSION['id'])) {
                     // Retrieving age of user
-                    $ageRetrieve = $gamesdb->prepare("SELECT Age FROM Users WHERE Uname = ?");
-                    $ageRetrieve->execute([$_SESSION['username']]);
+                    $ageRetrieve = $gamesdb->prepare("SELECT Age FROM Users WHERE UID = ?");
+                    $ageRetrieve->execute([$_SESSION['id']]);
                     if ($ageRetrieve->rowCount() == 1){
                         $row = $ageRetrieve->fetch(PDO::FETCH_ASSOC);
                         $userAge = $row['Age'];
                         $loggedIn = true;
+
                         if ($userAge < $age) {
                             $oldEnough = false;
                         }
@@ -56,44 +59,59 @@
             } else {
                 echo "<script type='text/javascript'>location.href = '404.php';</script>";
             }
+
             // Checking details entered in review field alright for database
             function verifyReview() {
                 $review = $_POST['review'];
                 $errors = array();
                 // Checking review doesn't include any tags
                 if ($review != strip_tags($review)) {
-                    array_push($errors, ' Please don\'t use tags in your review');
+                    array_push($errors, "Please don\'t use tags in your review\n");
                 }
-                if(empty($errors)) {
-                    return true;
-                } else {
-                    $js_errors = json_encode($errors);
-                    echo "<script type='text/javascript'>alert(". $js_errors .");</script>";
-                    return false;
-                }
+                return $errors;
             }
+
             // Sending a new review to the database
             if($_SERVER["REQUEST_METHOD"] == "POST") {
                 if(isset($_POST['leaveReview'])) {
-                    // Collect details to send to database
-                    $reviewer = $_SESSION['username'];
-                    $rating = $_POST['rating'];
-                    $review = $_POST['review'];
-                    $date = date('Y-m-d');
-                    $gameid = $_GET['id'];
-                    
-                    // Inserting new information into the database
-                    $addNew = $gamesdb->prepare("INSERT INTO Reviews(GameID, DateOf, Uname, Rating, Review) VALUES (?, ?, ?, ?, ?)");
-                    $addNew->execute([$gameid, $date, $reviewer, $rating, $review]);
-                    // Calculate the average rating for this game, round to 1 decimal place
-                    $avgRating = $gamesdb->prepare("SELECT ROUND(AVG(Rating), 1) AS avgRating FROM Reviews WHERE GameID = ?");
-                    $avgRating->execute([$_GET['id']]);
-                    $avgRow = $avgRating->fetch(PDO::FETCH_ASSOC);
-                    $newAvg = $avgRow['avgRating'];
-                    // Inserting new information into the database
-                    $update = $gamesdb->prepare("UPDATE Games SET AvgRating = ? WHERE GameID = ?");
-                    $update->execute([$newAvg, $id]);
-                    echo "<script type='text/javascript'>alert('Reviewed Successfully.')</script>";
+                    $rErrors = verifyReview();
+
+                    if (empty($rErrors)) {
+                        // Collect details to send to database
+                        $reviewer = $_SESSION['id'];
+                        $rating = $_POST['rating'];
+                        $review = $_POST['review'];
+                        $date = date('Y-m-d');
+                        $gameid = $_GET['id'];
+                        
+                        $retrieve = $gamesdb->prepare("SELECT * FROM Reviews WHERE GameID = ? AND UID = ?");
+                        $retrieve->execute([$gameid, $reviewer]);
+
+                        if ($retrieve->rowCount() == 1) {
+                            // Inserting new information into the database
+                            $addNew = $gamesdb->prepare("UPDATE Reviews SET DateOf = ?, Rating = ?, Review = ? WHERE GameID = ? AND UID = ?");
+                            $addNew->execute([$date, $rating, $review, $gameid, $reviewer]);
+                        } else {
+                            // Inserting new information into the database
+                            $addNew = $gamesdb->prepare("INSERT INTO Reviews(GameID, DateOf, UID, Rating, Review) VALUES (?, ?, ?, ?, ?)");
+                            $addNew->execute([$gameid, $date, $reviewer, $rating, $review]);
+                        }
+
+                        // Calculate the average rating for this game, round to 1 decimal place
+                        $avgRating = $gamesdb->prepare("SELECT ROUND(AVG(Rating), 1) AS avgRating FROM Reviews WHERE GameID = ?");
+                        $avgRating->execute([$gameid]);
+                        $avgRow = $avgRating->fetch(PDO::FETCH_ASSOC);
+                        $newAvg = $avgRow['avgRating'];
+
+                        // Inserting new information into the database
+                        $update = $gamesdb->prepare("UPDATE Games SET AvgRating = ? WHERE GameID = ?");
+                        $update->execute([$newAvg, $gameid]);
+
+                        echo "<script type='text/javascript'>alert('Reviewed Successfully.')</script>";
+
+                    } else {
+                        echo "<script type='text/javascript'>alert(". json_encode($rErrors) .");</script>";
+                    }
                 }
             }
         } catch(PDOException $e) {
@@ -131,16 +149,17 @@
                                             include "config.php";
                                             
                                             // Retrieve top 10 scores from the Scores table
-                                            $retrieve = $gamesdb->prepare("SELECT Uname, Score FROM Scores WHERE GameID = ? ORDER BY Score DESC LIMIT 10");
+                                            $retrieve = $gamesdb->prepare("SELECT UID, Score FROM Scores WHERE GameID = ? ORDER BY Score DESC LIMIT 10");
                                             $retrieve->execute([$_GET['id']]);
                                             if ($retrieve->rowCount() > 0) {
                                                 echo "<a href='#'>High Scores: <span class='badge pull-right'></span></a><ul>";
                                                 foreach ($retrieve as $row) {
                                                     // For each score retrieved, display the name of the user, and their score
-                                                    $uname = $row['Uname'];
+                                                    $uid= $row['UID'];
                                                     $score = $row['Score'];
-                                                    $findpro = $gamesdb->prepare("SELECT ProName FROM Profiles WHERE Uname = ?");
-                                                    $findpro->execute([$uname]);
+
+                                                    $findpro = $gamesdb->prepare("SELECT ProName FROM Profiles WHERE UID = ?");
+                                                    $findpro->execute([$uid]);
                                                     $prow = $findpro->fetch(PDO::FETCH_ASSOC);
                                                     $pname = $prow['ProName'];
                                                     echo "<li style='margin-left:10%; margin-bottom:3%;'>$pname: $score</li>";
@@ -247,7 +266,7 @@
                             try{
                                 include "config.php";
                                 // Retrieve all ratings and reviews for this game
-                                $retrieve = $gamesdb->prepare("SELECT r.Rating, r.Review, r.DateOf, p.ProName FROM Reviews r JOIN Profiles p ON r.Uname = p.Uname WHERE r.GameID = ?");
+                                $retrieve = $gamesdb->prepare("SELECT r.Rating, r.Review, r.DateOf, p.ProName FROM Reviews r JOIN Profiles p ON r.UID = p.UID WHERE r.GameID = ?");
                                 $retrieve->execute([$_GET['id']]);
                                 $count = $retrieve->rowCount();
                                 if ($count > 0) {
@@ -279,12 +298,12 @@
                                 //Form for users to leave reviews of the game
                                 echo "<div id='comment-form' data-animate='fadeInUp'>";
                                 echo "<h4>Leave a review</h4>";
-                                echo "<form onsubmit='return verifyReview()' method='post'>";
+                                echo "<form action='detail.php?id=$id' method='post'>";
                                 echo "<div class='row'>";
                                 echo "<div class='col-sm-12'>";
                                 echo "<div class='form-group'>";
                                 echo "<label for='rating'>Rating out of 5 <span class='required'>*</span></label>";
-                                echo "<input class='form-control' type='number' id='rating' name='rating' required='required' min='1' max='5' placeholder='5'>";
+                                echo "<input class='form-control' type='number' id='rating' name='rating' required='required' min='1' max='5'>";
                                 echo "<label for='review'>Review <span class='required'>*</span></label>";
                                 echo "<textarea class='form-control' id='review' name='review' rows='4' required='required'></textarea>";
                                 echo "</div></div></div>";

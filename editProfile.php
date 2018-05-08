@@ -15,8 +15,8 @@
         try{
             include "config.php";
 
-            $retrieve = $gamesdb->prepare("SELECT * FROM Users WHERE Uname = ?");
-            $retrieve->execute([$_SESSION['username']]);
+            $retrieve = $gamesdb->prepare("SELECT * FROM Users WHERE UID = ?");
+            $retrieve->execute([$_SESSION['id']]);
         
             if ($retrieve->rowCount() == 1) {
                 $row = $retrieve->fetch(PDO::FETCH_ASSOC);
@@ -24,13 +24,13 @@
                 $fname = $row['Fname'];
                 $lname = $row['Lname'];
 
-                $retrieve = $gamesdb->prepare("SELECT * FROM Profiles WHERE Uname = ?");
-                $retrieve->execute([$_SESSION['username']]);
+                $retrieve = $gamesdb->prepare("SELECT * FROM Profiles WHERE UID = ?");
+                $retrieve->execute([$_SESSION['id']]);
                 $row = $retrieve->fetch(PDO::FETCH_ASSOC);
                 $pname = $row['ProName'];
                 $desc = $row['PDesc'];
-                $img = $row['ProPic'];
-                $banner = $row['Banner'];
+                $Pimg = $row['ProPic'];
+                $Pbanner = $row['Banner'];
 
             } else {
                 echo "<script type='text/javascript'>location.href = '404.php';</script>";
@@ -50,27 +50,27 @@
             $ndesc = $_POST['newdesc'];
             $errors = array();
 
-            if (preg_match('/^[a-zA-Z\-]{1,30}$/', $nfirst) == 0) {
-                array_push($errors, ' First name should only be 1 to 30 letters');
+            if ($nfirst != "") {
+                if (preg_match('/^[a-zA-Z\-]{1,30}$/', $nfirst) == 0) {
+                    array_push($errors, "First name should only be 1 to 30 letters\n");
+                }
             }
-            if (preg_match('/^[a-zA-Z\-]{1,40}$/', $nlast) == 0) {
-                array_push($errors, ' Last name should only be 1 to 40 letters');
+            if ($nlast != "") {
+                if (preg_match('/^[a-zA-Z\-]{1,40}$/', $nlast) == 0) {
+                    array_push($errors, "Last name should only be 1 to 40 letters\n");
+                }
             }
-            if ($npname != strip_tags($npname)) {
-                array_push($errors, ' Please don\'t use tags in your profile name');
+            if ($npname != "") {
+                if ($npname != strip_tags($npname)) {
+                    array_push($errors, "Please don't use tags in your profile name\n");
+                }
             }
-            if ($ndesc != strip_tags($ndesc)) {
-                array_push($errors, ' Please don\'t use tags in your description');
+            if ($ndesc != "") {
+                if ($ndesc != strip_tags($ndesc)) {
+                    array_push($errors, "Please don't use tags in your description\n");
+                }
             }
-            // picture checks here!!
-
-            if(empty($errors)) {
-                return true;
-            } else {
-                $js_errors = json_encode($errors);
-                echo "<script type='text/javascript'>alert(". $js_errors .";</script>";
-                return false;
-            }
+            return $errors;
         }
     ?>
 </head>
@@ -86,7 +86,7 @@
 
                     <ul class="breadcrumb">
                         <li><a href="index.php">Home</a></li>
-                        <?php echo "<li><a href='profile.php?id=".$_SESSION['username']."'>Profile</a></li>"; ?>
+                        <?php echo "<li><a href='profile.php?id=".$_SESSION['id']."'>Profile</a></li>"; ?>
                         <li>Edit Profile</li>
                     </ul>
 
@@ -103,7 +103,7 @@
 
                             <ul class="nav nav-pills nav-stacked">
                                 <li>
-                                    <?php echo "<a href='profile.php?id=$uname'><i class='fa fa-list'></i>My profile</a>"; ?>
+                                    <?php echo "<a href='profile.php?id=".$_SESSION['id']."'><i class='fa fa-list'></i>My profile</a>"; ?>
                                 </li>
                                 <li class="active">
                                     <a href="#"><i class="fa fa-heart"></i> Edit Profile</a>
@@ -131,7 +131,7 @@
 
                         <hr>
 
-                        <form onsubmit="return verifyEdit()" method='post' name='editPro'>
+                        <form action="editProfile.php" method='post' enctype="multipart/form-data">
                             <div class="row">
                                 <div class="col-sm-8">
                                     <div class="form-group">
@@ -159,15 +159,15 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="newpic">Profile Image</label>
-                                        <?php echo "<img src='$img' style='width:30%; vertical-align:top;'>"; ?>
+                                        <label for="newpic">Profile Image</label><br>
+                                        <img src="images/UserProfiles/<?php echo $Pimg; ?>" alt="" style="width:30%; vertical-align:top;">
                                         <input type="file" class="form-control" id="newpic" name="newpic">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="banpic">Banner Image</label>
-                                        <?php echo "<img src='$banner' style='width:30%; vertical-align:top;'>"; ?>
+                                        <label for="banpic">Banner Image</label><br>
+                                        <img src="images/UserBanners/<?php echo $Pbanner; ?>" alt="" style="width:89%; vertical-align:top;">
                                         <input type="file" class="form-control" id="banpic" name="banpic">
                                     </div>
                                 </div>
@@ -203,95 +203,93 @@
 
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST['edit_pro'])) {
-                $curuser = $_SESSION['username'];
-                $nfirst = $_POST['newfirst'];
-                $nlast = $_POST['newlast'];
-                $npname = $_POST['newpname'];
-                $npic = $_POST['newpic'];
-                $nban = $_POST['banpic'];
-                $ndesc = $_POST['newdesc'];
+                $errors = verifyEdit();
 
-                $error = false;
-                
-                if ($nfirst != "") {
-                    $update = $gamesdb->prepare("UPDATE Users SET FName = ? WHERE Uname = ?");
-                    $update->execute([$nfirst, $curuser]);
-                }
-                if ($nlast != "") {
-                    $update = $gamesdb->prepare("UPDATE Users SET LName = ? WHERE Uname = ?");
-                    $update->execute([$nlast, $curuser]);
-                } 
-                if ($npname != "") {
-                    $update = $gamesdb->prepare("UPDATE Profiles SET ProName = ? WHERE Uname = ?");
-                    $update->execute([$npname, $curuser]);
-                    $_SESSION['proname'] = $npname;
-                } 
-                if ($ndesc != "") {
-                    $update = $gamesdb->prepare("UPDATE Profiles SET PDesc = ? WHERE Uname = ?");
-                    $update->execute([$ndesc, $curuser]);
-                } 
-                if ($npic != "") {
-                    $uploadOk = false;
-                    $fileTypePlain = exif_imagetype($npic);
-                    $fileType = $fileTypePlain == 1 ? "gif" : ($fileTypePlain == 2 ? "jpeg" : ( $fileTypePlain == 3 ? "png" : "" ));
-                    $nfilename = uniqid() . $fileType;
+                if(empty($errors)) {
+                    $curuser = $_SESSION['id'];
+                    $nfirst = $_POST['newfirst'];
+                    $nlast = $_POST['newlast'];
+                    $npname = $_POST['newpname'];
+                    $npic = $_FILES['newpic'];
+                    $nban = $_FILES['banpic'];
+                    $ndesc = $_POST['newdesc'];
 
-                    $check = getimagesize($npic["tmp_name"]);
-                    if($check !== false) {
-                        $uploadOk = true;
-                    } 
-
-                    if($fileType == "") {
-                        $uploadOk = false;
+                    $error = false;
+                    
+                    if ($nfirst != "") {
+                        $update = $gamesdb->prepare("UPDATE Users SET FName = ? WHERE UID = ?");
+                        $update->execute([$nfirst, $curuser]);
                     }
+                    if ($nlast != "") {
+                        $update = $gamesdb->prepare("UPDATE Users SET LName = ? WHERE UID = ?");
+                        $update->execute([$nlast, $curuser]);
+                    } 
+                    if ($npname != "") {
+                        $update = $gamesdb->prepare("UPDATE Profiles SET ProName = ? WHERE UID = ?");
+                        $update->execute([$npname, $curuser]);
+                        $_SESSION['proname'] = $npname;
+                    } 
+                    if ($ndesc != "") {
+                        $update = $gamesdb->prepare("UPDATE Profiles SET PDesc = ? WHERE UID = ?");
+                        $update->execute([$ndesc, $curuser]);
+                    } 
+                    if (basename($npic["name"])!= "") {
+                        $uploadOk = false;
+                        $ext = strtolower(pathinfo($npic["name"], PATHINFO_EXTENSION));
 
-                    if($uploadOk) {
-                        $target_file = "images/UserProfiles". $nfilename;
+                        $nfilename = $_SESSION['id'] . uniqid() . '.' . $ext;
+                        $target_file = "images/UserProfiles/". $nfilename;
 
-                        if (move_uploaded_file($npic["tmp_name"], $target_file)) {
-                            $update = $gamesdb->prepare("UPDATE Profiles SET ProPic = ? WHERE Uname = ?");
-                            $update->execute([$nfilename, $curuser]);
+                        $check = getimagesize($npic["tmp_name"]);
+
+                        if($check !== false && ($ext == "jpg" || $ext == "png" || $ext == "jpeg" || $ext == "gif")) {
+                            $uploadOk = true;
+                        } 
+
+                        if($uploadOk) {
+                            if (move_uploaded_file($npic["tmp_name"], $target_file)) {
+                                $update = $gamesdb->prepare("UPDATE Profiles SET ProPic = ? WHERE UID = ?");
+                                $update->execute([$nfilename, $curuser]);
+                            } else {
+                                $error = true;
+                                echo "<script type='text/javascript'>alert('Error uploading new profile pic.')</script>";
+                            }
                         } else {
                             $error = true;
-                            echo "<script type='text/javascript'>alert('Error uploading new profile pic.')</script>";
+                            echo "<script type='text/javascript'>alert('Please only upload a JPG, JPEG, PNG, or a GIF file.')</script>";
                         }
-                    } else {
-                        $error = true;
-                        echo "<script type='text/javascript'>alert('Please only upload a JPG, JPEG, PNG, or a GIF file.')</script>";
-                    }
-                } 
-                if ($nban != "") {
-                    $uploadOk = false;
-                    $fileTypePlain = exif_imagetype($nban);
-                    $fileType = $fileTypePlain == 1 ? "gif" : ($fileTypePlain == 2 ? "jpeg" : ( $fileTypePlain == 3 ? "png" : "" ));
-                    $nfilename = uniqid() . $fileType;
-
-                    $check = getimagesize($nban["tmp_name"]);
-                    if($check !== false) {
-                        $uploadOk = true;
                     } 
-
-                    if($fileType == "") {
+                    if (basename($nban["name"]) != "") {
                         $uploadOk = false;
-                    }
+                        $ext = strtolower(pathinfo($nban["name"], PATHINFO_EXTENSION));
+                    
+                        $nfilename = $_SESSION['id'] . uniqid() . '.' . $ext;
+                        $target_file = "images/UserBanners/". $nfilename;
 
-                    if($uploadOk) {
-                        $target_file = "images/UserBanners". $nfilename;
+                        $check = getimagesize($nban["tmp_name"]);
 
-                        if (move_uploaded_file($npic["tmp_name"], $target_file)) {
-                            $update = $gamesdb->prepare("UPDATE Profiles SET Banner = ? WHERE Uname = ?");
-                            $update->execute([$nfilename, $curuser]);
+                        if($check !== false && ($ext == "jpg" || $ext == "png" || $ext == "jpeg" || $ext == "gif")) {
+                            $uploadOk = true;
+                        } 
+
+                        if($uploadOk) {
+                            if (move_uploaded_file($nban["tmp_name"], $target_file)) {
+                                $update = $gamesdb->prepare("UPDATE Profiles SET Banner = ? WHERE UID = ?");
+                                $update->execute([$nfilename, $curuser]);
+                            } else {
+                                $error = true;
+                                echo "<script type='text/javascript'>alert('Error uploading new banner.')</script>";
+                            }
                         } else {
                             $error = true;
-                            echo "<script type='text/javascript'>alert('Error uploading new banner.')</script>";
+                            echo "<script type='text/javascript'>alert('Please only upload a JPG, JPEG, PNG, or a GIF file, less than .')</script>";
                         }
-                    } else {
-                        $error = true;
-                        echo "<script type='text/javascript'>alert('Please only upload a JPG, JPEG, PNG, or a GIF file.')</script>";
+                    } 
+                    if (!$error) {
+                        echo "<script type='text/javascript'>alert('Successfully Updated Profile'); window.location.href = window.location.href;</script>";
                     }
-                } 
-                if (!$error) {
-                    echo "<script type='text/javascript'>alert('Successfully Updated Profile'); window.location.href = window.location.href;</script>";
+                } else {
+                    echo "<script type='text/javascript'>alert(". json_encode($errors) .");</script>";
                 }
             }
         }

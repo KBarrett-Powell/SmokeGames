@@ -9,7 +9,7 @@ session_start();
     </title>
 
     <?php 
-        if (!isset($_SESSION['username']) || !isset($_SESSION['admin']) || $_SESSION['admin'] == false) {
+        if (!isset($_SESSION['id']) || !isset($_SESSION['admin']) || $_SESSION['admin'] == false) {
             echo "<script type='text/javascript'>location.href = '404.php';</script>";
         }
         include "references.php"; 
@@ -69,17 +69,17 @@ session_start();
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
                                 <li>
-                                    <a href="#"><i class="fa fa-list"></i>Admin Rules</a>
+                                    <a href="admin.php"><i class="fa fa-list"></i>Admin Rules</a>
                                 </li>
                                 <li class="active">
-                                    <a href="adminReports.php"><i class="fa fa-user"></i>Manage User Reports</a>
+                                    <a href="#"><i class="fa fa-user"></i>Manage User Reports</a>
                                 </li>
                                 <li>
                                     <a href="adminGames.php"><i class="fa fa-play"></i>Upload New Game</a>
                                 </li>
-                                <li>
+                                <!-- <li>
                                     <a href="adminUpdates.php"><i class="fa fa-heart"></i>Update Games</a>
-                                </li>
+                                </li> -->
                             </ul>
                         </div>
                     </div>
@@ -87,6 +87,13 @@ session_start();
 
                 <div class="col-md-9">
                     <div class="box">
+
+                        <h1>User Reports & Bans</h1>
+                        <p class='lead'>This is where you can view unresolved reports, and user bans. And decide whether to ban a user due to a report, 
+                            delete the report, or unban a user</p>
+                        <hr>
+
+                        <h3>Unresolved Reports</h3>
                         <div class="table-responsive">
                             <table class='table'>
                             <tr><th>User Reported</th><th>Report</th><th>Reporting User</th><th>Options</th></tr>
@@ -102,9 +109,9 @@ session_start();
                                         // For each report, display the user the report was made on, and the report description
                                         foreach ($retrieve as $row) {
                                             $rid = $row['ReportNum'];
-                                            $user = $row['Uname1'];
+                                            $user = $row['UID1'];
                                             $report = $row['Report'] + $row['Rdesc'];
-                                            $user2 = $row['Uname2'];
+                                            $user2 = $row['UID2'];
 
                                             echo "<form method='post'>";
                                             echo "<tr><td>$user</td><td>$report</td><td>$user2</td>";
@@ -123,11 +130,8 @@ session_start();
                             ?>  
                             </table>
                         </div>
-                    </div>
-
-                    <hr>
-
-                    <div class="box">
+                        
+                        <h3>Currently Banned Users</h3>
                         <div class="table-responsive">
                             <table class='table'>
                             <tr><th>User Banned</th><th>Banned For</th><th>Date</th><th>Options</th></tr>
@@ -143,7 +147,7 @@ session_start();
                                         // For each report, display the user the report was made on, and the report description
                                         foreach ($retrieve as $row) {
                                             $rid = $row['ReportNum'];
-                                            $user = $row['Uname1'];
+                                            $user = $row['UID1'];
                                             $report = $row['Report'] + $row['Rdesc'];
                                             $date = $row['DateBan'];
 

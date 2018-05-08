@@ -9,7 +9,7 @@
     </title>
 
     <?php 
-        if (!isset($_SESSION['username']) || !isset($_SESSION['admin']) || $_SESSION['admin'] == false) {
+        if (!isset($_SESSION['id']) || !isset($_SESSION['admin']) || $_SESSION['admin'] == false) {
             echo "<script type='text/javascript'>location.href = '404.php';</script>";
         }
         include "references.php"; 
@@ -40,7 +40,7 @@
                             <div class="panel-body">
                                 <ul class="nav nav-pills nav-stacked">
                                     <li>
-                                        <a href="#"><i class="fa fa-list"></i>Admin Rules</a>
+                                        <a href="admin.php"><i class="fa fa-list"></i>Admin Rules</a>
                                     </li>
                                     <li>
                                         <a href="adminReports.php"><i class="fa fa-user"></i>Manage User Reports</a>
@@ -49,7 +49,7 @@
                                         <a href="adminGames.php"><i class="fa fa-play"></i>Upload New Game</a>
                                     </li>
                                     <li class="active">
-                                        <a href="adminUpdates.php"><i class="fa fa-heart"></i>Update Games</a>
+                                        <a href="#"><i class="fa fa-heart"></i>Update Games</a>
                                     </li>
                                 </ul>
                             </div>

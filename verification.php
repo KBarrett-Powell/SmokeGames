@@ -27,7 +27,7 @@
 
                     <ul class="breadcrumb">
                         <li><a href="index.php">Home</a></li>
-                        <?php echo "<li><a href='profile.php?id=".$_SESSION['username']."'>Profile</a></li>"?>
+                        <?php echo "<li><a href='profile.php?id=".$_SESSION['id']."'>Profile</a></li>"?>
                         <li>Verify User</li>
                     </ul>
 
@@ -45,7 +45,7 @@
 
                             <ul class="nav nav-pills nav-stacked">
                                 <li>
-                                    <?php echo "<a href='profile.php?id=". $_SESSION['username'] ."'><i class='fa fa-list'></i>My profile</a>"; ?>
+                                    <?php echo "<a href='profile.php?id=". $_SESSION['id'] ."'><i class='fa fa-list'></i>My profile</a>"; ?>
                                 </li>
                                 <li>
                                     <a href="editProfile.php"><i class="fa fa-heart"></i> Edit Profile</a>
@@ -85,9 +85,7 @@
                     </div>
                 </div>
             </div>
-            <!-- /.container -->
         </div>
-        <!-- /#content -->
 
 <?php 
     try{
@@ -102,7 +100,7 @@
                 $password = $_POST['pass'];
 
                 // Try to find user account with details entered
-                $retrieve = $gamesdb->prepare("SELECT u.Pass, u.Verified, p.ProName FROM Users u, Profiles p WHERE u.Uname = ? AND u.Uname = p.Uname");
+                $retrieve = $gamesdb->prepare("SELECT u.Pass, u.Verified, p.ProName FROM Users u, Profiles p WHERE u.Uname = ? AND u.UID = p.UID");
                 $retrieve->execute([$username]);
 
                 if ($retrieve->rowCount() == 1) {
@@ -114,12 +112,13 @@
                     //if (password_verify($password, $hash)) {
                     if ($password == $hash) {
 
+                        $_SESSION['justFrom'] = 10;
                         $_SESSION['verified'] = true;
 
                         // Take user to account page
                         echo "<script type='text/javascript'>location.href = 'editAccount.php';</script>";
                             
-                    } else {echo "<script type='text/javascript'>alert('Password Incorrect. ' . (5 - $attempts) . 'Please Try Again.')</script>";}
+                    } else {echo "<script type='text/javascript'>alert('Password Incorrect. Please Try Again.')</script>";}
 
                 } else {echo "<script type='text/javascript'>alert('Username Incorrect. Please Try Again.')</script>";}
             }  
