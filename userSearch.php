@@ -54,10 +54,10 @@
                                         
                                         echo "<div class='item'><div class='product'><div class='flip-container'>";
                                         echo "<div class='flipper'><div class='front'>";
-                                        echo "<a href='profile?id=$uid'><img src='images/userProfiles/$img' class='img-responsive'></a></div>";
-                                        echo "<div class='back'><a href='profile?id=$uid'><img src='images/userProfiles/$img' alt='' class='img-responsive'></a></div></div></div>";
-                                        echo "<a href='profile?id=$uid' class='invisible'><img src='images/userProfiles/$img' class='img-responsive'></a>";
-                                        echo "<div class='text'><h3><a href='profile?id=$uid''>$pname</a></h3>";
+                                        echo "<a href='profile.php?id=$uid'><img src='images/userProfiles/$img' class='img-responsive'></a></div>";
+                                        echo "<div class='back'><a href='profile.php?id=$uid'><img src='images/userProfiles/$img' alt='' class='img-responsive'></a></div></div></div>";
+                                        echo "<a href='profile.php?id=$uid' class='invisible'><img src='images/userProfiles/$img' class='img-responsive'></a>";
+                                        echo "<div class='text'><h3><a href='profile.php?id=$uid''>$pname</a></h3>";
                                         echo "</div></div></div>";
                                     }
                                     echo "</div>";
