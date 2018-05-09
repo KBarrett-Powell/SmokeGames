@@ -55,14 +55,14 @@
 
                         <hr>
 
-                        <form action="" name="reset" method="post">
+                        <form action="forceChange.php" method="post">
                             <div class="form-group">
                                 <label for="pass1">New Password</label>
-                                <input class="form-control" type="text" id="pass1" name="pass1" required="required" placeholder="New Password">
+                                <input class="form-control" type="password" id="pass1" name="pass1" required="required" placeholder="New Password">
                             </div>
                             <div class="form-group">
                                 <label for="pass2">Confirm Password</label>
-                                <input class="form-control" type="text" id="pass2" name="pass2" required="required" placeholder="Confirm Password">
+                                <input class="form-control" type="password" id="pass2" name="pass2" required="required" placeholder="Confirm Password">
                             </div>
                             <div class="text-center">
                                 <button class="btn btn-primary" type="submit" value="Update" name="update_pass"><i class="fa fa-sign-in"></i> Update Password</button>
@@ -87,24 +87,26 @@
                 $user = $_SESSION['id'];
 
                 if ($newpass == $compass){
-                    //$pass = password_hash($newpass, PASSWORD_DEFAULT);
+                    $pass = password_hash($newpass, PASSWORD_DEFAULT);
 
                     // Update password for this user
                     $update = $gamesdb->prepare("UPDATE Users SET Pass = ? WHERE UID = ?");
-                    $update->execute([$newpass, $user]);
+                    $update->execute([$pass, $user]);
 
                     // Remove temporary password from database
-                    $update = $gamesdb->prepare("UPDATE Users SET TempPass = NULL WHERE UID = ?");
+                    $update = $gamesdb->prepare("UPDATE Users SET Temp = NULL WHERE UID = ?");
                     $update->execute([$user]);
 
                     $_SESSION['temp_used'] = false;
 
                     echo "<script type='text/javascript'>alert('Successfully Updated Password.'); location.href = 'index.php';</script>";
-                }    
+                } else {
+                    echo "<script type='text/javascript'>alert('Passwords Don't Match.');</script>";
+                } 
             }  
         }
     }catch(PDOException $e) {
-        echo "Connection failed: " . $e->getMessage();
+        echo "<script type='text/javascript'>location.href = '404.php'";
     }
     $gamesdb = null;
 ?>

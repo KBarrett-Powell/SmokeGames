@@ -66,7 +66,7 @@
                 $errors = array();
                 // Checking review doesn't include any tags
                 if ($review != strip_tags($review)) {
-                    array_push($errors, "Please don\'t use tags in your review\n");
+                    array_push($errors, "Please don't use tags in your review\n");
                 }
                 return $errors;
             }
@@ -115,7 +115,7 @@
                 }
             }
         } catch(PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
+            echo "<script type='text/javascript'>location.href = '404.php'";
         }
         $gamesdb = null;
     ?>
@@ -170,7 +170,7 @@
                                                 echo "<a href='#'>--No Scores Found--</a>";
                                             }
                                         } catch(PDOException $e) {
-                                            echo "Connection failed: " . $e->getMessage();
+                                            echo "<script type='text/javascript'>location.href = '404.php'";
                                         }
                                         $gamesdb = null;
                                     ?>
@@ -286,7 +286,7 @@
                                 }
                                         
                             }catch(PDOException $e) {
-                                echo "Connection failed: " . $e->getMessage();
+                                echo "<script type='text/javascript'>location.href = '404.php'";
                             }
                             $gamesdb = null;
                         ?>   
@@ -350,7 +350,7 @@
                                     echo "<p>--No results</p>";
                                 }
                             }catch(PDOException $e) {
-                                echo "Connection failed: " . $e->getMessage();
+                                echo "<script type='text/javascript'>location.href = '404.php'";
                             }
                             $gamesdb = null;                 
                         ?>

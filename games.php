@@ -104,7 +104,7 @@
                                     } else { echo "<h3 style='margin-left: 35%;'>--No results--</h3>";}
 
                                 }catch(PDOException $e) {
-                                    echo "Connection failed: " . $e->getMessage();
+                                    echo "<script type='text/javascript'>location.href = '404.php'";
                                 }
                                 $gamesdb = null;
                             ?>

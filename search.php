@@ -70,7 +70,7 @@
                                 } else { echo "<p style='margin-left:2%'>-- No results --</p>";}
 
                             }catch(PDOException $e) {
-                                echo "Connection failed: " . $e->getMessage();
+                                echo "<script type='text/javascript'>location.href = '404.php'";
                             }
                             $gamesdb = null;
                         ?>
@@ -113,7 +113,7 @@
                                 } else { echo "<p style='margin-left:2%'>-- No results --</p>";}
 
                             }catch(PDOException $e) {
-                                echo "Connection failed: " . $e->getMessage();
+                                echo "<script type='text/javascript'>location.href = '404.php'";
                             }
                             $gamesdb = null;
                         ?>

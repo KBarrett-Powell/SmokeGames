@@ -32,7 +32,7 @@
             }
 
         } catch(PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
+            echo "<script type='text/javascript'>location.href = '404.php'";
         }
         $gamesdb = null;
 
@@ -46,13 +46,7 @@
                 array_push($errors, ' Please don\'t use tags in your description');
             }
 
-            if(empty($errors)) {
-                return true;
-            } else {
-                $js_errors = json_encode($errors);
-                echo "<script type='text/javascript'>alert(". $js_errors .");</script>";
-                return false;
-            }
+            return $errors;
         }
     ?>
 </head>
@@ -135,7 +129,8 @@
 
             // If login form has been filled out:
             if(isset($_POST['report_user'])) {
-                if (verifyReport()) {
+                $rErrors = verifyReport();
+                if (empty($rErrors)) {
                     $report = $_POST['reason'];
                     $desc = $_POST['desc'];
 
@@ -151,10 +146,12 @@
 
                     echo "<script type='text/javascript'>alert('Report successfully filed.'); location.href = 'index.php';</script>";
                 }
-            }  
+            } else {
+                echo "<script type='text/javascript'>alert(". json_encode($rErrors) .");</script>";
+            } 
         }
     }catch(PDOException $e) {
-        echo "Connection failed: " . $e->getMessage();
+        echo "<script type='text/javascript'>location.href = '404.php'";
     }
     $gamesdb = null;
 ?>

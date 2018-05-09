@@ -20,13 +20,13 @@
             $errors = array();
 
             if ($uname != strip_tags($uname)) {
-                array_push($errors, "Please don\'t use tags in your username\n");
+                array_push($errors, "Please don't use tags in your username\n");
             }
             if ($subject != strip_tags($subject)) {
-                array_push($errors, "Please don\'t use tags in your email subject\n");
+                array_push($errors, "Please don't use tags in your email subject\n");
             }
             if ($message != strip_tags($message)) {
-                array_push($errors, "Please don\'t use tags in your message\n");
+                array_push($errors, "Please don't use tags in your message\n");
             }
 
             return $errors;
@@ -57,13 +57,16 @@
                     <div class="panel panel-default sidebar-menu">
 
                         <div class="panel-heading">
-                            <h3 class="panel-title">Menu</h3>
+                            <h3 class="panel-title">Pages</h3>
                         </div>
 
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li class="active">
-                                    <a href="#">Contact Information</a>
+                                <li>
+                                    <a href="faq.php">Terms & Conditions</a>
+                                </li>
+                                <li>
+                                    <a href="#">Contact page</a>
                                 </li>
                             </ul>
                         </div>
@@ -210,7 +213,7 @@
         }
 
     }catch(PDOException $e) {
-        echo "Connection failed: " . $e->getMessage();
+        echo "<script type='text/javascript'>location.href = '404.php'";
     }
     $gamesdb = null;
 ?>

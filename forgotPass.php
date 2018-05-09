@@ -11,6 +11,7 @@
 
     <?php 
         include "references.php"; 
+        include "requireMail.php";
     ?>
 </head>
 
@@ -60,7 +61,7 @@
 
                         <hr>
 
-                        <form action="" name="reset" method="post">
+                        <form action="forgotPass.php" name="reset" method="post">
                             <div class="form-group">
                                 <label for="email">Email</label>
                                 <input class="form-control" type="text" id="email" name="email" required="required" placeholder="Email Address">
@@ -82,15 +83,11 @@
 
             // If login form has been filled out:
             if(isset($_POST['reset_pass'])) {
-
                 $email = $_POST['email'];
+
                 // generate temp pass
                 $tempPass = bin2hex(openssl_random_pseudo_bytes(5));
-                //$SecPass = password_hash($tempPass, PASSWORD_DEFAULT);
-
-                // Create query to set a temporary password for this account
-                $retrieve = $gamesdb->prepare("UPDATE Users SET TempPass = ? WHERE Email = ?");
-                $retrieve->execute([$tempPass, $email]);
+                $SecPass = password_hash($tempPass, PASSWORD_DEFAULT);
 
                 try {
                     // Add header and subject variables to the email
@@ -98,27 +95,32 @@
                     $mail->AddAddress($email);
                     $mail->Subject  = 'Password Changed!';
 
+                    echo "<script type='text/javascript'>alert('Body.')</script>";
                     // Creating email to send to users on registration
-                    $mail->Body     = "Hi ".$user."
+                    $mail->Body     = "Hi ".$_SESSION['username'].",
 
-                    You asked us to reset your password, your new temporary password is below:
-                    ".$tempPass." - You can now use this to login to your account, 
-                    after logging in you will be asked to enter a new password for security.";
+You asked us to reset your password, your new temporary password is below:
+".$tempPass." - You can now use this to log in to your account, after logging in you will be asked to enter a new password for security.";
                     
                     // Sending Email
                     $mail->Send();
-                        
+                    
+                    echo "<script type='text/javascript'>alert('query.')</script>";
+                    // Create query to set a temporary password for this account
+                    $retrieve = $gamesdb->prepare("UPDATE Users SET Temp = ? WHERE Email = ?");
+                    $retrieve->execute([$SecPass, $email]);
+
                     // Send user success message, and take them to main page
                     echo "<script type='text/javascript'>alert('Successfully Changed Password. An email has been sent to you with your temporary password.'); location.href = 'index.php';</script>";
                 
                 } catch (phpmailerException $e) {
                     echo "<script type='text/javascript'>alert('Email could not be sent. Please check email address and try again later.')</script>";
-                    echo $e->errorMessage(); 
+                    echo "<script type='text/javascript'>location.href = '404.php'";
                 }
             }  
         }
     }catch(PDOException $e) {
-        echo "Connection failed: " . $e->getMessage();
+        echo "<script type='text/javascript'>location.href = '404.php'";
     }
     $gamesdb = null;
 ?>

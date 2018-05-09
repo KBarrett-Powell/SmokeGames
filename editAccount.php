@@ -38,7 +38,7 @@
             }
 
         } catch(PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
+            echo "<script type='text/javascript'>location.href = '404.php'";
         }
         $gamesdb = null;
 
@@ -85,7 +85,7 @@
                 }
 
             }catch(PDOException $e) {
-                echo "Connection failed: " . $e->getMessage();
+                echo "<script type='text/javascript'>location.href = '404.php'";
             }
             $gamesdb = null;
 
@@ -297,7 +297,7 @@
             }
         }
     } catch(PDOException $e) {
-        echo "Connection failed: " . $e->getMessage();
+        echo "<script type='text/javascript'>location.href = '404.php'";
     }
     $gamesdb = null;
 ?>  

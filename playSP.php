@@ -32,7 +32,7 @@
             echo "<script type='text/javascript'>location.href = '404.php';</script>";
           }
         } catch(PDOException $e) {
-          echo "Connection failed: " . $e->getMessage();
+            echo "<script type='text/javascript'>location.href = '404.php'";
         }
 	?>
 	
@@ -103,7 +103,7 @@
                                 
                             }
                             catch(PDOException $e) {
-                                echo "Connection failed: " . $e->getMessage();
+                                echo "<script type='text/javascript'>location.href = '404.php'";
                             }
                         ?>
 					</div>

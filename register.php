@@ -53,7 +53,7 @@
                 if($find->rowCount()>0){array_push($errors, ' An account is already linked to this email');}
 
             }catch(PDOException $e) {
-                echo "Connection failed: " . $e->getMessage();
+                echo "<script type='text/javascript'>location.href = '404.php'";
             }
             $gamesdb = null;
 
@@ -88,7 +88,7 @@
 
                         <hr>
 
-                        <form action="return verifyCreate()" method="post">
+                        <form action="register.php" method="post">
                             <div class="form-group">
                                 <label for="name">First Name</label>
                                 <input class="form-control" type="text" id="fname" name="fname" required="required" placeholder="First Name">
@@ -134,7 +134,7 @@
 
                         <hr>
 
-                        <form action="" name="login" method="post">
+                        <form action="register.php" name="login" method="post">
                             <div class="form-group">
                                 <label for="email">Username</label>
                                 <input class="form-control" type="text" id="user" name="user" required="required" placeholder="Username">
@@ -143,9 +143,11 @@
                                 <label for="password">Password</label>
                                 <input class="form-control" type="password" id="pass" name="pass" required="required" placeholder="Password">
                             </div>
-                            <div class="text-center">
+                            <div class="text-center" style='margin-bottom: 2%;'>
                                 <button class="btn btn-primary" type="submit" value="Login" name="submit_login"><i class="fa fa-sign-in"></i> Log in</button>
                             </div>
+                        </form>
+                        <form action="register.php" method="post">
                             <div class="text-center">
                                 <button class="btn btn-primary" type="submit" value="ForgotPass" name="forgot_pass"><i class="fa fa-sign-in"></i> Forgotten Password</button>
                             </div>
@@ -192,8 +194,7 @@
                         if ($verf == 1){
 
                             // Compare passwords
-                            //if (password_verify($password, $hash)) {
-                            if ($password == $hash) {
+                            if (password_verify($password, $hash)) {
                                     
                                 // Set session variables
                                 $_SESSION['id'] = $uid;
@@ -211,7 +212,7 @@
                                 // Take user to main page
                                 echo "<script type='text/javascript'>alert('Successfully Logged In.'); location.href = 'index.php';</script>";
                                 
-                            } else if ($password == $tempPass){
+                            } else if (password_verify($password, $tempPass)){
                                     
                                 // Set session variables
                                 $_SESSION['id'] = $uid;
@@ -252,9 +253,8 @@
                         $phone = NULL;
                     }
                     $hash = md5( rand(0,1000) );
-                    $pass = $_POST['pass1'];
-                    //$plainPass = $_POST['pass1'];
-                    //$pass = password_hash($plainPass, PASSWORD_DEFAULT);
+                    $plainPass = $_POST['pass1'];
+                    $pass = password_hash($plainPass, PASSWORD_DEFAULT);
 
                     // Create new user id
                     $retrieve = $gamesdb->prepare("SELECT max(UID) FROM Users");
@@ -277,10 +277,10 @@
 
                         // Creating email to send to users on registration
                         $mail->Body     = "Hi ".$user.",
-                        Thanks for signing up to Smoke Games!
+Thanks for signing up to Smoke Games!
 
-                        Your account has been created, please verify by clicking the link below:
-                        https://www.group.cs.cf.ac.uk/group4/verify.php?id=".$uid."&hash=".$hash."";
+Your account has been created, please verify by clicking the link below:
+https://group.cs.cf.ac.uk/group4/verify.php?id=".$uid."&hash=".$hash."";
                         
                         // Sending Email
                         $mail->Send();
@@ -309,7 +309,7 @@
         } 
 
     }catch(PDOException $e) {
-        echo "Connection failed: " . $e->getMessage();
+        echo "<script type='text/javascript'>location.href = '404.php'";
     }
     $gamesdb = null;
 ?>

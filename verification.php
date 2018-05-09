@@ -109,8 +109,7 @@
                     $pname = $row['ProName'];
 
                     // Compare passwords
-                    //if (password_verify($password, $hash)) {
-                    if ($password == $hash) {
+                    if (password_verify($password, $hash)) {
 
                         $_SESSION['justFrom'] = 10;
                         $_SESSION['verified'] = true;
@@ -124,7 +123,7 @@
             }  
         }
     }catch(PDOException $e) {
-        echo "Connection failed: " . $e->getMessage();
+        echo "<script type='text/javascript'>location.href = '404.php'";
     }
     $gamesdb = null;
 ?>

@@ -156,7 +156,7 @@
                 }
             }
         } catch(PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
+            echo "<script type='text/javascript'>location.href = '404.php'";
         }
         $gamesdb = null;
     ?>
@@ -281,7 +281,7 @@
                                             echo "<tr><td colspan='2'>--No Scores Found--</td></tr></table>";
                                         }
                                     }catch(PDOException $e) {
-                                        echo "Connection failed: " . $e->getMessage();
+                                        echo "<script type='text/javascript'>location.href = '404.php'";
                                     }
                                     $gamesdb = null;
                                 ?>     
@@ -313,7 +313,7 @@
                                         }
 
                                     }catch(PDOException $e) {
-                                        echo "Connection failed: " . $e->getMessage();
+                                        echo "<script type='text/javascript'>location.href = '404.php'";
                                     }
                                     $gamesdb = null;
                                 ?>     
@@ -347,7 +347,7 @@
                                         }
 
                                     }catch(PDOException $e) {
-                                        echo "Connection failed: " . $e->getMessage();
+                                        echo "<script type='text/javascript'>location.href = '404.php'";
                                     }
                                     $gamesdb = null;
                                 ?>     
@@ -381,7 +381,7 @@
                                         }
                                     
                                     }catch(PDOException $e) {
-                                        echo "Connection failed: " . $e->getMessage();
+                                        echo "<script type='text/javascript'>location.href = '404.php'";
                                     }
                                     $gamesdb = null;
                                 ?> 

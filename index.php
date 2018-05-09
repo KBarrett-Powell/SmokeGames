@@ -94,7 +94,7 @@
                             try{
                                 include "config.php";
 
-                                $retrieve = $gamesdb->prepare("SELECT * FROM Games ORDER BY Gname ASC");
+                                $retrieve = $gamesdb->prepare("SELECT * FROM Games ORDER BY Rating DESC LIMIT 20");
                                 $retrieve->execute();
                                 
                                 if ($retrieve->rowCount() > 0) {
@@ -114,7 +114,7 @@
                                 } else { echo "No results";}
 
                             }catch(PDOException $e) {
-                                echo "Connection failed: " . $e->getMessage();
+                                echo "<script type='text/javascript'>location.href = '404.php'";
                             }
                             $gamesdb = null;
                         ?>

@@ -64,7 +64,7 @@
                                 } else { echo "<h2>-- No results --</h2>";}
 
                             }catch(PDOException $e) {
-                                echo "Connection failed: " . $e->getMessage();
+                                echo "<script type='text/javascript'>location.href = '404.php'";
                             }
                             $gamesdb = null;
                         ?>

@@ -43,13 +43,10 @@
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
                                 <li>
-                                    <a href="faq.php">Terms & Conditions</a>
+                                    <a href="#">Terms & Conditions</a>
                                 </li>
                                 <li>
                                     <a href="contact.php">Contact page</a>
-                                </li>
-                                <li>
-                                    <a href="faq.html">FAQ</a>
                                 </li>
                             </ul>
                         </div>

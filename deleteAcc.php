@@ -10,7 +10,7 @@
         echo "<script type='text/javascript'>alert('Deleted Account Successfully');location.href = 'logout.php';</script>";
         
     } catch(PDOException $e) {
-        echo "Connection failed: " . $e->getMessage();
+        echo "<script type='text/javascript'>location.href = '404.php'";
     }
     $gamesdb = null;
 ?>
